@@ -19,7 +19,7 @@ Route::group(['prefix' => 'motors_kpi'], function () {
         return view('app');
     });
     Route::post('/login', [UserController::class, 'login']);
+    Route::group(['middleware' => 'auth'], function () {
+        Route::get('/user', [UserController::class, 'get_user']);
+    });
 });
-
-
-

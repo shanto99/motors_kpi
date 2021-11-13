@@ -6,13 +6,15 @@ import {withStyles} from "@mui/styles";
 import {login} from "../../API/authentication";
 
 import styles from "./styles";
+import { Redirect } from "react-router-dom";
 
 class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             userId: '',
-            password: ''
+            password: '',
+            isAuthenticated: false
         }
     }
 
@@ -28,60 +30,67 @@ class Login extends React.Component {
         e.preventDefault();
         const {userId, password} = this.state;
         login(userId, password).then(res => {
-            console.log(res);
+            this.setState({
+                isAuthenticated: true
+            })
         }).catch(err => {
             console.log("Login failed: ", err);
         })
     }
 
     render() {
+        const {isAuthenticated} = this.state;
         return (
-            <Container component="main" maxWidth="xs">
-                <Box
-                    sx={{
-                        marginTop: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                        Sign in
-                    </Typography>
-                    <Box component="form" noValidate sx = {{ mt: 1 }}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="staffId"
-                            label="Staff id"
-                            autoFocus
-                            onChange={(e) => this.handleUserInput(e.target.value, 'userId')}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="password"
-                            label="Password"
-                            type="password"
-                            onChange={(e) => this.handleUserInput(e.target.value, 'password')}
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
-                            onClick={this.handleLogin}
-                        >
-                            Sign In
-                        </Button>
+            <React.Fragment>
+                {isAuthenticated
+                ? <Redirect to="/dashboard"/>
+                : <Container component="main" maxWidth="xs">
+                    <Box
+                        sx={{
+                            marginTop: 8,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                            <LockIcon />
+                        </Avatar>
+                        <Typography component="h1" variant="h5">
+                            Sign in
+                        </Typography>
+                        <Box component="form" noValidate sx = {{ mt: 1 }}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="staffId"
+                                label="Staff id"
+                                autoFocus
+                                onChange={(e) => this.handleUserInput(e.target.value, 'userId')}
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="password"
+                                label="Password"
+                                type="password"
+                                onChange={(e) => this.handleUserInput(e.target.value, 'password')}
+                            />
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                                onClick={this.handleLogin}
+                            >
+                                Sign In
+                            </Button>
+                        </Box>
                     </Box>
-                </Box>
-            </Container>
+                </Container>}
+            </React.Fragment>
         );
     }
 }

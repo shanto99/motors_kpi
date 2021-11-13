@@ -13,8 +13,8 @@ class App extends React.Component {
                 <CssBaseline/>
                 <Router basename="motors_kpi">
                     <Switch>
-                        <Route exact={true} path="/" component={Login}/>
-                        <Route exact={true} path="/dashboard" component={Dashboard}/>
+                        <Route exact={true} path="/login" component={Login}/>
+                        <Route exact={true} path="/" component={Dashboard}/>
                     </Switch>
                 </Router>
             </>
