@@ -21,9 +21,19 @@ const getUser = function() {
             if(reject) {
                 reject(err);
             }
-            
+
         })
     });
+};
+
+const logout = function() {
+    return new Promise(function (resolve, reject) {
+        axios.post('/motors_kpi/logout').then(function(res) {
+            resolve(res.data);
+        }).catch(function (err) {
+            if(reject) reject(err);
+        });
+    })
 }
 
-export {login, getUser};
+export {login, getUser, logout};

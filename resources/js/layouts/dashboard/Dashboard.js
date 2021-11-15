@@ -1,10 +1,16 @@
 import React from "react";
 import {Grid} from "@mui/material";
 import {withStyles} from "@mui/styles";
-import { Redirect } from "react-router-dom";
+import {Redirect, Route, Switch} from "react-router-dom";
 
 import SidePanel from "../../components/sidePanel/SidePanel";
 import Navbar from "../../components/navBar/Navbar";
+
+// pages
+import Home from "./pages/home/Home";
+import UserManager from "./pages/userManager/UserManager";
+import Criteria from "./pages/criteria/Criteria";
+import AssignCriteria from "./pages/assignCriteria/AssignCriteria";
 
 import { getUser } from "../../API/authentication";
 
@@ -13,7 +19,7 @@ import styles from  "./styles";
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
-        
+
         this.state = {
             isLoading: true,
             isAuthenticated: true
@@ -45,10 +51,16 @@ class Dashboard extends React.Component {
                         </Grid>
                         <Grid item lg={10} className={classes.mainBody}>
                             <Navbar/>
+                            <>
+                                <Route exact={true} path="/" component={Home} />
+                                <Route exact={true} path="/user-manager" component={UserManager}/>
+                                <Route exact path="/assign-criteria" component={AssignCriteria}/>
+                                <Route exact={true} path="/criteria" component={Criteria}/>
+                            </>
                         </Grid>
                     </Grid>
                 : <Redirect to="/login" />}
-                
+
             </React.Fragment>
         );
     }

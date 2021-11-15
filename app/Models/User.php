@@ -14,10 +14,19 @@ class User extends Authenticatable
 
     protected $table = "UserManager";
 
+    protected $primaryKey = "UserID";
+
+    public $keyType = "string";
+
+    public $incrementing = false;
+
     protected $fillable = [
         'UserID',
-        'Name',
+        'UserName',
         'Password',
+        'Designation',
+        'Email',
+        'Active'
     ];
 
     protected $hidden = [

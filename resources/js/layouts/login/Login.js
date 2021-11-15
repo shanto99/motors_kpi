@@ -5,6 +5,8 @@ import {withStyles} from "@mui/styles";
 
 import {login} from "../../API/authentication";
 
+import {getUser} from "../../API/authentication";
+
 import styles from "./styles";
 import { Redirect } from "react-router-dom";
 
@@ -16,6 +18,18 @@ class Login extends React.Component {
             password: '',
             isAuthenticated: false
         }
+    }
+
+    componentDidMount() {
+        getUser().then(res => {
+           if(res.status === 200) {
+               this.setState({
+                   isAuthenticated: true
+               });
+           }
+        }).catch(err => {
+
+        });
     }
 
     handleUserInput = (value, field) => {
@@ -43,7 +57,7 @@ class Login extends React.Component {
         return (
             <React.Fragment>
                 {isAuthenticated
-                ? <Redirect to="/dashboard"/>
+                ? <Redirect to="/"/>
                 : <Container component="main" maxWidth="xs">
                     <Box
                         sx={{
