@@ -40,12 +40,4 @@ class CriteriaController extends Controller
             'status' => 200
         ], 200);
     }
-
-    public function assign_weights(Request $request)
-    {
-        $weights = $request->weights;
-        return response()->json([
-           'weights' => $weights
-        ]);
-    }
 }

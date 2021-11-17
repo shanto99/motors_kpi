@@ -64,51 +64,29 @@ class Criteria extends React.Component {
         return (
             <Grid container spacing={4}>
                 <Grid item lg={8}>
+                    <h5>All criteria</h5>
                     <List
                         sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-                        component="nav"
-                        aria-labelledby="nested-list-subheader"
-                        subheader={
-                            <ListSubheader component="div" id="nested-list-subheader">
-                                All Criteria
-                            </ListSubheader>
-                        }
                     >
                         <List>
                             {criterias.map(criteria => {
                                 return (
                                     <React.Fragment>
                                         <ListItemButton>
-                                            <ListItemIcon>
-                                                <AddIcon/>
-                                            </ListItemIcon>
                                             <ListItemText primary={criteria.Name} />
                                         </ListItemButton>
                                         {criteria.sub_criterias
                                         ? <List
                                                 style={{ paddingLeft: '20px' }}
-                                                subheader={
-                                                    <ListSubheader component="div" id="nested-list-subheader">
-                                                        Sub Criteria
-                                                    </ListSubheader>
-                                                }
                                             >
                                                 {criteria.sub_criterias.map(subCriteria => (
                                                     <React.Fragment>
                                                         <ListItemButton>
-                                                            <ListItemIcon>
-                                                                <AddIcon/>
-                                                            </ListItemIcon>
                                                             <ListItemText primary={subCriteria.Name} />
                                                         </ListItemButton>
                                                         {subCriteria.sub_sub_criterias
                                                         ? <List
                                                                 style={{ paddingLeft: '20px' }}
-                                                                subheader={
-                                                                    <ListSubheader component="div" id="nested-list-subheader">
-                                                                        Sub sub Criteria
-                                                                    </ListSubheader>
-                                                                }
                                                             >
                                                                 {subCriteria.sub_sub_criterias.map(subSubCriteria => {
                                                                     return (

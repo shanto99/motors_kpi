@@ -36,6 +36,6 @@
         "@mui/styles": "^5.1.0",
         "material-table": "^1.69.3",
         "react-router-dom": "^5.2.0",
-        "sweetalert2": "^11.1.10"
+        "sweetalert": "^2.1.2"
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Weight;
 
 class User extends Authenticatable
 {
@@ -33,4 +34,9 @@ class User extends Authenticatable
         'Password',
         'remember_token',
     ];
+
+    public function weights()
+    {
+        return $this->hasMany(Weight::class, 'UserID', 'UserID');
+    }
 }

@@ -11,6 +11,7 @@ import Home from "./pages/home/Home";
 import UserManager from "./pages/userManager/UserManager";
 import Criteria from "./pages/criteria/Criteria";
 import AssignCriteria from "./pages/assignCriteria/AssignCriteria";
+import CriteriaForm from "./pages/criteriaForm/CriteriaForm";
 
 import { getUser } from "../../API/authentication";
 
@@ -55,6 +56,7 @@ class Dashboard extends React.Component {
                                 <Route exact={true} path="/" component={Home} />
                                 <Route exact={true} path="/user-manager" component={UserManager}/>
                                 <Route exact path="/assign-criteria" component={AssignCriteria}/>
+                                <Route exact path="/criteria-form" component={CriteriaForm} />
                                 <Route exact={true} path="/criteria" component={Criteria}/>
                             </>
                         </Grid>

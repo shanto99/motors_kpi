@@ -13,12 +13,12 @@ const getAllUsers = function() {
 const createUser = function(userId, userName, designation, email, password, supervisor) {
     return new Promise(function (resolve, reject) {
         axios.post('/motors_kpi/create_user', {
-            UserID: userId,
-            UserName: userName,
-            Designation: designation,
-            Email: email,
-            Password: password,
-            Supervisor: supervisor
+            UserID: userId === "" ? null : userId,
+            UserName: userName === "" ? null : userName,
+            Designation: designation === "" ? null : designation,
+            Email: email === "" ? null : email,
+            Password: password === "" ? null : password,
+            Supervisor: supervisor === "" ? null : supervisor
         }).then(function(res) {
             resolve(res.data);
         }).catch(function(err) {

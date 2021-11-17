@@ -57,6 +57,16 @@ class SidePanel extends React.Component {
                             </ListItemText>
                         </ListItem>
                     </Link>
+                    <Link to="/criteria-form">
+                        <ListItem>
+                            <ListItemIcon>
+                                <CategoryIcon/>
+                            </ListItemIcon>
+                            <ListItemText>
+                                Criteria form
+                            </ListItemText>
+                        </ListItem>
+                    </Link>
                 </List>
             </div>
         );

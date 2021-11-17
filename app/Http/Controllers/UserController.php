@@ -12,9 +12,29 @@ class UserController extends Controller
 {
     public function create_user(Request $request)
     {
-        $inputData = $request->only('UserID', 'UserName', 'Designation', 'Email', 'Supervisor');
+        $inputData = $request->only('UserID', 'UserName', 'Designation', 'Email');
         $inputData['Password'] = Hash::make($request->Password);
-        $user = User::create($inputData);
+
+        DB::beginTransaction();
+        try {
+            $user = User::create($inputData);
+
+            if($request->has('Supervisor')) {
+                DB::table('Supervisors')->insert([
+                    'UserID' => $request->UserID,
+                    'SupervisorID' => $request->Supervisor
+                ]);
+            }
+
+            DB::commit();;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'error' => 'Something went wrong',
+                'status' => 500
+            ], 500);
+        }
+
         return response()->json([
             'user' => $user,
             'status' => 200

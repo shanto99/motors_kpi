@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CriteriaController;
+use App\Http\Controllers\WeightController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +32,8 @@ Route::group(['prefix' => 'motors_kpi'], function () {
         Route::get('/users_with_pagination/{currentPage}/{pagination}/{searchKey?}', [UserController::class, 'users_with_pagination']);
         Route::get('/criterias', [CriteriaController::class, 'get_criterias']);
         Route::post('/create_criteria', [CriteriaController::class, 'create_criteria']);
-        Route::post('/assign_weights', [CriteriaController::class, 'assign_weights']);
+        Route::post('/assign_weights', [WeightController::class, 'assign_weights']);
+        Route::get('/get_weights/{userId}', [WeightController::class, 'get_weights']);
     });
 });
 

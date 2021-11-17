@@ -2,6 +2,7 @@ import React from "react";
 
 import {getAllUsers, createUser, getUsersWithPagination} from "../../../../API/userManager";
 import {Grid, Box, TextField, Button, FormControl, InputLabel, Autocomplete} from "@mui/material";
+import swal from "sweetalert";
 import {withStyles} from "@mui/styles";
 import {Edit, Delete} from "@mui/icons-material";
 
@@ -25,6 +26,10 @@ class UserManager extends React.Component {
     }
 
     componentDidMount() {
+        this.fetchAllUsers();
+    }
+
+    fetchAllUsers = () => {
         getAllUsers().then(res => {
             this.setState({
                 users: res.users || []
@@ -47,11 +52,25 @@ class UserManager extends React.Component {
         }
 
         createUser(userId, userName, userDesignation, userEmail, userPassword, supervisorId).then(res => {
-            console.log(res.user);
+            this.fetchAllUsers();
+            this.resetForm();
+            swal("Added", "User added successfully", "success");
         }).catch(err => {
-            console.log("Could not create user: ", err);
+            swal("Error", "Could not add user", "error");
         })
 
+    }
+
+    resetForm = () => {
+        this.setState({
+            userId: '',
+            userName: '',
+            userDesignation: '',
+            userPassword: '',
+            userEmail: '',
+            userPhone: '',
+            supervisor: null,
+        })
     }
 
     editUser = () => {
@@ -65,6 +84,7 @@ class UserManager extends React.Component {
     render() {
         const {classes} = this.props;
         const {users} = this.state;
+
         return (
             <Grid container spacing={4}>
                 <Grid item lg={8}>
