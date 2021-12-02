@@ -1,7 +1,8 @@
 import React from "react";
 
 import {getAllUsers, createUser, getUsersWithPagination} from "../../../../API/userManager";
-import {Grid, Box, TextField, Button, FormControl, InputLabel, Autocomplete} from "@mui/material";
+import {Grid, Box, TextField, Button, Select,
+    FormControl, InputLabel, Autocomplete, MenuItem} from "@mui/material";
 import swal from "sweetalert";
 import {withStyles} from "@mui/styles";
 import {Edit, Delete} from "@mui/icons-material";
@@ -9,11 +10,13 @@ import {Edit, Delete} from "@mui/icons-material";
 import PaginationTable from "../../../../components/paginationTable/PaginationTable";
 
 import styles from "./styles";
+import { getAllDesignations } from "../../../../API/designation";
 
 class UserManager extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            designations: [],
             userId: '',
             userName: '',
             userDesignation: '',
@@ -26,7 +29,15 @@ class UserManager extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchAllUsers();
+        Promise.all([getAllDesignations(), getAllUsers()]).then(responses => {
+            const designations = responses[0].designations || [];
+            const users = responses[1].users || [];
+
+            this.setState({
+                designations: designations,
+                users: users
+            });
+        });
     }
 
     fetchAllUsers = () => {
@@ -73,6 +84,14 @@ class UserManager extends React.Component {
         })
     }
 
+    handleDesignationChange = (e) => {
+        let value = e.target.value;
+        console.log("Designation: ", value);
+        this.setState({
+            userDesignation: value
+        });
+    }
+
     editUser = () => {
 
     }
@@ -83,7 +102,7 @@ class UserManager extends React.Component {
 
     render() {
         const {classes} = this.props;
-        const {users} = this.state;
+        const {users, designations} = this.state;
 
         return (
             <Grid container spacing={4}>
@@ -138,20 +157,27 @@ class UserManager extends React.Component {
                                 userName: e.target.value
                             })}
                         />
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="userDesignation"
-                            label="User designation"
-                            name="UserDesignation"
-                            value={this.state.userDesignation}
-                            autoComplete="off"
-                            onChange={e => this.setState({
-                                userDesignation: e.target.value
-                            })}
-                        />
+
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Designation</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={this.state.userDesignation}
+                                label="Designation"
+                                onChange={this.handleDesignationChange}
+                            >
+                                <MenuItem value="">
+                                    <em>Select designation</em>
+                                </MenuItem>
+                                {designations.map(designation => (
+                                    <MenuItem value={designation.DesignationID}>
+                                        {designation.Designation}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        
                         <TextField
                             variant="outlined"
                             margin="normal"

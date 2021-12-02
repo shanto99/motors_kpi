@@ -42,5 +42,17 @@ const getUsersWithPagination = function(currentPage, pagination, search) {
     })
 }
 
+const getUserCriteria = function() {
+    return new Promise(function(resolve, reject) {
+        axios.get('/motors_kpi/get_criteria').then(function(res) {
+            resolve(res.data);
+        }).catch(function(err) {
+            if(reject) {
+                reject(err);
+            }
+        });
+    })
+}
 
-export {getAllUsers, createUser, getUsersWithPagination};
+
+export {getAllUsers, createUser, getUsersWithPagination, getUserCriteria};

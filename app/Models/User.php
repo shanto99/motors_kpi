@@ -35,8 +35,18 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function designation()
+    {
+        return $this->belongsTo(Designation::class, 'Designation', 'DesignationID');
+    }
+
     public function weights()
     {
         return $this->hasMany(Weight::class, 'UserID', 'UserID');
+    }
+
+    public function targets()
+    {
+        return $this->hasMany(UserTarget::class, 'UserID', 'UserID');
     }
 }

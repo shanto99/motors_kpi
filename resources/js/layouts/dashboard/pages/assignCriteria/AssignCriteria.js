@@ -1,9 +1,10 @@
 import React from "react";
 import swal from "sweetalert";
 import {getCriterias} from "../../../../API/criteria";
-import {getAllUsers} from "../../../../API/userManager";
-import {Autocomplete, Container, FormControl, List, TextField, Button, ListItem} from "@mui/material";
-import {Box, ListSubheader} from "@material-ui/core";
+import {getAllDesignations} from "../../../../API/designation";
+import {Select, Container, FormControl, InputLabel, MenuItem,
+    List, TextField, Button, ListItem} from "@mui/material";
+import {ListSubheader} from "@material-ui/core";
 import {withStyles} from "@mui/styles";
 
 import {assignWeights, getWeights} from "../../../../API/weight";
@@ -13,22 +14,23 @@ import styles from './styles';
 class AssignCriteria extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            users: [],
+            designations: [],
+            designation: "",
             criterias: [],
-            user: null,
             reload: true,
             criteriaWeights: []
         }
     }
 
     componentDidMount() {
-        Promise.all([getAllUsers(), getCriterias()]).then(responses => {
-            let users = responses[0].users;
+        Promise.all([getAllDesignations(), getCriterias()]).then(responses => {
+            let designations = responses[0].designations;
             let criterias = responses[1].criterias;
 
             this.setState({
-                users: users,
+                designations: designations,
                 criterias: criterias
             });
         });
@@ -37,6 +39,10 @@ class AssignCriteria extends React.Component {
     findCriteria = (criteriaId, subCriteriaId, subSubCriteriaId, criteriaWeights) =>
     {
         let criteria = null;
+
+        criteriaId = criteriaId.toString();
+        if(subCriteriaId) subCriteriaId = subCriteriaId.toString();
+        if(subSubCriteriaId) subSubCriteriaId = subSubCriteriaId.toString();
 
         if(subSubCriteriaId) {
             criteria = criteriaWeights.find(weight => weight.CriteriaID === criteriaId &&
@@ -52,27 +58,20 @@ class AssignCriteria extends React.Component {
         return criteria;
     }
 
-    getCriteriaValue = (criteriaId, subCriteria, subSubCriteria, type) => {
+    getCriteriaValue = (criteriaId, subCriteria, subSubCriteria) => {
         let {criteriaWeights} = this.state;
         let criteria = this.findCriteria(criteriaId, subCriteria, subSubCriteria, criteriaWeights);
-        if(type === "weight") {
-            return criteria && criteria.Weight || "";
-        } else {
-            return criteria && criteria.Target || "";
-        }
+        
+        return criteria && criteria.Weight || "";
+        
 
     }
 
-    handleCriteriaWeightChange = (criteriaId, subCriteria, subSubCriteria, inputValue, type) => {
+    handleCriteriaWeightChange = (criteriaId, subCriteria, subSubCriteria, inputValue) => {
         let {criteriaWeights} = this.state;
         let criteria = this.findCriteria(criteriaId, subCriteria, subSubCriteria, criteriaWeights);
         if(criteria) {
-            if(type === 'weight') {
-                criteria.Weight = inputValue;
-            } else {
-                criteria.Target = inputValue;
-            }
-
+            criteria.Weight = inputValue;
         } else {
             let criteriaWeight = {
                 CriteriaID: criteriaId,
@@ -81,12 +80,8 @@ class AssignCriteria extends React.Component {
                 Weight: null,
                 Target: null
             }
-            if(type === 'weight') {
-                criteriaWeight.Weight = inputValue
-            } else {
-                criteriaWeight.Target = inputValue
-            }
-            criteriaWeights.push();
+            criteriaWeight.Weight = inputValue
+            criteriaWeights.push(criteriaWeight);
         }
 
         this.setState({
@@ -95,9 +90,9 @@ class AssignCriteria extends React.Component {
     }
 
     submitCriteriaWeights = () => {
-        const userId = this.state.user.UserID;
-        assignWeights(this.state.criteriaWeights, userId).then(res => {
-            swal("Assigned", "Criteria assign to user", "success");
+        const designationId = this.state.designation;
+        assignWeights(this.state.criteriaWeights, designationId).then(res => {
+            swal("Assigned", "Criteria assign to this designation", "success");
             this.setState(preState => {
                 const newState = {...preState};
                 newState.reload = !preState.reload;
@@ -108,36 +103,40 @@ class AssignCriteria extends React.Component {
         })
     }
 
-    handleUserChange = (event, user) => {
-        getWeights(user.UserID).then(res => {
-            const weight = res.weight;
-            if(weight) {
-                this.setState({
-                    criteriaWeights: weight.weights,
-                    user: user
-                });
-            } else {
-                this.setState({
-                    criteriaWeights: [],
-                    user: user
-                });
-            }
+    handleDesignationChange = (event, designation) => {
+        const designationId = event.target.value;
+        getWeights(designationId).then(res => {
+            this.setState({
+                criteriaWeights: res.weights || [],
+                designation: designationId
+            });
         });
 
     }
 
     render() {
-        const {users, criterias} = this.state;
+        const {designations, criterias} = this.state;
         const {classes} = this.props;
         return (
             <Container maxWidth="md">
                 <FormControl style={{ width: '300px' }}>
-                    <Autocomplete
-                        renderInput={(params) => <TextField {...params} label="User" />}
-                        options={users}
-                        onChange={this.handleUserChange}
-                        getOptionLabel={(option) => option.UserName}
-                    />
+                    <InputLabel id="demo-simple-select-label">Designation</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={this.state.designation}
+                        label="Designation"
+                        onChange={this.handleDesignationChange}
+                    >
+                        <MenuItem value="">
+                            <em>Select designation</em>
+                        </MenuItem>
+                        {designations.map(designation => (
+                            <MenuItem value={designation.DesignationID}>
+                                {designation.Designation}
+                            </MenuItem>
+                        ))}
+                    </Select>
                 </FormControl>
 
                 <List
@@ -181,20 +180,10 @@ class AssignCriteria extends React.Component {
                                                                            label="Weight"
                                                                            value={this.getCriteriaValue(criteria.CriteriaID.toString(),
                                                                                subCriteria.SubCriteriaID.toString(),
-                                                                               subSubCriteria.SubSubCriteriaID.toString(), "weight")}
+                                                                               subSubCriteria.SubSubCriteriaID.toString())}
                                                                            onChange={(e) =>
                                                                                this.handleCriteriaWeightChange(criteria.CriteriaID.toString(), subCriteria.SubCriteriaID.toString(),
-                                                                                   subSubCriteria.SubSubCriteriaID.toString(), e.target.value, 'weight')}
-                                                                       />
-                                                                       <TextField
-                                                                           className="inputField"
-                                                                           label="Target"
-                                                                           value={this.getCriteriaValue(criteria.CriteriaID.toString(),
-                                                                               subCriteria.SubCriteriaID.toString(),
-                                                                               subSubCriteria.SubSubCriteriaID.toString(), "target")}
-                                                                           onChange={(e) =>
-                                                                               this.handleCriteriaWeightChange(criteria.CriteriaID.toString(), subCriteria.SubCriteriaID.toString(),
-                                                                                   subSubCriteria.SubSubCriteriaID.toString(), e.target.value, 'target')}
+                                                                                   subSubCriteria.SubSubCriteriaID.toString(), e.target.value)}
                                                                        />
                                                                    </div>
                                                                </div>
@@ -209,19 +198,10 @@ class AssignCriteria extends React.Component {
                                                                    label="weight"
                                                                    className="inputField"
                                                                    value={this.getCriteriaValue(criteria.CriteriaID.toString(),
-                                                                       subCriteria.SubCriteriaID.toString(), null, 'weight')}
+                                                                       subCriteria.SubCriteriaID.toString(), null)}
                                                                    onChange={(e) =>
                                                                        this.handleCriteriaWeightChange(criteria.CriteriaID.toString(),
-                                                                           subCriteria.SubCriteriaID.toString(), null, e.target.value, 'weight')}
-                                                               />
-                                                               <TextField
-                                                                   className="inputField"
-                                                                   label="Target"
-                                                                   value={this.getCriteriaValue(criteria.CriteriaID.toString(),
-                                                                       subCriteria.SubCriteriaID.toString(), null, 'target')}
-                                                                   onChange={(e) =>
-                                                                       this.handleCriteriaWeightChange(criteria.CriteriaID.toString(),
-                                                                           subCriteria.SubCriteriaID.toString(), null, e.target.value, 'target')}
+                                                                           subCriteria.SubCriteriaID.toString(), null, e.target.value)}
                                                                />
                                                            </div>
                                                         </div>
@@ -235,18 +215,10 @@ class AssignCriteria extends React.Component {
                                            <TextField
                                                label="Weight"
                                                className="inputField"
-                                               value={this.getCriteriaValue(criteria.CriteriaID.toString(), null, null, 'weight')}
+                                               value={this.getCriteriaValue(criteria.CriteriaID.toString(), null, null)}
                                                onChange={(e) =>
                                                    this.handleCriteriaWeightChange(criteria.CriteriaID.toString(), null,
-                                                   null, e.target.value, 'weight')}
-                                           />
-                                           <TextField
-                                               className="inputField"
-                                               label="Target"
-                                               value={this.getCriteriaValue(criteria.CriteriaID.toString(), null, null, 'target')}
-                                               onChange={(e) =>
-                                                   this.handleCriteriaWeightChange(criteria.CriteriaID.toString(), null,
-                                                       null, e.target.value, 'target')}
+                                                   null, e.target.value)}
                                            />
                                        </div>
                                    </div>}

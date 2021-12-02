@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CriteriaController;
 use App\Http\Controllers\WeightController;
+use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\TargetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +27,8 @@ Route::group(['prefix' => 'motors_kpi'], function () {
     });
     Route::post('/login', [UserController::class, 'login']);
     Route::group(['middleware' => 'auth'], function () {
+        Route::get('/designations', [DesignationController::class, 'getAllDesignations']);
+        Route::post('/save_designation', [DesignationController::class, 'createDesignation']);
         Route::get('/user', [UserController::class, 'get_user']);
         Route::post('/logout', [UserController::class, 'logout']);
         Route::get('/users', [UserController::class, 'get_all_users']);
@@ -32,11 +36,15 @@ Route::group(['prefix' => 'motors_kpi'], function () {
         Route::get('/users_with_pagination/{currentPage}/{pagination}/{searchKey?}', [UserController::class, 'users_with_pagination']);
         Route::get('/criterias', [CriteriaController::class, 'get_criterias']);
         Route::post('/create_criteria', [CriteriaController::class, 'create_criteria']);
-        Route::post('/assign_weights', [WeightController::class, 'assign_weights']);
-        Route::get('/get_weights/{userId}', [WeightController::class, 'get_weights']);
+        Route::post('/assign_weights_to_designation', [WeightController::class, 'assign_weights']);
+        Route::get('/get_weights/{designationId}', [WeightController::class, 'get_weights']);
+        Route::get('/get_criteria', [UserController::class, 'get_user_criteria']);
+        Route::post('/post_targets', [TargetController::class, 'post_targets']);
+
+        Route::get('/get_submitted_criteria_details', [CriteriaController::class, 'get_submitted_criteria_details']);
     });
 });
 
-Route::fallback(function() {
+Route::fallback(function () {
     return redirect("/motors_kpi/");
 });

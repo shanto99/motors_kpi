@@ -1,11 +1,9 @@
 import axios from "axios";
 
-const assignWeights = function (weights, userId) {
-    console.log(weights);
-    console.log(userId);
+const assignWeights = function (weights, designationId) {
     return new Promise(function (resolve, reject) {
-        axios.post('/motors_kpi/assign_weights', {
-            userId: userId,
+        axios.post('/motors_kpi/assign_weights_to_designation', {
+            designationId: designationId,
             weights: weights
         }).then(function (res) {
             resolve(res.data);
@@ -15,9 +13,9 @@ const assignWeights = function (weights, userId) {
     });
 }
 
-const getWeights = function(userId) {
+const getWeights = function(designationId) {
     return new Promise(function (resolve, reject) {
-        axios.get(`/motors_kpi/get_weights/${userId}`).then(function (res) {
+        axios.get(`/motors_kpi/get_weights/${designationId}`).then(function (res) {
             resolve(res.data);
         }).catch(function (err) {
             if(reject) {

@@ -4,9 +4,33 @@ import {withStyles} from "@mui/styles";
 import styles from "./styles";
 import {Box, Container, TableContainer, Table, TableHead, TableRow, TableCell, TableBody} from "@material-ui/core";
 
+import {getSubmittedCriteriaDetails} from "../../../../API/criteria";
+
 class CriteriaForm extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            criterias: {}
+        }
+    }
+
+    componentDidMount() {
+        getSubmittedCriteriaDetails().then(res => {
+            this.setState({
+               criterias: res.result
+            });
+        })
+    }
+
+
+    calculateRowSpan = (row) => {
+
+    }
+
     render() {
         const {classes} = this.props;
+        const {criterias} = this.state;
         return (
             <Container>
                 <Box className={classes.formContainer}>
@@ -23,125 +47,21 @@ class CriteriaForm extends React.Component {
                                     <TableCell>
                                         Sub-Criteria
                                     </TableCell>
-                                    <TableCell>
-                                        Target
-                                    </TableCell>
-                                    <TableCell>
-                                        Actual
-                                    </TableCell>
-                                    <TableCell>
-                                        Weight
-                                    </TableCell>
-                                    <TableCell>
-                                        Score
-                                    </TableCell>
-                                    <TableCell>
-                                        F. Score
-                                    </TableCell>
-                                    <TableCell>
-                                        Remarks
-                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                <TableRow>
-                                    <TableCell rowSpan={5}>
-                                        1
-                                    </TableCell>
-                                    <TableCell rowSpan={5}>
-                                        Financial
-                                    </TableCell>
-                                    <TableCell>
-                                        Budget vs. Achievement (Tractor) - Unit
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        %
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>
-                                        Budget vs. Achievement (Tractor) - Unit
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        %
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>
-                                        Budget vs. Achievement (Tractor) - Unit
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        %
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>
-                                        Budget vs. Achievement (Tractor) - Unit
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        10
-                                    </TableCell>
-                                    <TableCell>
-                                        %
-                                    </TableCell>
-                                </TableRow>
+                                {Object.keys(criterias).map((criteriaKey, index) => {
+                                    const criteria = criterias[criteriaKey];
+                                    return (
+                                        <React.Fragment>
+                                            <TableRow>
+                                                <TableCell rowSpan={this.calculateRowSpan(criteria)}>
+
+                                                </TableCell>
+                                            </TableRow>
+                                        </React.Fragment>
+                                    )
+                                })}
                             </TableBody>
                         </Table>
                     </TableContainer>

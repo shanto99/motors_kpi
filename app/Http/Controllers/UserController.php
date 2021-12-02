@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Dotenv\Repository\RepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,7 @@ class UserController extends Controller
         try {
             $user = User::create($inputData);
 
-            if($request->has('Supervisor')) {
+            if ($request->has('Supervisor')) {
                 DB::table('Supervisors')->insert([
                     'UserID' => $request->UserID,
                     'SupervisorID' => $request->Supervisor
@@ -74,7 +75,7 @@ class UserController extends Controller
     {
         Auth::logout();
         return response()->json([
-           'status' => 200
+            'status' => 200
         ]);
     }
 
@@ -87,25 +88,25 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function users_with_pagination($currentPage, $pagination, $searchKey="")
+    public function users_with_pagination($currentPage, $pagination, $searchKey = "")
     {
-        $offset = ($currentPage-1)*$pagination;
-//        if(Auth::user()->Designation) {
-//            $query = DB::table('UserManager')
-//                ->where('UserID', 'like', '%' . $searchKey . '%')
-//                ->orWhere('UserName', 'like', '%' . $searchKey . '%')->get()->toArray();
-//        } else {
-//            $query = Auth::user()->subordinatesWithCondition($searchKey)->toArray();
-//        }
+        $offset = ($currentPage - 1) * $pagination;
+        //        if(Auth::user()->Designation) {
+        //            $query = DB::table('UserManager')
+        //                ->where('UserID', 'like', '%' . $searchKey . '%')
+        //                ->orWhere('UserName', 'like', '%' . $searchKey . '%')->get()->toArray();
+        //        } else {
+        //            $query = Auth::user()->subordinatesWithCondition($searchKey)->toArray();
+        //        }
 
         $query = DB::table('UserManager')
-                ->where('UserID', 'like', '%' . $searchKey . '%')
-                ->orWhere('UserName', 'like', '%' . $searchKey . '%')->get()->toArray();
+            ->where('UserID', 'like', '%' . $searchKey . '%')
+            ->orWhere('UserName', 'like', '%' . $searchKey . '%')->get()->toArray();
 
         $totalCount = count($query);
         $users = array_slice($query, $offset, $pagination);
 
-        $totalPage = ceil($totalCount/$pagination);
+        $totalPage = ceil($totalCount / $pagination);
 
         return response()->json([
             'current_page' => (int)$currentPage,
@@ -113,5 +114,17 @@ class UserController extends Controller
             'total_page' => $totalPage,
             'data' => $users
         ]);
+    }
+
+    public function get_user_criteria()
+    {
+        $user = Auth::user();
+        $user = User::with('designation.weights.criteria', 'designation.weights.subCriteria', 'designation.weights.subSubCriteria')->where('UserID', $user->UserID)->first();
+
+
+        return response()->json([
+            'criteria' => $user->designation->weights,
+            'status' => 200
+        ], 200);
     }
 }

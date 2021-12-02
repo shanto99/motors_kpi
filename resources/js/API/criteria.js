@@ -25,6 +25,17 @@ const createCriteria = function(name, criteriaId, subCriteriaId) {
             if(reject) reject(err);
         });
     });
-}
+};
 
-export {getCriterias, createCriteria};
+const getSubmittedCriteriaDetails = () => {
+    return new Promise(function (resolve, reject) {
+        axios.get('/motors_kpi/get_submitted_criteria_details').then(function(res) {
+            resolve(res.data);
+        }).then(function(err) {
+           if(reject) reject(err);
+        });
+    });
+
+};
+
+export {getCriterias, createCriteria, getSubmittedCriteriaDetails};

@@ -27,6 +27,16 @@ class SidePanel extends React.Component {
                             </ListItemText>
                         </ListItem>
                     </Link>
+                    <Link to="/designation">
+                        <ListItem>
+                            <ListItemIcon>
+                                <SupervisedUserCircle/>
+                            </ListItemIcon>
+                            <ListItemText>
+                                Designation
+                            </ListItemText>
+                        </ListItem>
+                    </Link>
                     <Link to="/user-manager">
                         <ListItem>
                             <ListItemIcon>
@@ -64,6 +74,16 @@ class SidePanel extends React.Component {
                             </ListItemIcon>
                             <ListItemText>
                                 Criteria form
+                            </ListItemText>
+                        </ListItem>
+                    </Link>
+                    <Link to="/set-target">
+                        <ListItem>
+                            <ListItemIcon>
+                                <CategoryIcon/>
+                            </ListItemIcon>
+                            <ListItemText>
+                                Set target
                             </ListItemText>
                         </ListItem>
                     </Link>

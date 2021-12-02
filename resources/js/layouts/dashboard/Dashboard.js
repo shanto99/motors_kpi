@@ -12,10 +12,12 @@ import UserManager from "./pages/userManager/UserManager";
 import Criteria from "./pages/criteria/Criteria";
 import AssignCriteria from "./pages/assignCriteria/AssignCriteria";
 import CriteriaForm from "./pages/criteriaForm/CriteriaForm";
+import SetTarget from "./pages/setTarget/SetTarget";
 
 import { getUser } from "../../API/authentication";
 
 import styles from  "./styles";
+import Designation from "./pages/designation/Designation";
 
 class Dashboard extends React.Component {
     constructor(props) {
@@ -58,6 +60,8 @@ class Dashboard extends React.Component {
                                 <Route exact path="/assign-criteria" component={AssignCriteria}/>
                                 <Route exact path="/criteria-form" component={CriteriaForm} />
                                 <Route exact={true} path="/criteria" component={Criteria}/>
+                                <Route exact={true} path="/designation" component={Designation} />
+                                <Route exact={true} path="/set-target" component={SetTarget} />
                             </>
                         </Grid>
                     </Grid>
