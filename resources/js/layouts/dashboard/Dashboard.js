@@ -11,8 +11,10 @@ import Home from "./pages/home/Home";
 import UserManager from "./pages/userManager/UserManager";
 import Criteria from "./pages/criteria/Criteria";
 import AssignCriteria from "./pages/assignCriteria/AssignCriteria";
-import CriteriaForm from "./pages/criteriaForm/CriteriaForm";
 import SetTarget from "./pages/setTarget/SetTarget";
+import ActualInput from "./pages/inputActual/ActualInput";
+import KPI from "./pages/kpi/KPI";
+import ApproveTarget from "./pages/approveTarget/ApproveTarget";
 
 import { getUser } from "../../API/authentication";
 
@@ -57,11 +59,13 @@ class Dashboard extends React.Component {
                             <>
                                 <Route exact={true} path="/" component={Home} />
                                 <Route exact={true} path="/user-manager" component={UserManager}/>
+                                <Route exact={true} path="/kpi" component = {KPI} />
                                 <Route exact path="/assign-criteria" component={AssignCriteria}/>
-                                <Route exact path="/criteria-form" component={CriteriaForm} />
                                 <Route exact={true} path="/criteria" component={Criteria}/>
                                 <Route exact={true} path="/designation" component={Designation} />
                                 <Route exact={true} path="/set-target" component={SetTarget} />
+                                <Route exact={true} path="/actual-input" component={ActualInput} />
+                                <Route exact={true} path="/approve-target" component={ApproveTarget} />
                             </>
                         </Grid>
                     </Grid>

@@ -27,6 +27,16 @@ class SidePanel extends React.Component {
                             </ListItemText>
                         </ListItem>
                     </Link>
+                    <Link to="/kpi">
+                        <ListItem>
+                            <ListItemIcon>
+                                <SupervisedUserCircle/>
+                            </ListItemIcon>
+                            <ListItemText>
+                                KPI
+                            </ListItemText>
+                        </ListItem>
+                    </Link>
                     <Link to="/designation">
                         <ListItem>
                             <ListItemIcon>
@@ -67,16 +77,6 @@ class SidePanel extends React.Component {
                             </ListItemText>
                         </ListItem>
                     </Link>
-                    <Link to="/criteria-form">
-                        <ListItem>
-                            <ListItemIcon>
-                                <CategoryIcon/>
-                            </ListItemIcon>
-                            <ListItemText>
-                                Criteria form
-                            </ListItemText>
-                        </ListItem>
-                    </Link>
                     <Link to="/set-target">
                         <ListItem>
                             <ListItemIcon>
@@ -84,6 +84,26 @@ class SidePanel extends React.Component {
                             </ListItemIcon>
                             <ListItemText>
                                 Set target
+                            </ListItemText>
+                        </ListItem>
+                    </Link>
+                    <Link to="/approve-target">
+                        <ListItem>
+                            <ListItemIcon>
+                                <CategoryIcon/>
+                            </ListItemIcon>
+                            <ListItemText>
+                                Approve target
+                            </ListItemText>
+                        </ListItem>
+                    </Link>
+                    <Link to="/actual-input">
+                        <ListItem>
+                            <ListItemIcon>
+                                <CategoryIcon/>
+                            </ListItemIcon>
+                            <ListItemText>
+                                Input actual
                             </ListItemText>
                         </ListItem>
                     </Link>

@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CriteriaController;
 use App\Http\Controllers\WeightController;
 use App\Http\Controllers\DesignationController;
+use App\Http\Controllers\KpiController;
 use App\Http\Controllers\TargetController;
 
 /*
@@ -38,10 +39,17 @@ Route::group(['prefix' => 'motors_kpi'], function () {
         Route::post('/create_criteria', [CriteriaController::class, 'create_criteria']);
         Route::post('/assign_weights_to_designation', [WeightController::class, 'assign_weights']);
         Route::get('/get_weights/{designationId}', [WeightController::class, 'get_weights']);
-        Route::get('/get_criteria', [UserController::class, 'get_user_criteria']);
+        Route::get('/get_criteria/{userId?}', [UserController::class, 'get_user_criteria']);
         Route::post('/post_targets', [TargetController::class, 'post_targets']);
+        Route::get('/targets/{period}', [TargetController::class, 'getTargets']);
+        Route::post('/approve_targets', [TargetController::class, 'approveTargets']);
+        Route::post('/post_actuals', [TargetController::class, 'postActuals']);
 
         Route::get('/get_submitted_criteria_details', [CriteriaController::class, 'get_submitted_criteria_details']);
+        Route::get('/get_kpi/{period}', [KpiController::class, 'get_kpi']);
+
+        Route::get('/get_pending_targets', [TargetController::class, 'getPendingTargets']);
+        Route::get('/plan_details/{planId}', [TargetController::class, 'getTargetDetails']);
     });
 });
 

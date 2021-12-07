@@ -86,14 +86,24 @@ class UserManager extends React.Component {
 
     handleDesignationChange = (e) => {
         let value = e.target.value;
-        console.log("Designation: ", value);
         this.setState({
             userDesignation: value
         });
     }
 
-    editUser = () => {
+    editUser = (userId) => {
+        const userDetails = this.state.users.find(user => user.UserID === userId);
+        this.setState(preState => {
+            let newState = {...preState};
+            newState.userId = userDetails.UserID || "";
+            newState.userName = userDetails.UserName || "";
+            newState.userDesignation = userDetails.Designation || ""
+            newState.userPassword = userDetails.UserPassword || "";
+            newState.userEmail = userDetails.Email || "";
+            newState.supervisor = userDetails.supervisor || null;
+            return newState;
 
+        });
     }
 
     deleteUser = () => {
@@ -181,7 +191,6 @@ class UserManager extends React.Component {
                         <TextField
                             variant="outlined"
                             margin="normal"
-                            required
                             fullWidth
                             id="userPassword"
                             label="Password"
@@ -207,22 +216,6 @@ class UserManager extends React.Component {
                                 })
                             }}
                             autoComplete="off"
-                        />
-                        <TextField
-                            variant="outlined"
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="userPhone"
-                            label="Phone"
-                            name="Phone"
-                            value={this.state.userPhone}
-                            autoComplete="off"
-                            onChange={(e) => {
-                                this.setState({
-                                    userPhone: e.target.value
-                                })
-                            }}
                         />
                         <Autocomplete
                             renderInput={(params) => <TextField {...params} label="Supervisor" />}

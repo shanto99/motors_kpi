@@ -3,7 +3,16 @@ import axios from "axios";
 const getAllUsers = function() {
     return new Promise(function (resolve, reject) {
        axios.get('/motors_kpi/users').then(function(res) {
-          resolve(res.data);
+           let users = res.data && res.data.users || [];
+            users = users.map(user => {
+                let clonedUser = {...user};
+                if(user.supervisors && user.supervisors.length > 0) {
+                    clonedUser.supervisor = user.supervisors[0].supervisor;
+                } 
+                delete clonedUser.supervisors;
+                return clonedUser;
+            });
+          resolve({users: users});
        }).catch(function(err) {
            if(reject) reject(err);
        });
@@ -30,9 +39,17 @@ const createUser = function(userId, userName, designation, email, password, supe
 const getUsersWithPagination = function(currentPage, pagination, search) {
     return new Promise(function(resolve, reject) {
         axios.get(`/motors_kpi/users_with_pagination/${currentPage}/${pagination}/${search}`).then(function(res) {
-            console.log(res);
+            let users = res.data.data || [];
+            users = users.map(user => {
+                let clonedUser = {...user};
+                if(user.supervisors && user.supervisors.length > 0) {
+                    clonedUser.supervisor = user.supervisors[0].supervisor;
+                } 
+                delete clonedUser.supervisors;
+                return clonedUser;
+            });
             resolve({
-                data: res.data.data,
+                data: users,
                 page: currentPage-1,
                 totalCount: res.data.total_count
             });
@@ -42,9 +59,12 @@ const getUsersWithPagination = function(currentPage, pagination, search) {
     })
 }
 
-const getUserCriteria = function() {
+const getUserCriteria = function(userId) {
     return new Promise(function(resolve, reject) {
-        axios.get('/motors_kpi/get_criteria').then(function(res) {
+        let url = '/motors_kpi/get_criteria';
+        if(userId) url = url+`/${userId}`;
+
+        axios.get(url).then(function(res) {
             resolve(res.data);
         }).catch(function(err) {
             if(reject) {

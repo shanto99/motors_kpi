@@ -14,11 +14,17 @@ class UserController extends Controller
     public function create_user(Request $request)
     {
         $inputData = $request->only('UserID', 'UserName', 'Designation', 'Email');
-        $inputData['Password'] = Hash::make($request->Password);
+        if (isset($request->Password) && $request->Password) $inputData['Password'] = Hash::make($request->Password);
 
         DB::beginTransaction();
         try {
-            $user = User::create($inputData);
+            $user = User::find($inputData['UserID']);
+            if ($user) {
+                $user->update($inputData);
+                $user->supervisors()->delete();
+            } else {
+                $user = User::create($inputData);
+            }
 
             if ($request->has('Supervisor')) {
                 DB::table('Supervisors')->insert([
@@ -81,7 +87,7 @@ class UserController extends Controller
 
     public function get_all_users()
     {
-        $users = User::all();
+        $users = User::with('supervisors.supervisor')->get();
         return response()->json([
             'users' => $users,
             'status' => 200
@@ -116,9 +122,14 @@ class UserController extends Controller
         ]);
     }
 
-    public function get_user_criteria()
+    public function get_user_criteria($userId = null)
     {
-        $user = Auth::user();
+        if ($userId) {
+            $user = User::find($userId);
+        } else {
+            $user = Auth::user();
+        }
+
         $user = User::with('designation.weights.criteria', 'designation.weights.subCriteria', 'designation.weights.subSubCriteria')->where('UserID', $user->UserID)->first();
 
 

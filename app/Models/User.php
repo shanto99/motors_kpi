@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Weight;
+use Supervisors;
 
 class User extends Authenticatable
 {
@@ -35,6 +36,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function supervisors()
+    {
+        return $this->hasMany(Supervisor::class, 'UserID', 'UserID');
+    }
+
     public function designation()
     {
         return $this->belongsTo(Designation::class, 'Designation', 'DesignationID');
@@ -45,8 +51,13 @@ class User extends Authenticatable
         return $this->hasMany(Weight::class, 'UserID', 'UserID');
     }
 
-    public function targets()
+    public function plans()
     {
-        return $this->hasMany(UserTarget::class, 'UserID', 'UserID');
+        return $this->hasMany(MonthPlan::class, 'UserID', 'UserID');
+    }
+
+    public function subordinates()
+    {
+        return $this->hasMany(Supervisor::class, 'SupervisorID', 'UserID');
     }
 }

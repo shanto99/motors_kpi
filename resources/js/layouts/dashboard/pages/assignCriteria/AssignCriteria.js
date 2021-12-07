@@ -91,7 +91,16 @@ class AssignCriteria extends React.Component {
 
     submitCriteriaWeights = () => {
         const designationId = this.state.designation;
-        assignWeights(this.state.criteriaWeights, designationId).then(res => {
+        const weights = this.state.criteriaWeights;
+        let sum = 0;
+        weights.forEach(function(weight) {
+            sum += Number(weight.Weight);
+        });
+        if(sum !== 100) {
+            swal("Error!", "Sum of weights must be equal to 100", "error");
+            return;
+        }
+        assignWeights(weights, designationId).then(res => {
             swal("Assigned", "Criteria assign to this designation", "success");
             this.setState(preState => {
                 const newState = {...preState};

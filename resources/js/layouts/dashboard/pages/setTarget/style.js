@@ -17,7 +17,25 @@ const styles = theme => ({
                 flex: '2'
             }
         }
+    },
+
+    setTargetHeader: {
+        display: 'flex',
+        width: '100%',
+        maxWidth: '500px',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        '& .datePickerContainer': {
+            width: '100px',
+            '& input': {
+                height: '40px',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                padding: '5px 8px'
+            }
+        }
     }
+    
 });
 
 export default styles;
