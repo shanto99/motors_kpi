@@ -25,6 +25,11 @@ class MonthPlan extends Model
         return $this->belongsTo(User::class, 'UserID', 'UserID');
     }
 
+    public function approvals()
+    {
+        return $this->hasMany(Approvals::class, 'MonthPlanID', 'MonthPlanID');
+    }
+
     public function delete()
     {
         DB::transaction(function () {

@@ -15,9 +15,9 @@ class AddTargetApprovedByToMonthPlans extends Migration
     {
         Schema::table('MonthPlans', function (Blueprint $table) {
             $table->string('TargetApprovedBy')->nullable();
-            $table->string('ApprovedBy')->nullable();
+            $table->string('PendingApproval')->nullable();
             $table->foreign('TargetApprovedBy')->references('UserID')->on('UserManager');
-            $table->foreign('ApprovedBy')->references('UserID')->on('UserManager');
+            $table->foreign('PendingApproval')->references('UserID')->on('UserManager');
         });
     }
 

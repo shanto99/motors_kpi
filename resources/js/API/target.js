@@ -79,4 +79,16 @@ const approveTargets = (planId, targets) => {
     });
 }
 
-export {setTargets, getTargets, inputActuals, getPendingTargets, getPlanDetail, approveTargets};
+const getPendingKpis = function() {
+    return new Promise(function(resolve, reject) {
+        axios.get('/motors_kpi/get_pending_kpis').then(function(res) {
+            resolve(res.data);
+        }).catch(function(err) {
+            if(reject) {
+                reject(err);
+            }
+        });
+    });
+}
+
+export {setTargets, getTargets, inputActuals, getPendingTargets, getPlanDetail, approveTargets, getPendingKpis};

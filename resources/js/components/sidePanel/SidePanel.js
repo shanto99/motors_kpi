@@ -37,6 +37,16 @@ class SidePanel extends React.Component {
                             </ListItemText>
                         </ListItem>
                     </Link>
+                    <Link to="/approve-kpi">
+                        <ListItem>
+                            <ListItemIcon>
+                                <SupervisedUserCircle/>
+                            </ListItemIcon>
+                            <ListItemText>
+                                Approve KPI
+                            </ListItemText>
+                        </ListItem>
+                    </Link>
                     <Link to="/designation">
                         <ListItem>
                             <ListItemIcon>

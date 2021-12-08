@@ -8,20 +8,11 @@ class KPIForm extends React.Component {
         super(props);
 
         this.state = {
-            criterias: props.criterias
+            criterias: props.criterias,
+            approvals: props.approvals,
+            employee: props.employee
         }
     }
-
-    // componentDidMount()
-    // {
-    //     getKpi().then(res => {
-    //         this.setState({
-    //             criterias: res
-    //         });
-    //     }).catch(err => {
-    //         console.log("Could not get kpi: ", err);
-    //     });
-    // }
 
     generateCriteriaRows = (criterias) => {
         let mappedCriteria = criterias.map(criteria => {
@@ -154,16 +145,16 @@ class KPIForm extends React.Component {
 
     static getDerivedStateFromProps(props, state) {
         return{
-            criterias: props.criterias
+            criterias: props.criterias,
+            approvals: props.approvals,
+            employee: props.employee
         };
     }
 
     render()
     {
         const classes = this.props.classes;
-        const {criterias} = this.state;
-
-        console.log("From criterias: ", criterias);
+        const {criterias, approvals} = this.state;
 
         const criteriaRows = this.generateCriteriaRows(criterias);
 
@@ -200,6 +191,26 @@ class KPIForm extends React.Component {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                <div className={classes.signaturesPanel}>
+                    {this.state.employee
+                    ? <div className="signatureContainer">
+                        <img src={`/${this.state.employee.Signature}`} />
+                        Name: {this.state.employee.UserName}
+                        <h3>Employee</h3>
+                      </div>
+                      : null}
+                    
+                    {approvals.map(approval => {
+                        const user = approval.user;
+                        return (
+                            <div className="signatureContainer">
+                                <img src={`/${user.Signature}`} />
+                                Name: {user.UserName}
+                                <h3>{user.designation.Designation}</h3>
+                            </div>
+                        )
+                    })}
+                </div>
             </div>
         )
     }

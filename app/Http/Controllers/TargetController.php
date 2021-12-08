@@ -73,8 +73,7 @@ class TargetController extends Controller
     public function getTargets($period)
     {
         $userId = Auth::user()->UserID;
-        //$period = date("Y-m");
-        $userPlan = MonthPlan::with('targets')->where('UserID', $userId)->where('Period', $period)->first();
+        $userPlan = MonthPlan::with('targets', 'approvals')->where('UserID', $userId)->where('Period', $period)->first();
 
         return response()->json([
             'plan' => $userPlan,
@@ -87,21 +86,45 @@ class TargetController extends Controller
         $planId = $request->planId;
         $actuals = $request->actuals;
 
-        $monthPlan = MonthPlan::find($planId);
+        DB::beginTransaction();
 
-        if (!$monthPlan->TargetApprovedBy) {
-            return response()->json([
-                'error' => 'Targets are not approved yet',
-                'status' => 400
-            ], 400);
-        }
+        try {
+            $supervisors = Auth::user()->supervisors;
 
-        foreach ($actuals as $actual) {
-            $target = PlanTarget::find($actual['PlanTargetID']);
-            $target->update([
-                'Actual' => $actual['Actual']
+            if ($supervisors && count($supervisors) > 0) {
+                $supervisor = $supervisors[0]->SupervisorID;
+            }
+
+            $monthPlan = MonthPlan::find($planId);
+
+            if (!$monthPlan->TargetApprovedBy) {
+                return response()->json([
+                    'error' => 'Targets are not approved yet',
+                    'status' => 400
+                ], 400);
+            }
+
+            $monthPlan->update([
+                'PendingApproval' => $supervisor
             ]);
+
+            foreach ($actuals as $actual) {
+                $target = PlanTarget::find($actual['PlanTargetID']);
+                $target->update([
+                    'Actual' => $actual['Actual']
+                ]);
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'error' => 'Could not submit actual',
+                'status' => 500
+            ], 500);
         }
+
+
 
         return response()->json([
             'message' => 'Actuals submitted successfully',

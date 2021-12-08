@@ -9,7 +9,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import {getKpi} from "../../../../API/kpi";
 
 import KPIForm from "../../../../components/kpiForm/KPIForm";
-import { ClassNames } from "@emotion/react";
 
 class KPI extends React.Component {
     constructor(props) {
@@ -17,7 +16,9 @@ class KPI extends React.Component {
 
         this.state = {
             period: new Date(),
-            criterias: []
+            criterias: [],
+            approvals: [],
+            employee: null
         }
     }
 
@@ -30,11 +31,15 @@ class KPI extends React.Component {
         let period = `${this.state.period.getFullYear()}-${this.state.period.getMonth()+1}`;
         getKpi(period).then(res => {
             this.setState({
-                criterias: res
+                criterias: res.formattedCriteria,
+                approvals: res.approvals,
+                employee: res.employee
             });
         }).catch(err => {
             this.setState({
-                criterias: []
+                criterias: [],
+                approvals: [],
+                employee: null
             });
             console.log("Could not get kpi: ", err);
         });
@@ -58,13 +63,17 @@ class KPI extends React.Component {
                     </h3>
                     <div className="datePickerContainer">
                         <DatePicker selected={period} 
-                        dateFormat="yyyy-MM"
-                        showMonthYearPicker onChange={this.handleMonthSelect}
-                        onChange={this.handleMonthSelect}
+                            dateFormat="yyyy-MM"
+                            showMonthYearPicker onChange={this.handleMonthSelect}
+                            onChange={this.handleMonthSelect}
                          />
                     </div>
                  </div>
-                 <KPIForm criterias={this.state.criterias}/>
+                 <KPIForm 
+                    criterias={this.state.criterias} 
+                    approvals={this.state.approvals}
+                    employee={this.state.employee}
+                 />
              </React.Fragment>
             
         )

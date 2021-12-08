@@ -19,15 +19,29 @@ const getAllUsers = function() {
     });
 };
 
-const createUser = function(userId, userName, designation, email, password, supervisor) {
+const createUser = function(userId, userName, designation, email, password, sign, supervisor) {
     return new Promise(function (resolve, reject) {
-        axios.post('/motors_kpi/create_user', {
-            UserID: userId === "" ? null : userId,
-            UserName: userName === "" ? null : userName,
-            Designation: designation === "" ? null : designation,
-            Email: email === "" ? null : email,
-            Password: password === "" ? null : password,
-            Supervisor: supervisor === "" ? null : supervisor
+
+            userId = userId === "" ? null : userId,
+            userName = userName === "" ? null : userName,
+            designation = designation === "" ? null : designation,
+            email = email === "" ? null : email,
+            password = password === "" ? null : password,
+            supervisor = supervisor === "" ? null : supervisor;
+
+        const formData = new FormData();
+        formData.append("UserID", userId);
+        formData.append("UserName", userName);
+        formData.append("Designation", designation);
+        formData.append("Email", email);
+        formData.append("Password", password);
+        formData.append("Supervisor", supervisor);
+        formData.append("Signature", sign);
+
+        axios.post('/motors_kpi/create_user', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
         }).then(function(res) {
             resolve(res.data);
         }).catch(function(err) {

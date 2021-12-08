@@ -44,8 +44,6 @@ class ApproveTarget extends React.Component {
             const criterias = responses[0].criteria;
             const targets = responses[1].plan && responses[1].plan.targets || [];
 
-            console.log("Targets: ", targets);
-
             this.setState({
                 selectedPlan: selectedPlan,
                 selectedPlancriterias: criterias,

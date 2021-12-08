@@ -24,7 +24,8 @@ class UserManager extends React.Component {
             userEmail: '',
             userPhone: '',
             supervisor: null,
-            users: []
+            users: [],
+            sign: null
         };
     }
 
@@ -57,12 +58,12 @@ class UserManager extends React.Component {
     handleUserFormSubmit = (e) => {
         e.preventDefault();
         let supervisorId = null;
-        const {userId, userName, userDesignation, userEmail, userPassword, userPhone} = this.state;
+        const {userId, userName, userDesignation, userEmail, userPassword, userPhone, sign} = this.state;
         if(this.state.supervisor) {
             supervisorId = this.state.supervisor.UserID;
         }
 
-        createUser(userId, userName, userDesignation, userEmail, userPassword, supervisorId).then(res => {
+        createUser(userId, userName, userDesignation, userEmail, userPassword, sign, supervisorId).then(res => {
             this.fetchAllUsers();
             this.resetForm();
             swal("Added", "User added successfully", "success");
@@ -81,6 +82,7 @@ class UserManager extends React.Component {
             userEmail: '',
             userPhone: '',
             supervisor: null,
+            sign: null
         })
     }
 
@@ -108,6 +110,13 @@ class UserManager extends React.Component {
 
     deleteUser = () => {
 
+    }
+
+    handleImageSelect = (e) => {
+        const files = e.target.files;
+        this.setState({
+            sign: files[0]
+        });
     }
 
     render() {
@@ -222,8 +231,10 @@ class UserManager extends React.Component {
                             getOptionLabel={(option) => option.UserName}
                             value={this.state.supervisor}
                             onChange={this.handleSupervisorChange}
-                            options={users}/>
+                            options={users}
+                        />
                         <br/>
+                        <input type="file" onChange={this.handleImageSelect} />
                         <Button
                             type="submit"
                             fullWidth

@@ -19,6 +19,14 @@ class UserController extends Controller
         DB::beginTransaction();
         try {
             $user = User::find($inputData['UserID']);
+
+            if ($request->hasFile('Signature')) {
+                $signature = $request->Signature;
+                $filename = $request->UserID . '.' . $signature->extension();
+                $signature->move(public_path('signatures'), $filename);
+                $signPath = 'public/signatures/' . $filename;
+                $inputData['Signature'] = $signPath;
+            }
             if ($user) {
                 $user->update($inputData);
                 $user->supervisors()->delete();

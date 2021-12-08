@@ -15,6 +15,7 @@ import SetTarget from "./pages/setTarget/SetTarget";
 import ActualInput from "./pages/inputActual/ActualInput";
 import KPI from "./pages/kpi/KPI";
 import ApproveTarget from "./pages/approveTarget/ApproveTarget";
+import ApproveKPI from "./pages/approveKPI/ApproveKPI";
 
 import { getUser } from "../../API/authentication";
 
@@ -66,6 +67,7 @@ class Dashboard extends React.Component {
                                 <Route exact={true} path="/set-target" component={SetTarget} />
                                 <Route exact={true} path="/actual-input" component={ActualInput} />
                                 <Route exact={true} path="/approve-target" component={ApproveTarget} />
+                                <Route exact={true} path="/approve-kpi" component={ApproveKPI} />
                             </>
                         </Grid>
                     </Grid>

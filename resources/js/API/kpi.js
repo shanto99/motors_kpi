@@ -137,11 +137,37 @@ const getKpi = function(period) {
         axios.get(`/motors_kpi/get_kpi/${period}`).then(function(res) {
             const response = res.data;
             const formattedCriteria = criteriaWithValue(response.criterias, response.targets);
-            resolve(formattedCriteria);
+            const approvals = response.approvals;
+            const employee = response.employee;
+            resolve({formattedCriteria, approvals, employee});
         }).catch(function(err) {
             if(reject) reject(err);
         })
     })
 }
 
-export {getKpi};
+const getKpiById = function(kpiId) {
+    return new Promise(function(resolve, reject) {
+        axios.get(`/motors_kpi/get_kpi_by_id/${kpiId}`).then(function(res) {
+            const response = res.data;
+            const formattedCriteria = criteriaWithValue(response.criterias, response.targets);
+            const approvals = response.approvals;
+            const employee = response.employee;
+            resolve({formattedCriteria, approvals, employee});
+        }).catch(function(err) {
+            if(reject) reject(err);
+        })
+    })
+}
+
+const approveKpi = function(kpiId) {
+    return new Promise(function(resolve, reject) {
+        axios.get(`/motors_kpi/approve_kpi/${kpiId}`).then(function(res) {
+            resolve(res.data);
+        }).catch(function(err) {
+            if(reject) reject(err);
+        });
+    })
+}
+
+export {getKpi, getKpiById, approveKpi};

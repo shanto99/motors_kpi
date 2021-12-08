@@ -23,7 +23,8 @@ class ActualInput extends React.Component {
             criterias: [],
             targets: [],
             targetApproved: false,
-            period: lastMonth
+            period: lastMonth,
+            actualApproved: true
         }
 
 
@@ -43,7 +44,8 @@ class ActualInput extends React.Component {
                 selectedPlanId: plan.MonthPlanID,
                 criterias: criteria,
                 targets: targets || [],
-                targetApproved: plan && plan.TargetApprovedBy ? true : false
+                targetApproved: plan && plan.TargetApprovedBy ? true : false,
+                actualApproved: plan.approvals && plan.approvals.length > 0 ? true : false
             });
         });
     }
@@ -107,22 +109,25 @@ class ActualInput extends React.Component {
         let period = `${date.getFullYear()}-${date.getMonth()+1}`;
         getTargets(period).then(res => {
             const plan = res.plan;
-            const targets = plan && plan.targets || [];
+            if(plan) {
+                const targets = plan.targets || [];
+                const approved = !!(plan.TargetApprovedBy);
 
-            const approved = !!(plan && plan.TargetApprovedBy);
-
-            this.setState({
-                selectedPlanId: plan.MonthPlanID,
-                targets: targets || [],
-                approved: approved,
-                period: date
-            });
+                this.setState({
+                    selectedPlanId: plan.MonthPlanID,
+                    targets: targets || [],
+                    targetApproved: approved,
+                    period: date,
+                    actualApproved: plan.approvals && plan.approvals.length > 0 ? true : false
+                });
+            }
+            
         });
     }
 
     render() {
         const classes = this.props.classes;
-        const {criterias, approved, period} = this.state;
+        const {criterias, targetApproved, period, actualApproved} = this.state;
 
         return (
             <div className={classes.targetFormContainer}>
@@ -157,7 +162,7 @@ class ActualInput extends React.Component {
                                 <TextField
                                     variant="outlined"
                                     label="Actual"
-                                    disabled={!approved}
+                                    disabled={!(targetApproved && !actualApproved)}
                                     value={(() => this.getTarget(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, "actual"))()}
                                     onChange={(e) => 
                                         this.handleTargetChange(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, e.target.value)}
@@ -171,7 +176,7 @@ class ActualInput extends React.Component {
                 <Button
                     variant="outlined"
                     onClick={this.submitTarget}
-                    disabled={!approved}
+                    disabled={!(targetApproved && !actualApproved)}
                 >
                     Submit
                 </Button>

@@ -14,6 +14,19 @@ const styles = theme => ({
                 fontWeight: 'bold'
             }
         }
+    },
+
+    signaturesPanel: {
+        display: 'flex',
+        width: '100%',
+        marginTop: '20px',
+
+        '& .signatureContainer': {
+            width: '120px',
+            '& img': {
+                width: '100px'
+            }
+        }
     }
 });
 
