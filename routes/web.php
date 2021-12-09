@@ -48,12 +48,15 @@ Route::group(['prefix' => 'motors_kpi'], function () {
         Route::get('/get_submitted_criteria_details', [CriteriaController::class, 'get_submitted_criteria_details']);
         Route::get('/get_kpi/{period}', [KpiController::class, 'get_kpi']);
         Route::get('/get_kpi_by_id/{kpiId}', [KpiController::class, 'getKpiById']);
+        Route::get('get_user_kpi_by_period/{userId}/{period}', [KpiController::class, 'getUserKpiByPeriod']);
 
         Route::get('/get_pending_targets', [TargetController::class, 'getPendingTargets']);
         Route::get('/plan_details/{planId}', [TargetController::class, 'getTargetDetails']);
 
         Route::get('/get_pending_kpis', [KpiController::class, 'getPendingKpi']);
         Route::get('/approve_kpi/{planId}', [KpiController::class, 'approveKpi']);
+
+        Route::get('/get_subordinates', [UserController::class, 'getSubordinates']);
     });
 });
 

@@ -89,4 +89,17 @@ const getUserCriteria = function(userId) {
 }
 
 
-export {getAllUsers, createUser, getUsersWithPagination, getUserCriteria};
+const getSubordinats = function() {
+    return new Promise(function(resolve, reject) {
+        axios.get('/motors_kpi/get_subordinates').then(function(res) {
+            resolve(res.data);
+        }).catch(function(err) {
+            if(reject) {
+                reject(err);
+            }
+        });
+    });
+}
+
+
+export {getAllUsers, createUser, getUsersWithPagination, getUserCriteria, getSubordinats};

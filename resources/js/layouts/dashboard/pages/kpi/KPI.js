@@ -56,7 +56,7 @@ class KPI extends React.Component {
         const {period} = this.state;
         const classes = this.props.classes;
          return (
-             <React.Fragment>
+             <div style={{ width: 'fit-content', margin: '0 auto' }}>
                  <div className={classes.kpiFormHeader}>
                     <h3>
                         My KPI for period: 
@@ -74,7 +74,7 @@ class KPI extends React.Component {
                     approvals={this.state.approvals}
                     employee={this.state.employee}
                  />
-             </React.Fragment>
+             </div>
             
         )
     }

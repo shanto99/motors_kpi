@@ -54,6 +54,34 @@ class KpiController extends Controller
         ], 200);
     }
 
+    public function getUserKpiByPeriod($userId, $period)
+    {
+        $plan = MonthPlan::with(
+            'targets.criteria',
+            'targets.subCriteria',
+            'targets.subSubCriteria',
+            'approvals.user.designation',
+            'user'
+        )->where('UserID', $userId)->where('Period', $period)->first();
+        if (!$plan) return response()->json([
+            'kpi' => null,
+            'status' => 200
+        ], 200);
+        $targets = $plan->targets->toArray();
+        $criterias = Criteria::with('sub_criterias.sub_sub_criterias')->get();
+        $criterias = json_decode(json_encode($criterias), true);
+        $approvals = $plan->approvals;
+        $employee = $plan->user;
+
+        return response()->json([
+            'employee' => $employee,
+            'approvals' => $approvals,
+            'criterias' => $criterias,
+            'targets' => $targets,
+            'status' => 200
+        ], 200);
+    }
+
     public function getPendingKpi()
     {
         $plans = MonthPlan::with('user', 'approvals.user')->where('PendingApproval', Auth::user()->UserID)->get();

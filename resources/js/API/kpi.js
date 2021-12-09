@@ -160,6 +160,21 @@ const getKpiById = function(kpiId) {
     })
 }
 
+const getUserKpiByPeriod = function(userId, period) {
+    return new Promise(function(resolve, reject) {
+        axios.get(`/motors_kpi/get_user_kpi_by_period/${userId}/${period}`).then(function(res) {
+            const response = res.data;
+            if(!response.criterias) resolve(null);
+            const formattedCriteria = criteriaWithValue(response.criterias, response.targets);
+            const approvals = response.approvals;
+            const employee = response.employee;
+            resolve({formattedCriteria, approvals, employee});
+        }).catch(function(err) {
+            if(reject) reject(err);
+        })
+    })
+}
+
 const approveKpi = function(kpiId) {
     return new Promise(function(resolve, reject) {
         axios.get(`/motors_kpi/approve_kpi/${kpiId}`).then(function(res) {
@@ -170,4 +185,4 @@ const approveKpi = function(kpiId) {
     })
 }
 
-export {getKpi, getKpiById, approveKpi};
+export {getKpi, getKpiById, approveKpi, getUserKpiByPeriod};

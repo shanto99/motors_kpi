@@ -146,4 +146,44 @@ class UserController extends Controller
             'status' => 200
         ], 200);
     }
+
+    public function subordinateUsers($userId)
+    {
+        $user = User::with('subordinates.subordinate')->where('UserID', $userId)->first();
+        $subordinates = $user->subordinates;
+
+        $subordianteUsers = [];
+
+        if (isset($subordinates) && $subordinates) {
+            foreach ($subordinates as $subordinate) {
+                array_push($subordianteUsers, $subordinate->subordinate);
+            }
+        }
+
+        return $subordianteUsers;
+    }
+
+    function getSubordinateForUser($user, $result = [])
+    {
+        $subordinates = $this->subordinateUsers($user->UserID);
+        if (count($subordinates) > 0) {
+            for ($i = 0; $i < count($subordinates); $i++) {
+                $result = $this->getSubordinateForUser($subordinates[$i], $result);
+            }
+        }
+
+        array_push($result, $user);
+
+        return $result;
+    }
+
+    public function getSubordinates()
+    {
+        $allSubordinates = $this->getSubordinateForUser(Auth::user());
+
+        return response()->json([
+            'subordinates' => $allSubordinates,
+            'status' => 200
+        ], 200);
+    }
 }

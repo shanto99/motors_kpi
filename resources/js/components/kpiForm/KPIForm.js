@@ -154,7 +154,7 @@ class KPIForm extends React.Component {
     render()
     {
         const classes = this.props.classes;
-        const {criterias, approvals} = this.state;
+        const {criterias, approvals, employee} = this.state;
 
         const criteriaRows = this.generateCriteriaRows(criterias);
 
@@ -162,6 +162,17 @@ class KPIForm extends React.Component {
 
         return (
             <div className={classes.tableContainer}>
+                {employee
+                ? <div className="employeeInfo">
+                    <div className="infoRow">
+                        <div>Staff ID: {employee.UserID}</div>
+                        <div>
+                            Name: {employee.UserName}
+                        </div>
+                    </div>
+                </div>
+                : null}
+                
                 <TableContainer>
                     <Table>
                         <TableHead>
