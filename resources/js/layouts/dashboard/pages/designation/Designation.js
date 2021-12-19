@@ -1,4 +1,5 @@
 import React from "react";
+import swal from "sweetalert";
 import {Grid, Box, TextField, List, ListItem, ListItemText, Button, FormControl} from "@material-ui/core";
 
 import {getAllDesignations, createDesignation} from "../../../../API/designation";
@@ -15,6 +16,10 @@ class Designation extends React.Component {
 
     componentDidMount()
     {
+        this.getAllDesignations();
+    }
+
+    getAllDesignations = () => {
         getAllDesignations().then(res => {
             this.setState({
                 designations: res.designations
@@ -27,7 +32,8 @@ class Designation extends React.Component {
     handleDesignationSubmit = () => {
         const {designation} = this.state;
         createDesignation(designation).then(res => {
-            console.log(res.data);
+            swal("Created!", "New designation created", "success");
+            this.getAllDesignations();
         }).catch(err => {
             console.log(err);
         });

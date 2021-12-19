@@ -18,10 +18,10 @@ class KPIForm extends React.Component {
         let mappedCriteria = criterias.map(criteria => {
             if(criteria.sub_criterias && criteria.sub_criterias.length > 0) {
                 let subCriterias = criteria.sub_criterias;
-
+                let formattedSubCriterias = [];
                 subCriterias.forEach(subCriteria => {
                     let subSubCriterias = subCriteria.sub_sub_criterias;
-                    let formattedSubCriterias = [];
+                    
                     if(subSubCriterias && subSubCriterias.length > 0) {
                         let target = 0;
                         let weight = 0;
@@ -43,9 +43,12 @@ class KPIForm extends React.Component {
 
                         formattedSubCriterias.push(clonedSubCriteria);
 
-                        criteria.sub_criterias = formattedSubCriterias;
-
+                    } else {
+                        let clonedSubCriteria = {...subCriteria};
+                        formattedSubCriterias.push(clonedSubCriteria);
                     }
+
+                    criteria.sub_criterias = formattedSubCriterias;
                 });
 
                 return criteria
@@ -58,13 +61,32 @@ class KPIForm extends React.Component {
         return mappedCriteria;
     }
 
+    calculateScore = (criteria) => {
+        return ((criteria.Actual/criteria.Target)*criteria.Weight).toFixed(2);
+    }
+
+    calculateFScore = (weight, score) => {
+        weight = Number(weight);
+        score = Number(score);
+
+        return Math.min(weight, score);
+    }
+
     generateRows = (criterias) => {
         const rows = [];
+        let totalWeight = 0;
+        let totalScore = 0;
+        let totalFScore = 0;
+
         criterias.forEach((criteria, index) => {
             let subCriterias = criteria.sub_criterias;
             if(subCriterias && subCriterias.length > 0) {
                 subCriterias.forEach((subCriteria, subIndex) => {
                     if(subIndex === 0) {
+                        let score = this.calculateScore(subCriteria);
+                        let fScore = this.calculateFScore(subCriteria.Weight, score);
+                        totalScore += Number(score);
+                        totalFScore += Number(fScore);
                         rows.push(
                             <TableRow>
                                 <TableCell
@@ -91,9 +113,18 @@ class KPIForm extends React.Component {
                                 <TableCell className="tableCell">
                                     {subCriteria.Weight}
                                 </TableCell>
+                                <TableCell className="tableCell">
+                                    {score}
+                                </TableCell>
+                                <TableCell className="tableCell">
+                                    {fScore}
+                                </TableCell>
                             </TableRow>
-                        )
+                        );
+                        totalWeight += Number(subCriteria.Weight);
                     } else {
+                        let score = this.calculateScore(subCriteria);
+                        let fScore = this.calculateFScore(subCriteria.Weight, score);
                         rows.push(
                             <TableRow
                                 className={subCriteria.isSub ? 'coloredRow' : ''}
@@ -110,11 +141,26 @@ class KPIForm extends React.Component {
                                 <TableCell className="tableCell">
                                     {subCriteria.Weight}
                                 </TableCell>
+                                <TableCell className="tableCell">
+                                    {this.calculateScore(subCriteria)}
+                                </TableCell>
+                                <TableCell className="tableCell">
+                                    {fScore}
+                                </TableCell>
                             </TableRow>
-                        )
+                        );
+
+                        if(!subCriteria.isSub) {
+                            totalWeight += Number(subCriteria.Weight);
+                            totalScore += Number(score);
+                            totalFScore += Number(fScore);
+                        }
                     }
                 });
             } else {
+                let score = this.calculateScore(criteria);
+                let fScore = this.calculateFScore(criteria.Weight, score);
+                totalFScore += Number(fScore);
                 rows.push(
                     <TableRow>
                         <TableCell className="tableCell">
@@ -135,10 +181,48 @@ class KPIForm extends React.Component {
                         <TableCell className="tableCell">
                             {criteria.Weight}
                         </TableCell>
+                        <TableCell className="tableCell">
+                            {score}
+                        </TableCell>
+                        <TableCell className="tableCell">
+                            {fScore}
+                        </TableCell>
                     </TableRow>
-                )
+                );
+                totalWeight += Number(criteria.Weight);
+                totalScore += Number(score);
+
             }
         });
+
+        rows.push(
+            <TableRow>
+                <TableCell>
+
+                </TableCell>
+                <TableCell>
+                    
+                </TableCell>
+                <TableCell>
+                    
+                </TableCell>
+                <TableCell>
+                    
+                </TableCell>
+                <TableCell>
+                    
+                </TableCell>
+                <TableCell>
+                    {totalWeight} 
+                </TableCell>
+                <TableCell>
+                    {totalScore} 
+                </TableCell>
+                <TableCell>
+                    {totalFScore} 
+                </TableCell>
+            </TableRow>
+        );
 
         return rows;
     }
@@ -157,6 +241,8 @@ class KPIForm extends React.Component {
         const {criterias, approvals, employee} = this.state;
 
         const criteriaRows = this.generateCriteriaRows(criterias);
+
+        console.log("Criterai rows: ", criteriaRows);
 
         const rows = this.generateRows(criteriaRows);
 
@@ -195,6 +281,12 @@ class KPIForm extends React.Component {
                                 <TableCell className="tableCell">
                                     Weight
                                 </TableCell>
+                                <TableCell className="tableCell">
+                                    Score
+                                </TableCell>
+                                <TableCell className="tableCell">
+                                    F. Score
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -205,7 +297,7 @@ class KPIForm extends React.Component {
                 <div className={classes.signaturesPanel}>
                     {this.state.employee
                     ? <div className="signatureContainer">
-                        <img src={`/${this.state.employee.Signature}`} />
+                        <img src={`/motors_kpi/${this.state.employee.Signature}`} />
                         Name: {this.state.employee.UserName}
                         <h3>Employee</h3>
                       </div>
@@ -215,7 +307,7 @@ class KPIForm extends React.Component {
                         const user = approval.user;
                         return (
                             <div className="signatureContainer">
-                                <img src={`/${user.Signature}`} />
+                                <img src={`/motors_kpi/${user.Signature}`} />
                                 Name: {user.UserName}
                                 <h3>{user.designation.Designation}</h3>
                             </div>
