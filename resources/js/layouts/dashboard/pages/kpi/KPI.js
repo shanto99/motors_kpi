@@ -55,6 +55,7 @@ class KPI extends React.Component {
     {
         const {period} = this.state;
         const classes = this.props.classes;
+        const criterias = JSON.parse(JSON.stringify(this.state.criterias));
          return (
              <div style={{ width: 'fit-content', margin: '0 auto' }}>
                  <div className={classes.kpiFormHeader}>
@@ -70,7 +71,7 @@ class KPI extends React.Component {
                     </div>
                  </div>
                  <KPIForm 
-                    criterias={this.state.criterias} 
+                    criterias={criterias} 
                     approvals={this.state.approvals}
                     employee={this.state.employee}
                  />

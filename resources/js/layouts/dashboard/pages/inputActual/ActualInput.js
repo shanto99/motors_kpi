@@ -41,11 +41,11 @@ class ActualInput extends React.Component {
             const targets = plan && plan.targets || [];
 
             this.setState({
-                selectedPlanId: plan.MonthPlanID,
+                selectedPlanId: plan && plan.MonthPlanID,
                 criterias: criteria,
-                targets: targets || [],
+                targets: targets,
                 targetApproved: plan && plan.TargetApprovedBy ? true : false,
-                actualApproved: plan.approvals && plan.approvals.length > 0 ? true : false
+                actualApproved: plan && plan.approvals && plan.approvals.length > 0 ? true : false
             });
         });
     }
@@ -128,6 +128,8 @@ class ActualInput extends React.Component {
     render() {
         const classes = this.props.classes;
         const {criterias, targetApproved, period, actualApproved} = this.state;
+
+        console.log("Criterias: ", criterias);
 
         return (
             <div className={classes.targetFormContainer}>

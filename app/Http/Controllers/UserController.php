@@ -13,7 +13,7 @@ class UserController extends Controller
 {
     public function create_user(Request $request)
     {
-        $inputData = $request->only('UserID', 'UserName', 'Designation', 'Email');
+        $inputData = $request->only('UserID', 'UserName', 'Designation', 'Email', 'Phone', 'Portfolio', 'Location');
         if (isset($request->Password) && $request->Password) $inputData['Password'] = Hash::make($request->Password);
 
         DB::beginTransaction();

@@ -7,6 +7,8 @@ class KPIForm extends React.Component {
     constructor(props) {
         super(props);
 
+        console.log("Criteria props: ", props.criterias);
+
         this.state = {
             criterias: props.criterias,
             approvals: props.approvals,
@@ -235,14 +237,14 @@ class KPIForm extends React.Component {
         };
     }
 
+
     render()
     {
         const classes = this.props.classes;
+        const period = this.props.period || "";
         const {criterias, approvals, employee} = this.state;
 
         const criteriaRows = this.generateCriteriaRows(criterias);
-
-        console.log("Criterai rows: ", criteriaRows);
 
         const rows = this.generateRows(criteriaRows);
 
@@ -254,6 +256,20 @@ class KPIForm extends React.Component {
                         <div>Staff ID: {employee.UserID}</div>
                         <div>
                             Name: {employee.UserName}
+                        </div>
+                        <div>
+                            Period: {period}
+                        </div>
+                    </div>
+                    <div className="infoRow">
+                        <div>
+                            Phone: {employee.Phone || ""}
+                        </div>
+                        <div>
+                            Portfolio: {employee.Portfolio || ""}
+                        </div>
+                        <div>
+                            Location: {employee.Location || ""}
                         </div>
                     </div>
                 </div>

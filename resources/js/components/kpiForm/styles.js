@@ -1,7 +1,7 @@
 const styles = theme => ({
     tableContainer: {
         width: '100%',
-        maxWidth: '900px',
+        maxWidth: '1000px',
 
         '& .tableCell': {
             border: '1px solid'
@@ -12,6 +12,12 @@ const styles = theme => ({
 
             '& .tableCell': {
                 fontWeight: 'bold'
+            }
+        },
+        '& .infoRow': {
+            display: 'flex',
+            '& div': {
+                flex: 1
             }
         }
     },
@@ -27,7 +33,7 @@ const styles = theme => ({
                 width: '100px'
             }
         }
-    }
+    },
 });
 
 export default styles;

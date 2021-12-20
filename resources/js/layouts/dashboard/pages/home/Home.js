@@ -21,6 +21,7 @@ class Home extends React.Component {
         let period = `${dateInstance.getFullYear()}-${dateInstance.getMonth()+1}`;
 
         this.state = {
+            selectedDateInstance: new Date(),
             selectedUserId: null,
             selectedPeriod: period,
             subordinates: [],
@@ -59,17 +60,17 @@ class Home extends React.Component {
     handleMonthSelect = (periodDateInstance) => {
         let period = `${periodDateInstance.getFullYear()}-${periodDateInstance.getMonth()+1}`;
         this.setState({
-            selectedPeriod: period
+            selectedPeriod: period,
+            selectedDateInstance: periodDateInstance
         }, this.getKpi);
     }
 
     render() {
         const classes = this.props.classes;
         const subordinates = this.state.subordinates;
+        const period = this.state.selectedPeriod;
 
-        const kpi = this.state.kpi;
-
-        console.log("dfasdf", kpi);
+        const kpi = this.state.kpi ? JSON.parse(JSON.stringify(this.state.kpi)) : null;
 
         return (
             <React.Fragment>
@@ -91,17 +92,18 @@ class Home extends React.Component {
                     </FormControl>
 
                     <div className={classes.datePickerContainer}>
-                        <DatePicker selected={new Date()} 
+                        <DatePicker selected={this.state.selectedDateInstance} 
                         dateFormat="yyyy-MM"
                         showMonthYearPicker onChange={this.handleMonthSelect} />
                     </div>
                 </div>
-                {this.state.kpi
+                {kpi
                 ? <div style={{ width: 'fit-content', margin: '0 auto', marginTop: '30px' }}>
                     <KPIForm 
-                        criterias={this.state.kpi.formattedCriteria} 
-                        approvals={this.state.kpi.approvals}
-                        employee={this.state.kpi.employee}
+                        period={period}
+                        criterias={kpi.formattedCriteria} 
+                        approvals={kpi.approvals}
+                        employee={kpi.employee}
                     />
                   </div>
                 : <div>No KPI found</div>}

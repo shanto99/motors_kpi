@@ -19,6 +19,9 @@ class CreateUsersTable extends Migration
             $table->string('UserName');
             $table->string('Designation');
             $table->string('Email');
+            $table->string('Phone');
+            $table->string('Portfolio');
+            $table->string('Location');
             $table->string('Active')->default('Y');
             $table->string('Password');
             $table->rememberToken();

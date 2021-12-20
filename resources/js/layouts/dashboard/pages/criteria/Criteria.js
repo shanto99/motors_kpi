@@ -4,6 +4,7 @@ import {Autocomplete, Box, Button, Grid, List, ListItem, ListItemButton} from "@
 import {getCriterias, createCriteria} from "../../../../API/criteria";
 import {FormControl, Select, InputLabel, ListItemIcon, ListItemText, ListSubheader, MenuItem, TextField} from "@material-ui/core";
 import {Add as AddIcon} from "@mui/icons-material";
+import swal from "sweetalert";
 
 class Criteria extends React.Component {
     constructor(props) {
@@ -34,8 +35,10 @@ class Criteria extends React.Component {
         e.preventDefault();
         const {name, criteria, subCriteria} = this.state;
         createCriteria(name, criteria, subCriteria).then(res => {
+            swal("Created!!", "New criteria created", "success");
             this.getAllCriterias();
         }).catch(err => {
+            swal("Error!!", "Could not create criteria", "error");
             console.log("Could not create criteria: ", err);
         });
     }
@@ -43,7 +46,7 @@ class Criteria extends React.Component {
     handleCriteriaSelect = (event) => {
         let  value = event.target.value;
         let criteria = this.state.criterias.find(criteria => criteria.CriteriaID === value);
-        let subCriterias = criteria.sub_criterias || [];
+        let subCriterias = criteria && criteria.sub_criterias || [];
         this.setState({
           criteria: value,
           subCriterias: subCriterias
@@ -52,7 +55,6 @@ class Criteria extends React.Component {
 
     handleSubCriteriaSelect = (event) => {
         let  value = event.target.value;
-        console.log("Sub criteria: ", value);
         //let subCriteria = this.state.subCriterias.find(subCriteria => subCriteria.SubCriteriaID === value);
         this.setState({
             subCriteria: value
@@ -146,7 +148,7 @@ class Criteria extends React.Component {
                                 label="Sub criteria"
                                 onChange={this.handleSubCriteriaSelect}
                             >
-                                <MenuItem value="">Select su criteria</MenuItem>
+                                <MenuItem value="">Select sub criteria</MenuItem>
                                 {subCriterias.map(criteria => {
                                     return (
                                         <MenuItem value={criteria.SubCriteriaID}>{criteria.Name}</MenuItem>

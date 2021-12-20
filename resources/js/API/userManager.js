@@ -1,4 +1,5 @@
 import axios from "axios";
+import { formatRFC3339 } from "date-fns";
 
 const getAllUsers = function() {
     return new Promise(function (resolve, reject) {
@@ -19,7 +20,7 @@ const getAllUsers = function() {
     });
 };
 
-const createUser = function(userId, userName, designation, email, password, sign, supervisor) {
+const createUser = function(userId, userName, designation, email, phone, portfolio, location, password, sign, supervisor) {
     return new Promise(function (resolve, reject) {
 
             userId = userId === "" ? null : userId,
@@ -28,12 +29,18 @@ const createUser = function(userId, userName, designation, email, password, sign
             email = email === "" ? null : email,
             password = password === "" ? null : password,
             supervisor = supervisor === "" ? null : supervisor;
+            phone = phone === "" ? null : phone;
+            portfolio = portfolio === "" ? null : portfolio;
+            location = location === "" ? null : location;
 
         const formData = new FormData();
         formData.append("UserID", userId);
         formData.append("UserName", userName);
         formData.append("Designation", designation);
         formData.append("Email", email);
+        formData.append("Phone", phone);
+        formData.append("Portfolio", portfolio);
+        formData.append("Location", location);
         formData.append("Password", password);
         formData.append("Supervisor", supervisor);
         formData.append("Signature", sign);

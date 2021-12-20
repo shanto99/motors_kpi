@@ -23,6 +23,8 @@ class UserManager extends React.Component {
             userPassword: '',
             userEmail: '',
             userPhone: '',
+            userPortfolio: '',
+            userLocation: '',
             supervisor: null,
             users: [],
             sign: null
@@ -58,12 +60,15 @@ class UserManager extends React.Component {
     handleUserFormSubmit = (e) => {
         e.preventDefault();
         let supervisorId = null;
-        const {userId, userName, userDesignation, userEmail, userPassword, userPhone, sign} = this.state;
+        const {userId, userName, userDesignation, 
+            userEmail, userPassword, userPhone, userPortfolio, userLocation, sign} = this.state;
         if(this.state.supervisor) {
             supervisorId = this.state.supervisor.UserID;
         }
 
-        createUser(userId, userName, userDesignation, userEmail, userPassword, sign, supervisorId).then(res => {
+        createUser(userId, userName, userDesignation, userEmail, 
+            userPhone, userPortfolio, userLocation,
+            userPassword, sign, supervisorId).then(res => {
             this.fetchAllUsers();
             this.resetForm();
             swal("Added", "User added successfully", "success");
@@ -81,6 +86,8 @@ class UserManager extends React.Component {
             userPassword: '',
             userEmail: '',
             userPhone: '',
+            userPortfolio: '',
+            userLocation: '',
             supervisor: null,
             sign: null
         })
@@ -102,6 +109,9 @@ class UserManager extends React.Component {
             newState.userDesignation = userDetails.Designation || ""
             newState.userPassword = userDetails.UserPassword || "";
             newState.userEmail = userDetails.Email || "";
+            newState.userPhone = userDetails.Phone || "";
+            newState.userPortfolio = userDetails.Portfolio || "";
+            newState.userLocation = userDetails.Location || "";
             newState.supervisor = userDetails.supervisor || null;
             return newState;
 
@@ -215,6 +225,22 @@ class UserManager extends React.Component {
                             margin="normal"
                             required
                             fullWidth
+                            id="userPhone"
+                            label="Phone"
+                            name="Phone"
+                            value={this.state.userPhone}
+                            onChange={(e) => {
+                                this.setState({
+                                    userPhone: e.target.value
+                                })
+                            }}
+                            autoComplete="off"
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
                             id="userEmail"
                             label="Email"
                             name="Email"
@@ -222,6 +248,38 @@ class UserManager extends React.Component {
                             onChange={(e) => {
                                 this.setState({
                                     userEmail: e.target.value
+                                })
+                            }}
+                            autoComplete="off"
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="userPortfolio"
+                            label="Portfolio"
+                            name="Portfolio"
+                            value={this.state.userPortfolio}
+                            onChange={(e) => {
+                                this.setState({
+                                    userPortfolio: e.target.value
+                                })
+                            }}
+                            autoComplete="off"
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="userLocation"
+                            label="Location"
+                            name="Location"
+                            value={this.state.userLocation}
+                            onChange={(e) => {
+                                this.setState({
+                                    userLocation: e.target.value
                                 })
                             }}
                             autoComplete="off"
