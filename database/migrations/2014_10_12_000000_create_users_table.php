@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('Portfolio');
             $table->string('Location');
             $table->string('Active')->default('Y');
+            $table->boolean('IsAdmin')->default(false);
             $table->string('Password');
             $table->rememberToken();
             $table->timestamps();

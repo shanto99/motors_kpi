@@ -23,16 +23,6 @@ const getAllUsers = function() {
 const createUser = function(userId, userName, designation, email, phone, portfolio, location, password, sign, supervisor) {
     return new Promise(function (resolve, reject) {
 
-            userId = userId === "" ? null : userId,
-            userName = userName === "" ? null : userName,
-            designation = designation === "" ? null : designation,
-            email = email === "" ? null : email,
-            password = password === "" ? null : password,
-            supervisor = supervisor === "" ? null : supervisor;
-            phone = phone === "" ? null : phone;
-            portfolio = portfolio === "" ? null : portfolio;
-            location = location === "" ? null : location;
-
         const formData = new FormData();
         formData.append("UserID", userId);
         formData.append("UserName", userName);

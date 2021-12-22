@@ -20,7 +20,8 @@ class AssignCriteria extends React.Component {
             designation: "",
             criterias: [],
             reload: true,
-            criteriaWeights: []
+            criteriaWeights: [],
+            totalWeight: 0
         }
     }
 
@@ -68,6 +69,8 @@ class AssignCriteria extends React.Component {
     }
 
     handleCriteriaWeightChange = (criteriaId, subCriteria, subSubCriteria, inputValue) => {
+        console.log("dadfaf: ", inputValue);
+        if(isNaN(inputValue)) inputValue = 0;
         let {criteriaWeights} = this.state;
         let criteria = this.findCriteria(criteriaId, subCriteria, subSubCriteria, criteriaWeights);
         if(criteria) {
@@ -84,14 +87,32 @@ class AssignCriteria extends React.Component {
             criteriaWeights.push(criteriaWeight);
         }
 
-        this.setState({
-            criteriaWeights
+        this.setState(preState => {
+            const newState = {...preState};
+            newState.criteriaWeights = criteriaWeights
+            return newState;
+        }, this.calculateTotalWeight);
+    }
+
+    calculateTotalWeight = () => {
+        const weights = this.state.criteriaWeights;
+        let sum = 0;
+        weights.forEach(function(weight) {
+            sum += Number(weight.Weight);
         });
+
+        this.setState({
+            totalWeight: sum
+        });
+
     }
 
     submitCriteriaWeights = () => {
         const designationId = this.state.designation;
-        const weights = this.state.criteriaWeights;
+        let weights = this.state.criteriaWeights;
+        weights = weights.filter(weight => {
+            return Number(weight.Weight) !== 0;
+        });
         let sum = 0;
         weights.forEach(function(weight) {
             sum += Number(weight.Weight);
@@ -118,7 +139,7 @@ class AssignCriteria extends React.Component {
             this.setState({
                 criteriaWeights: res.weights || [],
                 designation: designationId
-            });
+            }, this.calculateTotalWeight);
         });
 
     }
@@ -126,6 +147,7 @@ class AssignCriteria extends React.Component {
     render() {
         const {designations, criterias} = this.state;
         const {classes} = this.props;
+
         return (
             <Container maxWidth="md">
                 <FormControl style={{ width: '300px' }}>
@@ -235,6 +257,11 @@ class AssignCriteria extends React.Component {
                        )
                     })}
                 </List>
+
+               <div>
+                   Total: {this.state.totalWeight}
+               </div>
+
 
                 <Button
                     variant="outlined"

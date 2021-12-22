@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Dotenv\Repository\RepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +13,7 @@ class UserController extends Controller
     public function create_user(Request $request)
     {
         $inputData = $request->only('UserID', 'UserName', 'Designation', 'Email', 'Phone', 'Portfolio', 'Location');
+
         if (isset($request->Password) && $request->Password) $inputData['Password'] = Hash::make($request->Password);
 
         DB::beginTransaction();
@@ -34,7 +34,7 @@ class UserController extends Controller
                 $user = User::create($inputData);
             }
 
-            if ($request->has('Supervisor')) {
+            if ($request->has('Supervisor') && $request->Supervisor !== "null") {
                 DB::table('Supervisors')->insert([
                     'UserID' => $request->UserID,
                     'SupervisorID' => $request->Supervisor
@@ -67,6 +67,7 @@ class UserController extends Controller
         if ($user && Hash::check($request->Password, $user->Password)) {
             Auth::login($user, true);
             return response()->json([
+                'user' => $user,
                 'message' => 'User logged in successfully'
             ], 200);
         } else {

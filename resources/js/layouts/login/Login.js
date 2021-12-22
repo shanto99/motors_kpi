@@ -2,7 +2,6 @@ import React from "react";
 import {Avatar, Box, Container, TextField, Typography, Button} from "@mui/material";
 import {Lock as LockIcon} from "@mui/icons-material";
 import {withStyles} from "@mui/styles";
-
 import {login} from "../../API/authentication";
 
 import {getUser} from "../../API/authentication";

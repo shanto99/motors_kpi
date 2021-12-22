@@ -32,7 +32,8 @@ class User extends Authenticatable
         'Location',
         'Email',
         'Active',
-        'Signature'
+        'Signature',
+        'IsAdmin'
     ];
 
     protected $hidden = [

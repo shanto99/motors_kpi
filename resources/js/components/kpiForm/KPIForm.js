@@ -7,8 +7,6 @@ class KPIForm extends React.Component {
     constructor(props) {
         super(props);
 
-        console.log("Criteria props: ", props.criterias);
-
         this.state = {
             criterias: props.criterias,
             approvals: props.approvals,
@@ -38,9 +36,9 @@ class KPIForm extends React.Component {
                         });
 
                         let clonedSubCriteria = {...subCriteria};
-                        clonedSubCriteria.Target = target;
-                        clonedSubCriteria.Weight = weight;
-                        clonedSubCriteria.Actual = actual;
+                        clonedSubCriteria.Target = target.toFixed(2);
+                        clonedSubCriteria.Weight = weight.toFixed(2);
+                        clonedSubCriteria.Actual = actual.toFixed(2);
                         clonedSubCriteria.isSub = true;
 
                         formattedSubCriterias.push(clonedSubCriteria);

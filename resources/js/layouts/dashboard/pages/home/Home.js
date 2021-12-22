@@ -74,24 +74,31 @@ class Home extends React.Component {
 
         return (
             <React.Fragment>
-                <div style={{ width: '700px', margin: '0 auto', display: 'flex', justifyContent: 'center' }}>
-                <FormControl style={{ width: '200px', marginRight: '20px' }}>
-                        <InputLabel id="demo-simple-select-label">Select subordinate</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            label="Age"
-                            onChange={this.handleSubordinateSelect}
-                        >
-                            {subordinates.map(subordinate => {
-                                return (
-                                    <MenuItem value={subordinate.UserID}>{subordinate.UserName}</MenuItem>
-                                )
-                            })}
-                        </Select>
-                    </FormControl>
+                <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto', display: 'flex', justifyContent: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', marginRight: '20px', flex: '1' }}>
+                        <label style={{ fontWeight: 'bold', marginRight: '20px' }}>Select Subordinate: </label>
+                        <FormControl style={{width: '200px'}}>
+                            <InputLabel id="subordinate-select-label">Select subordinate</InputLabel>
+                            <Select
+                                labelId="subordinate-select-label"
+                                variant="outlined"
+                                id="subordinate-select"
+                                label="Select subordinate"
+                                onChange={this.handleSubordinateSelect}
+                            >
+                                {subordinates.map(subordinate => {
+                                    return (
+                                        <MenuItem value={subordinate.UserID}>{subordinate.UserName}</MenuItem>
+                                    )
+                                })}
+                            </Select>
+                        </FormControl>
+                    </div>
+                    
 
-                    <div className={classes.datePickerContainer}>
+                    <div className={classes.datePickerContainer} 
+                    style={{ display: 'flex', alignItems: 'center', marginRight: '20px', flex: '1' }}>
+                        <label style={{ fontWeight: 'bold', width: '150px' }}>Select Period</label>
                         <DatePicker selected={this.state.selectedDateInstance} 
                         dateFormat="yyyy-MM"
                         showMonthYearPicker onChange={this.handleMonthSelect} />

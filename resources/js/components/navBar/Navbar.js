@@ -32,10 +32,7 @@ class Navbar extends React.Component {
         if(!this.state.isAuthenticated) return (<Redirect to="/login"/>)
         return (
             <div className={classes.navbarContainer}>
-                <div>
-                    <h4>Dashboard</h4>
-                </div>
-                <div>
+                {/* <div>
                     <Button
                         variant="outlined"
                         color="primary"
@@ -43,7 +40,7 @@ class Navbar extends React.Component {
                     >
                         Logout
                     </Button>
-                </div>
+                </div> */}
             </div>
         );
     }

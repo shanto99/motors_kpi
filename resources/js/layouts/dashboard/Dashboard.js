@@ -49,7 +49,7 @@ class Dashboard extends React.Component {
         const classes = this.props.classes;
         const {isAuthenticated} = this.state;
         return (
-            <React.Fragment>
+            <div className={classes.appContainer}>
                 {isAuthenticated
                 ?   <Grid container className={classes.pageWrapper}>
                         <Grid item lg={2} className={classes.sidePanel}>
@@ -73,7 +73,7 @@ class Dashboard extends React.Component {
                     </Grid>
                 : <Redirect to="/login" />}
 
-            </React.Fragment>
+            </div>
         );
     }
 }

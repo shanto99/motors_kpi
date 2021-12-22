@@ -4,120 +4,130 @@ import {Category as CategoryIcon, Dashboard as DashboardIcon, SupervisedUserCirc
 import {Typography, List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import styles from "./styles";
 import {Link} from "react-router-dom";
+import Cookies from "js-cookie";
 
 class SidePanel extends React.Component {
+    constructor(props)
+    {
+        super(props);
+        let isAdmin = false;
+        const userJson = Cookies.get('user');
+        if(userJson) {
+            let userObj = null;
+            try{
+                userObj = JSON.parse(userJson);
+            } catch(error) {
+                console.log("Could not parse user json");
+            }
+           isAdmin = userObj && userObj.IsAdmin.toString() === "1" ? true : false; 
+        }
+
+        this.state = {
+            isAdmin: isAdmin
+        };
+        
+    }
     render() {
         const classes = this.props.classes;
+        const isAdmin = this.state.isAdmin;
         return (
             <div className={classes.sidePanelContainer}>
-                <div className="sidePanelHeader">
-                    <Typography variant="h5" align="center" gutterBottom component="div">
-                        Motors KPI
-                    </Typography>
-                </div>
+                <section>
+                    <div className="sidePanelHeader">
+                        <Typography variant="h4" component="div" style={{ fontWeight: 'bold' }}>
+                            Motors KPI
+                        </Typography>
+                        <Typography variant="p" gutterBottom component="div" style={{ color: 'gray', fontSize: '16px' }}>
+                            Keep your Performance Indicator Board Updated!
+                        </Typography>
+                    </div>
 
-                <List>
-                    <Link to="/">
-                        <ListItem>
-                            <ListItemIcon>
-                                <DashboardIcon/>
-                            </ListItemIcon>
-                            <ListItemText>
-                                Dashboard
-                            </ListItemText>
-                        </ListItem>
-                    </Link>
-                    <Link to="/kpi">
-                        <ListItem>
-                            <ListItemIcon>
-                                <SupervisedUserCircle/>
-                            </ListItemIcon>
-                            <ListItemText>
-                                KPI
-                            </ListItemText>
-                        </ListItem>
-                    </Link>
-                    <Link to="/approve-kpi">
-                        <ListItem>
-                            <ListItemIcon>
-                                <SupervisedUserCircle/>
-                            </ListItemIcon>
-                            <ListItemText>
-                                Approve KPI
-                            </ListItemText>
-                        </ListItem>
-                    </Link>
-                    <Link to="/designation">
-                        <ListItem>
-                            <ListItemIcon>
-                                <SupervisedUserCircle/>
-                            </ListItemIcon>
-                            <ListItemText>
-                                Designation
-                            </ListItemText>
-                        </ListItem>
-                    </Link>
-                    <Link to="/user-manager">
-                        <ListItem>
-                            <ListItemIcon>
-                                <SupervisedUserCircle/>
-                            </ListItemIcon>
-                            <ListItemText>
-                                User manager
-                            </ListItemText>
-                        </ListItem>
-                    </Link>
-                    <Link to="/criteria">
-                        <ListItem>
-                            <ListItemIcon>
-                                <CategoryIcon/>
-                            </ListItemIcon>
-                            <ListItemText>
-                                Criteria
-                            </ListItemText>
-                        </ListItem>
-                    </Link>
-                    <Link to="/assign-criteria">
-                        <ListItem>
-                            <ListItemIcon>
-                                <CategoryIcon/>
-                            </ListItemIcon>
-                            <ListItemText>
-                                Assign criteria
-                            </ListItemText>
-                        </ListItem>
-                    </Link>
-                    <Link to="/set-target">
-                        <ListItem>
-                            <ListItemIcon>
-                                <CategoryIcon/>
-                            </ListItemIcon>
-                            <ListItemText>
-                                Set target
-                            </ListItemText>
-                        </ListItem>
-                    </Link>
-                    <Link to="/approve-target">
-                        <ListItem>
-                            <ListItemIcon>
-                                <CategoryIcon/>
-                            </ListItemIcon>
-                            <ListItemText>
-                                Approve target
-                            </ListItemText>
-                        </ListItem>
-                    </Link>
-                    <Link to="/actual-input">
-                        <ListItem>
-                            <ListItemIcon>
-                                <CategoryIcon/>
-                            </ListItemIcon>
-                            <ListItemText>
-                                Input actual
-                            </ListItemText>
-                        </ListItem>
-                    </Link>
-                </List>
+                    <List className="sidebarMenuList">
+                        <Link to="/" className={classes.menuItem}>
+                            <ListItem>
+                                <ListItemText>
+                                    Dashboard
+                                </ListItemText>
+                            </ListItem>
+                        </Link>
+                        <Link to="/kpi" className={classes.menuItem}>
+                            <ListItem>
+                                <ListItemText>
+                                    KPI
+                                </ListItemText>
+                            </ListItem>
+                        </Link>
+                        <Link to="/approve-kpi" className={classes.menuItem}>
+                            <ListItem>
+                                <ListItemText>
+                                    Approve KPI
+                                </ListItemText>
+                            </ListItem>
+                        </Link>
+                        {isAdmin
+                        ? <Link to="/designation" className={classes.menuItem}>
+                            <ListItem>
+                                <ListItemText>
+                                    Designation
+                                </ListItemText>
+                            </ListItem>
+                        </Link>
+                        : null}
+                        {isAdmin
+                        ? <Link to="/user-manager" className={classes.menuItem}>
+                            <ListItem>
+                                <ListItemText>
+                                    User manager
+                                </ListItemText>
+                            </ListItem>
+                        </Link>
+                        : null}
+                        {isAdmin
+                        ? <Link to="/criteria" className={classes.menuItem}>
+                            <ListItem>
+                                <ListItemText>
+                                    Criteria
+                                </ListItemText>
+                            </ListItem>
+                        </Link>
+                        : null}
+                        
+                        {isAdmin
+                        ? <Link to="/assign-criteria" className={classes.menuItem}>
+                            <ListItem>
+                                <ListItemText>
+                                    Assign criteria
+                                </ListItemText>
+                            </ListItem>
+                        </Link>
+                        : null}
+                        
+                        <Link to="/set-target" className={classes.menuItem}>
+                            <ListItem>
+                                <ListItemText>
+                                    Set target
+                                </ListItemText>
+                            </ListItem>
+                        </Link>
+                        <Link to="/approve-target" className={classes.menuItem}>
+                            <ListItem>
+                                <ListItemText>
+                                    Approve target
+                                </ListItemText>
+                            </ListItem>
+                        </Link>
+                        <Link to="/actual-input" className={classes.menuItem}>
+                            <ListItem>
+                                <ListItemText>
+                                    Input actual
+                                </ListItemText>
+                            </ListItem>
+                        </Link>
+                    </List>
+                </section>
+                <div>
+                    Logout
+                </div>
             </div>
         );
     }
