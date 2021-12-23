@@ -4,7 +4,6 @@ import {withStyles} from "@mui/styles";
 import {Redirect, Route, Switch} from "react-router-dom";
 
 import SidePanel from "../../components/sidePanel/SidePanel";
-import Navbar from "../../components/navBar/Navbar";
 
 // pages
 import Home from "./pages/home/Home";
@@ -56,7 +55,6 @@ class Dashboard extends React.Component {
                             <SidePanel/>
                         </Grid>
                         <Grid item lg={10} className={classes.mainBody}>
-                            <Navbar/>
                             <>
                                 <Route exact={true} path="/" component={Home} />
                                 <Route exact={true} path="/user-manager" component={UserManager}/>

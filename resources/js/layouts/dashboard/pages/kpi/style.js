@@ -8,9 +8,9 @@ const styles = theme => ({
     },
     kpiFormHeader: {
         display: 'flex',
-        width: '100%',
         maxWidth: '500px',
         justifyContent: 'space-between',
+        marginBottom: '60px',
         alignItems: 'center',
         '& .datePickerContainer': {
             width: '100px',

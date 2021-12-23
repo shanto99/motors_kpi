@@ -1,0 +1,14 @@
+<svg id="Component_11_1" data-name="Component 11 – 1" xmlns="http://www.w3.org/2000/svg" width="33.974" height="25" viewBox="0 0 33.974 25">
+  <g id="Group_1567" data-name="Group 1567" transform="translate(-1791 -91)">
+    <g id="Group_22" data-name="Group 22" transform="translate(1791 91)">
+      <g id="Group_21" data-name="Group 21">
+        <rect id="Rectangle_1910" data-name="Rectangle 1910" width="20" height="25" fill="#7ce6ca"/>
+        <g id="Rectangle_1911" data-name="Rectangle 1911" transform="translate(12 9)" fill="#5c63ab" stroke="#fff" stroke-width="2">
+          <rect width="17" height="7" stroke="none"/>
+          <rect x="1" y="1" width="15" height="5" fill="none"/>
+        </g>
+        <path id="Polygon_1" data-name="Polygon 1" d="M7.372,0l7.372,8.974H0Z" transform="translate(33.974 5.382) rotate(90)" fill="#5c63ab"/>
+      </g>
+    </g>
+  </g>
+</svg>

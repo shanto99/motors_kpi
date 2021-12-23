@@ -6,7 +6,7 @@ const styles = theme => ({
         padding: '15px'
     },
     pageWrapper: {
-        height: '100%',
+        minHeight: '100%',
         width: '100%',
         borderRadius: '20px',
         boxSizing: 'border-box',
@@ -18,7 +18,7 @@ const styles = theme => ({
 
     },
     mainBody: {
-        padding: '20px'
+        padding: '20px',
     }
 });
 

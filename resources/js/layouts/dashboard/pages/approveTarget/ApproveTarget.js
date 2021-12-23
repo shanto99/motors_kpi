@@ -130,7 +130,7 @@ class ApproveTarget extends React.Component {
                                     onClick={() => this.showTargetDetail(plan.MonthPlanID)}
                                 >
                                     <ListItemText 
-                                    primary={`Plan for period ${this.getMonthName(month-1)}, ${year}`} 
+                                    primary={`Plan for period ${this.getMonthName(month)}, ${year}`} 
                                     secondary={`User id: ${plan.UserID}, User name: ${plan.user.UserName}`}
                                     />
                                 </ListItem>

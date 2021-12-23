@@ -3,8 +3,10 @@ import {withStyles} from "@mui/styles";
 import {Category as CategoryIcon, Dashboard as DashboardIcon, SupervisedUserCircle} from "@mui/icons-material";
 import {Typography, List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
 import styles from "./styles";
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import Cookies from "js-cookie";
+
+import {logout} from "../../API/authentication";
 
 class SidePanel extends React.Component {
     constructor(props)
@@ -23,16 +25,31 @@ class SidePanel extends React.Component {
         }
 
         this.state = {
-            isAdmin: isAdmin
+            isAdmin: isAdmin,
+            isAuthenticated: true
         };
         
     }
+
+    makeLogout = () => {
+        logout().then(res => {
+            if(res.status === 200) {
+                this.setState({
+                    isAuthenticated: false
+                })
+            }
+        }).catch(err => {
+
+        });
+    }
+
     render() {
         const classes = this.props.classes;
         const isAdmin = this.state.isAdmin;
+        if(!this.state.isAuthenticated) return (<Redirect to="/login"/>)
         return (
             <div className={classes.sidePanelContainer}>
-                <section>
+                <section style={{marginBottom: '20px'}}>
                     <div className="sidePanelHeader">
                         <Typography variant="h4" component="div" style={{ fontWeight: 'bold' }}>
                             Motors KPI
@@ -126,7 +143,10 @@ class SidePanel extends React.Component {
                     </List>
                 </section>
                 <div>
-                    Logout
+                    <button className={classes.logoutBtn} onClick={this.makeLogout}>
+                       <span><img src="/motors_kpi/images/exit_icon.svg"/></span> Logout
+                    </button>
+                    
                 </div>
             </div>
         );

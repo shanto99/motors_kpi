@@ -2,12 +2,13 @@ import React from "react";
 
 import {getSubordinats} from "../../../../API/userManager";
 import {getUserKpiByPeriod} from "../../../../API/kpi";
-import { Select, FormControl, InputLabel, MenuItem, withStyles } from "@material-ui/core";
+import { Select, FormControl, InputLabel, MenuItem, withStyles, TextField } from "@material-ui/core";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import KPIForm from "../../../../components/kpiForm/KPIForm";
+import { Autocomplete } from "@material-ui/lab";
 
 import styles from "./styles";
 
@@ -50,8 +51,8 @@ class Home extends React.Component {
         }
     }
 
-    handleSubordinateSelect = (event, user) => {
-        let userId = event.target.value
+    handleSubordinateSelect = (user) => {
+        let userId = user.UserID;
         this.setState({
             selectedUserId: userId
         }, this.getKpi);
@@ -74,10 +75,17 @@ class Home extends React.Component {
 
         return (
             <React.Fragment>
-                <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto', display: 'flex', justifyContent: 'center' }}>
+                <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto', marginBottom: '60px', display: 'flex', justifyContent: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', marginRight: '20px', flex: '1' }}>
                         <label style={{ fontWeight: 'bold', marginRight: '20px' }}>Select Subordinate: </label>
-                        <FormControl style={{width: '200px'}}>
+                        <Autocomplete
+                            style={{width: '250px'}}
+                            options={subordinates}
+                            getOptionLabel={(option) => option.UserName}
+                            onChange={(e, user) => this.handleSubordinateSelect(user)}
+                            renderInput={(params) => <TextField variant="outlined" {...params} label="Subordinate" /> }
+                        />
+                        {/* <FormControl style={{width: '200px'}}>
                             <InputLabel id="subordinate-select-label">Select subordinate</InputLabel>
                             <Select
                                 labelId="subordinate-select-label"
@@ -92,7 +100,7 @@ class Home extends React.Component {
                                     )
                                 })}
                             </Select>
-                        </FormControl>
+                        </FormControl> */}
                     </div>
                     
 
@@ -113,7 +121,9 @@ class Home extends React.Component {
                         employee={kpi.employee}
                     />
                   </div>
-                : <div>No KPI found</div>}
+                : <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <img src="/motors_kpi/images/no_kpi.svg"/>
+                 </div>}
             </React.Fragment>
             
         );

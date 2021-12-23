@@ -70,11 +70,19 @@ class KPI extends React.Component {
                          />
                     </div>
                  </div>
-                 <KPIForm 
+                 {criterias.length < 1
+                 ?<seciton>
+                     <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <img src="/motors_kpi/images/no_kpi.svg"/>
+                    </div>
+                    <h2>No KPI found</h2>
+                  </seciton> 
+                 : <KPIForm 
                     criterias={criterias} 
                     approvals={this.state.approvals}
                     employee={this.state.employee}
-                 />
+                 />}
+                 
              </div>
             
         )

@@ -26,10 +26,21 @@ const styles = theme => ({
         color: 'white',
         textDecoration: 'none !important',
         '& span': {
-            fontSize: '20px'
+            fontSize: '18px'
         },
         '& li': {
             paddingLeft: '35px'
+        }
+    },
+    logoutBtn: {
+        border: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        fontSize: '16px',
+        background: 'none',
+        cursor: 'pointer',
+        '& span': {
+            marginRight: '15px'
         }
     }
 });
