@@ -4,7 +4,7 @@ const styles = theme => ({
         maxWidth: '1000px',
 
         '& .tableCell': {
-            border: '1px solid'
+            border: '2px solid white'
         },
 
         '& .coloredRow': {

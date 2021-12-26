@@ -17,7 +17,8 @@ class ApproveKPI extends React.Component {
             plans: [],
             selectedPlanId: null,
             planDetails: null,
-            approvals: []
+            approvals: [],
+            employee: null
         }
     }
     componentDidMount()
@@ -41,7 +42,8 @@ class ApproveKPI extends React.Component {
             this.setState({
                 selectedPlanId: planId,
                 planDetails: res.formattedCriteria,
-                approvals: res.approvals || []
+                approvals: res.approvals || [],
+                employee: res.employee
             });
         }).catch(err => {
             swal('Error', "Could not fetch KPI", "error");
@@ -60,32 +62,36 @@ class ApproveKPI extends React.Component {
     render() {
         const {plans, selectedPlanId, planDetails} = this.state;
         const classes = this.props.classes;
+        console.log("Plan details: ", planDetails);
         return (
             <Grid container>
                 <Grid item lg={4} md={4}>
-                    <List>
+                    <h3>Approve KPI</h3>
+                    <div>
                         {plans.map(plan => {
                             let period = plan.Period;
                             let periodArr = period.split("-");
                             let year = periodArr[0];
                             let month = Number(periodArr[1]);
                             return (
-                                <ListItem
-                                    onClick={() => this.showKPI(plan.MonthPlanID)}
-                                >
-                                    <ListItemText 
-                                    primary={`Plan for period: ${this.getMonthName(month-1)}, ${year}`} 
-                                    secondary={`User id: ${plan.UserID}, User name: ${plan.user.UserName}`}
-                                    />
-                                </ListItem>
+                                <div className={classes.kpiListItem}>
+                                    <h3>{`Plan for period: ${this.getMonthName(month-1)}, ${year}`}</h3>
+                                    <p>{`User id: ${plan.UserID}, User name: ${plan.user.UserName}`}</p>
+                                    <div className="kpiApprovalBtns">
+                                        <button className="btnPending">Pending</button>
+                                        <button className="btnDetails"  onClick={() => this.showKPI(plan.MonthPlanID)}>See details</button>
+                                    </div>
+                                </div>
                             )
                         })}
-                    </List>
+                    </div>
                 </Grid>
                 <Grid item lg={8} md={8}>
                     {planDetails
                     ? <div>
-                        <KPIForm criterias={this.state.planDetails} approvals={this.state.approvals} />
+                        <KPIForm criterias={this.state.planDetails} 
+                        employee = {this.state.employee}
+                        approvals={this.state.approvals} />
                         <div className={classes.kpiFormFooter}>
                             <Button
                                 variant="outlined"

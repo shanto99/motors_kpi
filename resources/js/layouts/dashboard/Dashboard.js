@@ -21,6 +21,8 @@ import { getUser } from "../../API/authentication";
 import styles from  "./styles";
 import Designation from "./pages/designation/Designation";
 
+import Header from "../../components/header/Header";
+
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
@@ -56,6 +58,7 @@ class Dashboard extends React.Component {
                         </Grid>
                         <Grid item lg={10} className={classes.mainBody}>
                             <>
+                                <Header/>
                                 <Route exact={true} path="/" component={Home} />
                                 <Route exact={true} path="/user-manager" component={UserManager}/>
                                 <Route exact={true} path="/kpi" component = {KPI} />

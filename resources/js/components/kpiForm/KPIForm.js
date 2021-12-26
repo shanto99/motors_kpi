@@ -73,10 +73,17 @@ class KPIForm extends React.Component {
     }
 
     generateRows = (criterias) => {
+        const rowBackgrounds = ['#f5f5f5', '#cfeded', '#e4e1f1'];
         const rows = [];
         let totalWeight = 0;
         let totalScore = 0;
         let totalFScore = 0;
+
+        function getBGcolor(index){
+            const colorCount = rowBackgrounds.length;
+            const colorIndex = index % colorCount;
+            return rowBackgrounds[colorIndex]
+        }
 
         criterias.forEach((criteria, index) => {
             let subCriterias = criteria.sub_criterias;
@@ -88,7 +95,7 @@ class KPIForm extends React.Component {
                         totalScore += Number(score);
                         totalFScore += Number(fScore);
                         rows.push(
-                            <TableRow>
+                            <TableRow style={{ backgroundColor: getBGcolor(subIndex)}}>
                                 <TableCell
                                     className="tableCell"
                                     rowSpan={subCriterias.length}
@@ -127,7 +134,8 @@ class KPIForm extends React.Component {
                         let fScore = this.calculateFScore(subCriteria.Weight, score);
                         rows.push(
                             <TableRow
-                                className={subCriteria.isSub ? 'coloredRow' : ''}
+                                className={subCriteria.isSub ? 'coloredRow' : '#fff'}
+                                style={{ backgroundColor: getBGcolor(subIndex) }}
                             >
                                 <TableCell className="tableCell">
                                     {subCriteria.Name}
@@ -251,23 +259,25 @@ class KPIForm extends React.Component {
                 {employee
                 ? <div className="employeeInfo">
                     <div className="infoRow">
-                        <div>Staff ID: {employee.UserID}</div>
                         <div>
-                            Name: {employee.UserName}
+                            <b>Staff ID: {employee.UserID}</b>
                         </div>
                         <div>
-                            Period: {period}
+                            <b>Name: {employee.UserName}</b>
+                        </div>
+                        <div>
+                            <b>Period: {period}</b>
                         </div>
                     </div>
                     <div className="infoRow">
                         <div>
-                            Phone: {employee.Phone || ""}
+                            <b>Phone: {employee.Phone || ""}</b>
                         </div>
                         <div>
-                            Portfolio: {employee.Portfolio || ""}
+                            <b>Portfolio: {employee.Portfolio || ""}</b>
                         </div>
                         <div>
-                            Location: {employee.Location || ""}
+                            <b>Location: {employee.Location || ""}</b>
                         </div>
                     </div>
                 </div>
@@ -278,28 +288,28 @@ class KPIForm extends React.Component {
                         <TableHead>
                             <TableRow>
                                 <TableCell className="tableCell">
-                                    SL
+                                    <b>SL</b>
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    Criteria
+                                    <b>Criteria</b>
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    Sub-Criteria
+                                    <b>Sub-Criteria</b>
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    Target
+                                    <b>Target</b>
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    Actual
+                                    <b>Actual</b>
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    Weight
+                                    <b>Weight</b>
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    Score
+                                    <b>Score</b>
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    F. Score
+                                    <b>F. Score</b>
                                 </TableCell>
                             </TableRow>
                         </TableHead>
