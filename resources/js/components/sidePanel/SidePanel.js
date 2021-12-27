@@ -13,6 +13,7 @@ class SidePanel extends React.Component {
     {
         super(props);
         let isAdmin = false;
+        let isApprover = false;
         const userJson = Cookies.get('user');
         if(userJson) {
             let userObj = null;
@@ -22,11 +23,13 @@ class SidePanel extends React.Component {
                 console.log("Could not parse user json");
             }
            isAdmin = userObj && userObj.IsAdmin.toString() === "1" ? true : false; 
+           isApprover = userObj && userObj.IsApprover && userObj.IsApprover.toString() === "1" ? true : false; 
         }
 
         this.state = {
             isAdmin: isAdmin,
-            isAuthenticated: true
+            isAuthenticated: true,
+            isApprover: isApprover
         };
         
     }
@@ -46,6 +49,8 @@ class SidePanel extends React.Component {
     render() {
         const classes = this.props.classes;
         const isAdmin = this.state.isAdmin;
+        const isApprover = this.state.isApprover;
+
         if(!this.state.isAuthenticated) return (<Redirect to="/login"/>)
         return (
             <div className={classes.sidePanelContainer}>
@@ -67,13 +72,16 @@ class SidePanel extends React.Component {
                                 </ListItemText>
                             </ListItem>
                         </Link>
-                        <Link to="/kpi" className={classes.menuItem}>
+                        { !isApprover
+                        ? <Link to="/kpi" className={classes.menuItem}>
                             <ListItem>
-                                <ListItemText>
-                                    KPI
-                                </ListItemText>
-                            </ListItem>
-                        </Link>
+                                    <ListItemText>
+                                        KPI
+                                    </ListItemText>
+                                </ListItem>
+                            </Link>
+                        : null}
+                        
                         <Link to="/approve-kpi" className={classes.menuItem}>
                             <ListItem>
                                 <ListItemText>
@@ -118,14 +126,17 @@ class SidePanel extends React.Component {
                             </ListItem>
                         </Link>
                         : null}
-                        
-                        <Link to="/set-target" className={classes.menuItem}>
+
+                        {!(isAdmin || isApprover)
+                        ? <Link to="/set-target" className={classes.menuItem}>
                             <ListItem>
                                 <ListItemText>
                                     Set target
                                 </ListItemText>
                             </ListItem>
                         </Link>
+                        : null}
+                        
                         <Link to="/approve-target" className={classes.menuItem}>
                             <ListItem>
                                 <ListItemText>
@@ -133,13 +144,24 @@ class SidePanel extends React.Component {
                                 </ListItemText>
                             </ListItem>
                         </Link>
-                        <Link to="/actual-input" className={classes.menuItem}>
+                        {!(isAdmin || isApprover)
+                         ? <Link to="/actual-input" className={classes.menuItem}>
+                                <ListItem>
+                                    <ListItemText>
+                                        Input actual
+                                    </ListItemText>
+                                </ListItem>
+                            </Link>
+                        : null}
+
+                        <Link to="/report" className={classes.menuItem}>
                             <ListItem>
                                 <ListItemText>
-                                    Input actual
+                                    Report
                                 </ListItemText>
                             </ListItem>
                         </Link>
+                        
                     </List>
                 </section>
                 <div>

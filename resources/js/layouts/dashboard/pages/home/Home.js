@@ -85,22 +85,6 @@ class Home extends React.Component {
                             onChange={(e, user) => this.handleSubordinateSelect(user)}
                             renderInput={(params) => <TextField variant="outlined" {...params} label="Subordinate" /> }
                         />
-                        {/* <FormControl style={{width: '200px'}}>
-                            <InputLabel id="subordinate-select-label">Select subordinate</InputLabel>
-                            <Select
-                                labelId="subordinate-select-label"
-                                variant="outlined"
-                                id="subordinate-select"
-                                label="Select subordinate"
-                                onChange={this.handleSubordinateSelect}
-                            >
-                                {subordinates.map(subordinate => {
-                                    return (
-                                        <MenuItem value={subordinate.UserID}>{subordinate.UserName}</MenuItem>
-                                    )
-                                })}
-                            </Select>
-                        </FormControl> */}
                     </div>
                     
 

@@ -23,6 +23,8 @@ import Designation from "./pages/designation/Designation";
 
 import Header from "../../components/header/Header";
 
+import Report from "./pages/report/Report";
+
 class Dashboard extends React.Component {
     constructor(props) {
         super(props);
@@ -69,6 +71,7 @@ class Dashboard extends React.Component {
                                 <Route exact={true} path="/actual-input" component={ActualInput} />
                                 <Route exact={true} path="/approve-target" component={ApproveTarget} />
                                 <Route exact={true} path="/approve-kpi" component={ApproveKPI} />
+                                <Route exact={true} path="/report" component={Report} />
                             </>
                         </Grid>
                     </Grid>

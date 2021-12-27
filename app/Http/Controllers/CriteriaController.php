@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Criteria;
+use App\Models\DesignationWeight;
 use App\Models\SubCriteria;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -20,20 +22,37 @@ class CriteriaController extends Controller
 
     public function create_criteria(Request $request)
     {
-        if($request->has('SubCriteriaID') && $request->SubCriteriaID !== null) {
-            $subCriteria = SubCriteria::find($request->SubCriteriaID);
-            $criteria = $subCriteria->sub_sub_criterias()->create([
-               'Name' => $request->Name
-            ]);
-        } else if($request->has('CriteriaID') && $request->CriteriaID !== null) {
-            $mainCriteria = Criteria::find($request->CriteriaID);
-            $criteria = $mainCriteria->sub_criterias()->create([
-               'Name' => $request->Name
-            ]);
-        } else {
-            $criteria = Criteria::create([
-               'Name' => $request->Name
-            ]);
+        try {
+            if ($request->has('SubCriteriaID') && $request->SubCriteriaID !== null) {
+
+                $subCriteriaWeight = DesignationWeight::where('SubCriteriaID', $request->SubCriteriaID)->where('SubSubCriteriaID', null)->first();
+                if ($subCriteriaWeight) {
+                    throw new Exception("Could not create criteria");
+                }
+
+                $subCriteria = SubCriteria::find($request->SubCriteriaID);
+                $criteria = $subCriteria->sub_sub_criterias()->create([
+                    'Name' => $request->Name
+                ]);
+            } else if ($request->has('CriteriaID') && $request->CriteriaID !== null) {
+                $mainCriteriaWeight = DesignationWeight::where('CriteriaID', $request->SubCriteriaID)->where('SubCriteriaID', null)->first();
+                if ($mainCriteriaWeight) {
+                    throw new Exception("Could not create criteria");
+                }
+                $mainCriteria = Criteria::find($request->CriteriaID);
+                $criteria = $mainCriteria->sub_criterias()->create([
+                    'Name' => $request->Name
+                ]);
+            } else {
+                $criteria = Criteria::create([
+                    'Name' => $request->Name
+                ]);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+                'status' => 400
+            ], 400);
         }
 
         return response()->json([
@@ -60,7 +79,5 @@ class CriteriaController extends Controller
             'result' => $groupedResult,
             'status' => 200
         ], 200);
-
-
     }
 }

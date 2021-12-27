@@ -175,6 +175,12 @@ class ActualInput extends React.Component {
                     )
                 })}
 
+                {!targetApproved
+                ? <h4>Target is not approved yet</h4>
+                : actualApproved 
+                ? <h4>Actual is approved already!</h4>
+                : null}
+
                 <Button
                     variant="outlined"
                     onClick={this.submitTarget}

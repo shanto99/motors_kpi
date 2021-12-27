@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MonthPlan;
 use App\Models\PlanTarget;
 use App\Models\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,13 +36,16 @@ class TargetController extends Controller
 
         $period = $request->period;
 
+        $periodDate = Carbon::createFromFormat('Y-m-d', $period . '-01');
+
         $existingPlan = MonthPlan::where('UserID', $user->UserID)->where('Period', $period)->first();
         if ($existingPlan) {
             $existingPlan->delete();
         }
 
         $plan = $user->plans()->create([
-            'Period' => $period
+            'Period' => $period,
+            'PeriodDate' => $periodDate
         ]);
 
 
@@ -134,7 +138,13 @@ class TargetController extends Controller
 
     public function getPendingTargets()
     {
-        $subrodinates = Auth::user()->subordinates->pluck('UserID');
+        $user = Auth::user();
+        if ($user->IsApprover == "1") {
+            $subrodinates = User::all()->pluck('UserID');
+        } else {
+            $subrodinates = Auth::user()->subordinates->pluck('UserID');
+        }
+
         $plans = MonthPlan::with('user')->where('TargetApprovedBy', null)->whereIn('UserID', $subrodinates)->get();
         return response()->json([
             'plans' => $plans
@@ -143,7 +153,7 @@ class TargetController extends Controller
 
     public function getTargetDetails($planId)
     {
-        $plan = MonthPlan::with('targets')->where('MonthPlanID', $planId)->first();
+        $plan = MonthPlan::with('targets', 'user')->where('MonthPlanID', $planId)->first();
         return response()->json([
             'plan' => $plan,
             'status' => 200

@@ -7,6 +7,7 @@ use App\Http\Controllers\WeightController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\KpiController;
 use App\Http\Controllers\TargetController;
+use Facade\FlareClient\Report;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,9 +55,11 @@ Route::group(['prefix' => 'motors_kpi'], function () {
         Route::get('/plan_details/{planId}', [TargetController::class, 'getTargetDetails']);
 
         Route::get('/get_pending_kpis', [KpiController::class, 'getPendingKpi']);
-        Route::get('/approve_kpi/{planId}', [KpiController::class, 'approveKpi']);
+        Route::post('/approve_kpi', [KpiController::class, 'approveKpi']);
 
         Route::get('/get_subordinates', [UserController::class, 'getSubordinates']);
+
+        Route::get('/report/{userId}/{from}/{to}', [KpiController::class, 'report']);
     });
 });
 

@@ -180,7 +180,7 @@ class UserController extends Controller
 
     public function getSubordinates()
     {
-        if (Auth::user()->IsAdmin == "1") $allSubordinates = User::all()->toArray();
+        if (Auth::user()->IsAdmin == "1" || Auth::user()->IsApprover == "1") $allSubordinates = User::all()->toArray();
         else {
             $allSubordinates = $this->getSubordinateForUser(Auth::user());
         }

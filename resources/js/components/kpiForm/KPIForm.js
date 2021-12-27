@@ -221,13 +221,13 @@ class KPIForm extends React.Component {
                     
                 </TableCell>
                 <TableCell>
-                    {totalWeight} 
+                    {totalWeight.toFixed(2)} 
                 </TableCell>
                 <TableCell>
-                    {totalScore} 
+                    {totalScore.toFixed(2)} 
                 </TableCell>
                 <TableCell>
-                    {totalFScore} 
+                    {totalFScore.toFixed(2)} 
                 </TableCell>
             </TableRow>
         );

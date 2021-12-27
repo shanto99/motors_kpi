@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('Location');
             $table->string('Active')->default('Y');
             $table->boolean('IsAdmin')->default(false);
+            $table->boolean('IsApprover')->default(false);
             $table->string('Password');
             $table->rememberToken();
             $table->timestamps();

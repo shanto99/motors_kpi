@@ -16,7 +16,8 @@ class ApproveTarget extends React.Component {
             selectedPlan: null,
             plans: [],
             selectedPlancriterias: [],
-            selectedPlantargets: []
+            selectedPlantargets: [],
+            planUser: null
         };
     }
     componentDidMount()
@@ -43,11 +44,13 @@ class ApproveTarget extends React.Component {
         Promise.all([getUserCriteria(selectedPlan.UserID), getPlanDetail(monthPlanId)]).then(responses => {
             const criterias = responses[0].criteria;
             const targets = responses[1].plan && responses[1].plan.targets || [];
+            const user = responses[1].plan && responses[1].plan.user || null;
 
             this.setState({
                 selectedPlan: selectedPlan,
                 selectedPlancriterias: criterias,
-                selectedPlantargets: targets
+                selectedPlantargets: targets,
+                planUser: user
             });
         });
     }
@@ -116,32 +119,44 @@ class ApproveTarget extends React.Component {
         const {plans} = this.state;
         const criterias = this.state.selectedPlancriterias;
         const classes = this.props.classes;
+        const planUser = this.state.planUser;
+
+        let totalWeight = 0;
         return (
             <Grid container spacing={4}>
-                <Grid item lg={6}>
-                    <List>
+                <Grid item lg={4}>
+                    <h4>Approve Target</h4>
+                    <div style={{maxHeight: '70vh', overflow: 'auto'}}>
                         {plans.map(plan => {
                             let period = plan.Period;
                             let periodArr = period.split("-");
                             let year = periodArr[0];
                             let month = Number(periodArr[1]);
                             return (
-                                <ListItem
-                                    onClick={() => this.showTargetDetail(plan.MonthPlanID)}
-                                >
-                                    <ListItemText 
-                                    primary={`Plan for period ${this.getMonthName(month)}, ${year}`} 
-                                    secondary={`User id: ${plan.UserID}, User name: ${plan.user.UserName}`}
-                                    />
-                                </ListItem>
-                            )
+                                <div className={classes.targetListItem}>
+                                    <h3>{`Target for period: ${this.getMonthName(month)}, ${year}`}</h3>
+                                    <p>{`User id: ${plan.UserID}, User name: ${plan.user.UserName}`}</p>
+                                    <div className="targetApprovalBtns">
+                                        <button className="btnPending">Pending</button>
+                                        <button className="btnDetails"  onClick={() => this.showTargetDetail(plan.MonthPlanID)}>See details</button>
+                                    </div>
+                                </div>
+                            );
                         })}
-                    </List>
+                    </div>
                 </Grid>
-                <Grid item lg={6}>
+                <Grid item lg={8}>
                     {this.state.selectedPlan 
                     ? <div className={classes.targetFormContainer}>
+                        <div className="userDetails">
+                            <h2 style={{margin: '5px 0'}}>{planUser && planUser.UserName}</h2>
+                            <h4 style={{margin: '5px 0'}}>User id: {planUser.UserID}</h4>
+                            <span><b>Period: {this.state.selectedPlan.Period}</b></span>
+                        </div>
+                        
                         {criterias.map(criteria => {
+                            const weight = this.getTarget(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, 'Weight');
+                            totalWeight += Number(weight);
                             return (
                                 <div className="formRow">
                                     <div className="fieldLabel">
@@ -151,7 +166,7 @@ class ApproveTarget extends React.Component {
                                         <TextField
                                             variant="outlined"
                                             label="Weight"
-                                            value={(() => this.getTarget(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, 'Weight'))()}
+                                            value={weight}
                                             onChange={(e) => 
                                                 this.handleTargetChange(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, e.target.value, 'Weight')}
 
@@ -170,6 +185,7 @@ class ApproveTarget extends React.Component {
                                 </div>
                             )
                         })}
+                        <h4>Total weight: {totalWeight}</h4>
                         <Button
                             variant="outlined"
                             onClick={this.approveTarget}

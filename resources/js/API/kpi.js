@@ -175,9 +175,12 @@ const getUserKpiByPeriod = function(userId, period) {
     })
 }
 
-const approveKpi = function(kpiId) {
+const approveKpi = function(kpiId, comment) {
     return new Promise(function(resolve, reject) {
-        axios.get(`/motors_kpi/approve_kpi/${kpiId}`).then(function(res) {
+        axios.post('/motors_kpi/approve_kpi', {
+            kpiId: kpiId,
+            comment: comment
+        }).then(function(res) {
             resolve(res.data);
         }).catch(function(err) {
             if(reject) reject(err);
@@ -185,4 +188,16 @@ const approveKpi = function(kpiId) {
     })
 }
 
-export {getKpi, getKpiById, approveKpi, getUserKpiByPeriod};
+const getReport = function(userId, from, to) {
+    console.log({from, to});
+    return new Promise(function(resolve, reject) {
+        axios.get(`/motors_kpi/report/${userId}/${from}/${to}`).then(function(res) {
+            resolve(res.data);
+        }).catch(function(err) {
+            if(reject) reject(err);
+        })
+    })
+    
+}
+
+export {getKpi, getKpiById, approveKpi, getUserKpiByPeriod, getReport};

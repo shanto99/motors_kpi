@@ -16,6 +16,7 @@ class ApproveKPI extends React.Component {
         this.state = {
             plans: [],
             selectedPlanId: null,
+            selectedPlan: null,
             planDetails: null,
             approvals: [],
             employee: null
@@ -39,8 +40,10 @@ class ApproveKPI extends React.Component {
 
     showKPI = (planId) => {
         getKpiById(planId).then(res => {
+            const selectedPlan = this.state.plans.find(plan => plan.MonthPlanID === planId);
             this.setState({
                 selectedPlanId: planId,
+                selectedPlan: selectedPlan,
                 planDetails: res.formattedCriteria,
                 approvals: res.approvals || [],
                 employee: res.employee
@@ -52,22 +55,48 @@ class ApproveKPI extends React.Component {
 
     approveKpi = () => {
         const {selectedPlanId} = this.state;
-        approveKpi(selectedPlanId).then(res => {
-            swal("Approved", "KPI approved successfully", "success");
-        }).catch(err => {
-            swal("Error", "Could not approve KPI", "error");
+        swal({
+            text: 'Give a comment(optional)',
+            content: "input",
+            button: {
+                text: "Approve",
+                closeModal: false
+            }
+        }).then(comment => {
+            comment = comment === "" ? null : comment;
+            approveKpi(selectedPlanId, comment).then(res => {
+                swal("Approved", "KPI approved successfully", "success");
+                this.setState(preState => {
+                    const newState = {...preState};
+                    let plans = newState.plans;
+                    const selectedPlanId = this.state.selectedPlanId;
+
+                    plans = plans.filter(function(plan) {
+                        return plan.MonthPlanID !== selectedPlanId;
+                    });
+
+                    newState.plans = plans;
+                    newState.selectedPlanId = null;
+                    newState.selectedPlan = null;
+                    newState.planDetails = null;
+                    newState.employee = null;
+                    return newState;
+                });
+            }).catch(err => {
+                swal("Error", "Could not approve KPI", "error");
+            });
         });
     }
 
     render() {
         const {plans, selectedPlanId, planDetails} = this.state;
         const classes = this.props.classes;
-        console.log("Plan details: ", planDetails);
+
         return (
             <Grid container>
                 <Grid item lg={4} md={4}>
                     <h3>Approve KPI</h3>
-                    <div>
+                    <div style={{maxWidth: '74vh', overflow: 'auto'}}>
                         {plans.map(plan => {
                             let period = plan.Period;
                             let periodArr = period.split("-");
@@ -75,7 +104,7 @@ class ApproveKPI extends React.Component {
                             let month = Number(periodArr[1]);
                             return (
                                 <div className={classes.kpiListItem}>
-                                    <h3>{`Plan for period: ${this.getMonthName(month-1)}, ${year}`}</h3>
+                                    <h3>{`Plan for period: ${this.getMonthName(month)}, ${year}`}</h3>
                                     <p>{`User id: ${plan.UserID}, User name: ${plan.user.UserName}`}</p>
                                     <div className="kpiApprovalBtns">
                                         <button className="btnPending">Pending</button>
@@ -89,9 +118,13 @@ class ApproveKPI extends React.Component {
                 <Grid item lg={8} md={8}>
                     {planDetails
                     ? <div>
-                        <KPIForm criterias={this.state.planDetails} 
-                        employee = {this.state.employee}
-                        approvals={this.state.approvals} />
+                        <div style={{ maxHeight: '74vh', overflow: 'auto' }}>
+                          <KPIForm criterias={this.state.planDetails} 
+                            employee = {this.state.employee}
+                            period={this.state.selectedPlan.Period}
+                            approvals={this.state.approvals} />  
+                        </div>
+                        
                         <div className={classes.kpiFormFooter}>
                             <Button
                                 variant="outlined"
