@@ -53,6 +53,21 @@ class SetTarget extends React.Component {
         return testName;
     }
 
+    getCriteriaRemarks = (criteria) => {
+        let remarks = '';
+        if(criteria.SubSubCriteriaID) {
+            remarks = criteria.sub_sub_criteria.Remarks;
+        } else if(criteria.SubCriteriaID) {
+            remarks = criteria.sub_criteria.Remarks;
+        } else {
+            remarks = criteria.criteria.Remarks;
+        }
+
+        console.log("Remarks: ", remarks);
+
+        return remarks;
+    }
+
     findCriteriaTarget = (criteriaId, subCriteriaId, subSubCriteriaId, targets) => {
         if(!targets) targets = this.state.targets;
 
@@ -88,6 +103,7 @@ class SetTarget extends React.Component {
     }
 
     submitTarget = () => {
+        if(this.state.approved) return;
         const targets = this.state.targets;
         let period = this.state.period;
         period = `${period.getFullYear()}-${period.getMonth()+1}`;
@@ -129,7 +145,8 @@ class SetTarget extends React.Component {
                         showMonthYearPicker onChange={this.handleMonthSelect} />
                     </div>
                 </div>
-                {criterias.map(criteria => {
+                <div style={{ maxHeight: '70vh', overflow: 'auto', padding: '0 20px' }}>
+                    {criterias.map(criteria => {
                     return (
                         <div className="formRow">
                             <div className="fieldLabel">
@@ -146,12 +163,19 @@ class SetTarget extends React.Component {
 
                                 />
                             </div>
+                            <div className="remark">
+                                <span>{this.getCriteriaRemarks(criteria)}</span>
+                            </div>
                         </div>
                     )
                 })}
+                </div>
+
+                {approved ? <h5>Targets are already approved!</h5> : null}
 
                 <Button
                     variant="outlined"
+                    disabled={approved}
                     onClick={this.submitTarget}
                 >
                     Submit

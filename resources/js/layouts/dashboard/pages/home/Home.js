@@ -75,8 +75,8 @@ class Home extends React.Component {
 
         return (
             <React.Fragment>
-                <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto', marginBottom: '60px', display: 'flex', justifyContent: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', marginRight: '20px', flex: '1' }}>
+                <div className={classes.kpiSearchForm}>
+                    <div className="autoCompleteContainer">
                         <label style={{ fontWeight: 'bold', marginRight: '20px' }}>Select Subordinate: </label>
                         <Autocomplete
                             style={{width: '250px'}}
@@ -88,8 +88,7 @@ class Home extends React.Component {
                     </div>
                     
 
-                    <div className={classes.datePickerContainer} 
-                    style={{ display: 'flex', alignItems: 'center', marginRight: '20px', flex: '1' }}>
+                    <div className={classes.datePickerContainer}>
                         <label style={{ fontWeight: 'bold', width: '150px' }}>Select Period</label>
                         <DatePicker selected={this.state.selectedDateInstance} 
                         dateFormat="yyyy-MM"
@@ -97,7 +96,7 @@ class Home extends React.Component {
                     </div>
                 </div>
                 {kpi
-                ? <div style={{ width: 'fit-content', margin: '0 auto', marginTop: '30px' }}>
+                ? <div style={{ margin: '0 auto', marginTop: '30px' }}>
                     <KPIForm 
                         period={period}
                         criterias={kpi.formattedCriteria} 

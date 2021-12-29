@@ -1,10 +1,13 @@
 const styles = theme => ({
     tableContainer: {
         width: '100%',
-        maxWidth: '1000px',
+        overflow: 'auto',
 
         '& .tableCell': {
-            border: '2px solid white'
+            border: '2px solid white',
+            '@media (max-width: 800px)': {
+                fontSize: '12px'
+            },
         },
 
         '& .coloredRow': {
@@ -18,7 +21,10 @@ const styles = theme => ({
             display: 'flex',
             '& div': {
                 flex: 1
-            }
+            },
+            '@media (max-width: 800px)': {
+                fontSize: '10px'
+            },
         }
     },
 
@@ -26,6 +32,9 @@ const styles = theme => ({
         display: 'flex',
         width: '100%',
         marginTop: '20px',
+        '@media (max-width: 800px)': {
+            fontSize: '12px'
+        },
 
         '& .signatureContainer': {
             width: '120px',

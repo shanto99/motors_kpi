@@ -1,9 +1,10 @@
 import React from "react";
-import {Autocomplete, Box, Button, Grid, List, ListItem, ListItemButton} from "@mui/material";
+import {Autocomplete, Box, Button, Grid, ListItemIcon,
+    List, ListItem, ListItemText, ListItemButton} from "@mui/material";
 
 import {getCriterias, createCriteria} from "../../../../API/criteria";
-import {FormControl, Select, InputLabel, ListItemIcon, ListItemText, ListSubheader, MenuItem, TextField} from "@material-ui/core";
-import {Add as AddIcon} from "@mui/icons-material";
+import {FormControl, Select, InputLabel, TextField, MenuItem} from "@material-ui/core";
+import {Add as AddIcon, Edit as EditIcon} from "@mui/icons-material";
 import swal from "sweetalert";
 
 class Criteria extends React.Component {
@@ -14,6 +15,7 @@ class Criteria extends React.Component {
             criteria: "",
             subCriteria: "",
             name: '',
+            remarks: '',
             criterias: [],
             subCriterias: []
         }
@@ -33,8 +35,8 @@ class Criteria extends React.Component {
 
     handleCriteriaSubmit = (e) => {
         e.preventDefault();
-        const {name, criteria, subCriteria} = this.state;
-        createCriteria(name, criteria, subCriteria).then(res => {
+        const {name, criteria, subCriteria, remarks} = this.state;
+        createCriteria(name, remarks, criteria, subCriteria).then(res => {
             swal("Created!!", "New criteria created", "success");
             this.getAllCriterias();
         }).catch(err => {
@@ -61,13 +63,33 @@ class Criteria extends React.Component {
         });
     }
 
+    editCriteria = (criteriaId="", subCriteriaId="", subSubCriteriaId="") => {
+        console.log("Criteria id: ", criteriaId);
+        const criteria = this.state.criterias.find(criteria => criteria.CriteriaID == criteriaId);
+        let editingCriteria = criteria;
+        let subCriterias = criteria.sub_criterias;
+        if(subCriteriaId !== "") {
+            subCriterias = criteria.sub_criterias;
+            editingCriteria = subCriterias.find(subCriteria => subCriteria.SubCriteriaID == subCriteriaId);
+
+        }
+
+        if(subSubCriteriaId !== "") {
+            let subSubCriterias = editingCriteria.sub_sub_criterias;
+            editingCriteria = subSubCriterias.find(criteria => criteria.SubSubCriteriaID == subSubCriteriaId);
+        }
+
+        console.log("Editing criteria: ", editingCriteria);
+    }
+
     render() {
         const {criterias, subCriterias} = this.state;
         return (
             <Grid container spacing={4}>
-                <Grid item lg={8}>
+                <Grid item lg={4}>
                     <h5>All criteria</h5>
-                    <List
+                    <div style={{maxHeight: '74vh', overflow: 'auto'}}>
+                        <List
                         sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
                     >
                         <List>
@@ -76,6 +98,9 @@ class Criteria extends React.Component {
                                     <React.Fragment>
                                         <ListItemButton>
                                             <ListItemText primary={criteria.Name} />
+                                            <ListItemIcon>
+                                                <EditIcon fontSize="medium" onClick={() => this.editCriteria(criteria.CriteriaID)} />
+                                            </ListItemIcon>
                                         </ListItemButton>
                                         {criteria.sub_criterias
                                         ? <List
@@ -85,6 +110,7 @@ class Criteria extends React.Component {
                                                     <React.Fragment>
                                                         <ListItemButton>
                                                             <ListItemText primary={subCriteria.Name} />
+                                                            <ListItemIcon><EditIcon fontSize="medium" onClick={() => this.editCriteria(criteria.CriteriaID, subCriteria.SubCriteriaID)}/></ListItemIcon>
                                                         </ListItemButton>
                                                         {subCriteria.sub_sub_criterias
                                                         ? <List
@@ -94,6 +120,7 @@ class Criteria extends React.Component {
                                                                     return (
                                                                         <ListItemButton>
                                                                             <ListItemText primary={subSubCriteria.Name}/>
+                                                                            <ListItemIcon><EditIcon fontSize="medium" onClick={() => this.editCriteria(criteria.CriteriaID, subCriteria.SubCriteriaID, subSubCriteria.SubSubCriteriaID)} /></ListItemIcon>
                                                                         </ListItemButton>
                                                                     )
                                                                 })}
@@ -108,9 +135,10 @@ class Criteria extends React.Component {
                             })}
                         </List>
                     </List>
+                    </div>  
                 </Grid>
-                <Grid item lg={4}>
-                    <Box component="form" onSubmit={this.handleCriteriaSubmit}>
+                <Grid item lg={6}>
+                    <Box component="form" style={{ maxWidth: '400px' }} onSubmit={this.handleCriteriaSubmit}>
                         <TextField
                             margin="normal"
                             required
@@ -157,6 +185,16 @@ class Criteria extends React.Component {
                             </Select>
                         </FormControl>
                         <br/>
+                        <TextField
+                            margin="normal"
+                            label="Remarks"
+                            value={this.state.remarks}
+                            fullWidth
+                            onChange={(e) => this.setState({
+                                remarks: e.target.value
+                            })}
+                        />
+                        <br/><br/>
                         <Button
                             type="submit"
                             fullWidth

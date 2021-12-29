@@ -1,7 +1,7 @@
 import React from "react";
 import {withStyles} from "@mui/styles";
-import {Category as CategoryIcon, Dashboard as DashboardIcon, SupervisedUserCircle} from "@mui/icons-material";
-import {Typography, List, ListItem, ListItemIcon, ListItemText} from "@mui/material";
+import {Close as CloseIcon} from "@mui/icons-material";
+import {Typography, List, ListItem, ListItemIcon, ListItemText, Hidden} from "@mui/material";
 import styles from "./styles";
 import {Link, Redirect} from "react-router-dom";
 import Cookies from "js-cookie";
@@ -56,8 +56,8 @@ class SidePanel extends React.Component {
             <div className={classes.sidePanelContainer}>
                 <section style={{marginBottom: '20px'}}>
                     <div className="sidePanelHeader">
-                        <Typography variant="h4" component="div" style={{ fontWeight: 'bold' }}>
-                            Motors KPI
+                        <Typography variant="h4" component="div" style={{ fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
+                            Motors KPI <Hidden mdUp><span onClick={this.props.closeSidePanel}><CloseIcon fontSize="large"/></span></Hidden>
                         </Typography>
                         <Typography variant="p" gutterBottom component="div" style={{ color: 'gray', fontSize: '16px' }}>
                             Keep your Performance Indicator Board Updated!

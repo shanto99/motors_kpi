@@ -1,17 +1,13 @@
 const styles = theme => ({
     kpiFormHeader: {
-        width: '100%',
-        maxWidth: '500px',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    kpiFormHeader: {
         display: 'flex',
         maxWidth: '500px',
         justifyContent: 'space-between',
         marginBottom: '60px',
         alignItems: 'center',
+        '@media (max-width: 800px)': {
+            display: 'block'
+        },
         '& .datePickerContainer': {
             width: '100px',
             '& input': {

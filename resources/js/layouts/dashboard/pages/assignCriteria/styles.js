@@ -3,6 +3,10 @@ const styles = theme => ({
         '& h4': {
             margin: '0px',
             marginBottom: '5px'
+        },
+
+        '& .MuiListSubheader-sticky': {
+            position: 'relative'
         }
 
     },

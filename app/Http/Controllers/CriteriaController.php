@@ -32,7 +32,8 @@ class CriteriaController extends Controller
 
                 $subCriteria = SubCriteria::find($request->SubCriteriaID);
                 $criteria = $subCriteria->sub_sub_criterias()->create([
-                    'Name' => $request->Name
+                    'Name' => $request->Name,
+                    'Remarks' => $request->Remarks
                 ]);
             } else if ($request->has('CriteriaID') && $request->CriteriaID !== null) {
                 $mainCriteriaWeight = DesignationWeight::where('CriteriaID', $request->SubCriteriaID)->where('SubCriteriaID', null)->first();
@@ -41,11 +42,13 @@ class CriteriaController extends Controller
                 }
                 $mainCriteria = Criteria::find($request->CriteriaID);
                 $criteria = $mainCriteria->sub_criterias()->create([
-                    'Name' => $request->Name
+                    'Name' => $request->Name,
+                    'Remarks' => $request->Remarks
                 ]);
             } else {
                 $criteria = Criteria::create([
-                    'Name' => $request->Name
+                    'Name' => $request->Name,
+                    'Remarks' => $request->Remarks
                 ]);
             }
         } catch (Exception $e) {

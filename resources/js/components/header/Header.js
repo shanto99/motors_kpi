@@ -1,7 +1,8 @@
-import { AccountCircle } from "@mui/icons-material";
+import { AccountCircle, Menu as MenuIcon } from "@mui/icons-material";
 import React from "react";
 import Cookies from "js-cookie";
 import "./style.css";
+import { Hidden } from "@mui/material";
 
 class Header extends React.Component {
     constructor(props) {
@@ -21,9 +22,20 @@ class Header extends React.Component {
         const user = this.state.user;
         return (
             <div className="headerWrapper">
-                <div style={{ textAlign: 'center', cursor: 'pointer' }}>
-                    <AccountCircle fontSize="large"/>
-                    <div>{user ? user.UserName : 'user name'}</div>
+                <div>
+                    <Hidden mdUp>
+                      <span onClick={this.props.openSidePanel}>
+                        <MenuIcon fontSize="large" />
+                      </span>  
+                    </Hidden>
+                    
+                </div>
+                <div style={{ display: 'flex', textAlign: 'center', cursor: 'pointer', justifyContent: 'flex-end' }}>
+                    <section>
+                        <AccountCircle fontSize="large"/>
+                        <div>{user ? user.UserName : 'user name'}</div>
+                    </section>
+                    
                 </div>
             </div>
         )

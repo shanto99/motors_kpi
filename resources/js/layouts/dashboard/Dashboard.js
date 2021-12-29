@@ -31,7 +31,8 @@ class Dashboard extends React.Component {
 
         this.state = {
             isLoading: true,
-            isAuthenticated: true
+            isAuthenticated: true,
+            sidePanelOpen: false
         }
     }
 
@@ -48,19 +49,35 @@ class Dashboard extends React.Component {
         })
     }
 
+    openSidePanel = () => {
+        console.log("Open side");
+        this.setState({
+            sidePanelOpen: true
+        });
+    }
+
+    closeSidePanel = () => {
+        this.setState({
+            sidePanelOpen: false
+        });
+    }
+
     render() {
         const classes = this.props.classes;
         const {isAuthenticated} = this.state;
+
         return (
             <div className={classes.appContainer}>
                 {isAuthenticated
                 ?   <Grid container className={classes.pageWrapper}>
-                        <Grid item lg={2} className={classes.sidePanel}>
-                            <SidePanel/>
+                        <Grid item lg={2} 
+                            onClick={() => this.setState({ sidePanelOpen: false })}
+                            className={ this.state.sidePanelOpen ? classes.sidePanelOpen : classes.sidePanelClose}>
+                            <SidePanel closeSidePanel={this.closeSidePanel}/>
                         </Grid>
                         <Grid item lg={10} className={classes.mainBody}>
                             <>
-                                <Header/>
+                                <Header openSidePanel={this.openSidePanel}/>
                                 <Route exact={true} path="/" component={Home} />
                                 <Route exact={true} path="/user-manager" component={UserManager}/>
                                 <Route exact={true} path="/kpi" component = {KPI} />

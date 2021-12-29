@@ -11,11 +11,10 @@ class Criteria extends Model
     protected $table = "Criterias";
     protected $primaryKey = "CriteriaID";
 
-    protected $fillable = ['Name', 'Weight'];
+    protected $fillable = ['Name', 'Weight', 'Remarks'];
 
     public function sub_criterias()
     {
         return $this->hasMany(SubCriteria::class, 'CriteriaID', 'CriteriaID');
     }
-
 }

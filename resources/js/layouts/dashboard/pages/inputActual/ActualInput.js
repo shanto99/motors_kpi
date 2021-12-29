@@ -96,6 +96,13 @@ class ActualInput extends React.Component {
         const planId = this.state.selectedPlanId;
         const targets = this.state.targets;
 
+        for(let i = 0; i<targets.length; i++) {
+            if(!targets[i].Actual) {
+                swal("Error", "Give actual for all targets", "error");
+                return;
+            }
+        }
+
         inputActuals(targets, planId).then(res => {
             if(res.status === 200) {
                 swal("Submitted", "Actual submitted successfully", "success");
@@ -129,8 +136,6 @@ class ActualInput extends React.Component {
         const classes = this.props.classes;
         const {criterias, targetApproved, period, actualApproved} = this.state;
 
-        console.log("Criterias: ", criterias);
-
         return (
             <div className={classes.targetFormContainer}>
                 <div className={classes.inputActualHeader}>
@@ -142,8 +147,8 @@ class ActualInput extends React.Component {
                     </div>
                 </div>
 
-                
-                {criterias.map(criteria => {
+                <div style={{padding: '0 15px', maxHeight: '70vh', overflow: 'auto'}}>
+                    {criterias.map(criteria => {
                     return (
                         <div className="formRow">
                             <div className="fieldLabel">
@@ -172,8 +177,9 @@ class ActualInput extends React.Component {
                                 />
                             </div>
                         </div>
-                    )
-                })}
+                        )
+                    })}
+                </div>
 
                 {!targetApproved
                 ? <h4>Target is not approved yet</h4>

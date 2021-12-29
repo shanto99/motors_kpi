@@ -10,13 +10,14 @@ const getCriterias = function() {
     });
 };
 
-const createCriteria = function(name, criteriaId, subCriteriaId) {
+const createCriteria = function(name, remarks, criteriaId, subCriteriaId) {
     criteriaId = criteriaId === "" ? null : criteriaId;
     subCriteriaId = subCriteriaId === "" ? null : subCriteriaId;
 
     return new Promise(function (resolve, reject) {
         axios.post('/motors_kpi/create_criteria', {
            Name: name,
+           Remarks: remarks,
            CriteriaID: criteriaId,
            SubCriteriaID: subCriteriaId
         }).then(function(res) {

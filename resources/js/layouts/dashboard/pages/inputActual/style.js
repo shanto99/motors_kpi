@@ -26,6 +26,9 @@ const styles = theme => ({
         maxWidth: '500px',
         justifyContent: 'space-between',
         alignItems: 'center',
+        '@media (max-width: 800px)': {
+            display: 'block'
+        },
         '& .datePickerContainer': {
             width: '100px',
             '& input': {

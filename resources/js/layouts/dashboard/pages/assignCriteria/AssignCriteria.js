@@ -69,7 +69,6 @@ class AssignCriteria extends React.Component {
     }
 
     handleCriteriaWeightChange = (criteriaId, subCriteria, subSubCriteria, inputValue) => {
-        console.log("dadfaf: ", inputValue);
         if(isNaN(inputValue)) inputValue = 0;
         let {criteriaWeights} = this.state;
         let criteria = this.findCriteria(criteriaId, subCriteria, subSubCriteria, criteriaWeights);
@@ -170,7 +169,8 @@ class AssignCriteria extends React.Component {
                     </Select>
                 </FormControl>
 
-                <List
+                <div style={{ maxHeight: '70vh', overflow: 'auto', marginTop: '20px' }}>
+                    <List
                     className={classes.criteriaList}
                     subheader={
                         <ListSubheader component="div" id="nested-list-subheader">
@@ -257,6 +257,7 @@ class AssignCriteria extends React.Component {
                        )
                     })}
                 </List>
+                </div>
 
                <div>
                    Total: {this.state.totalWeight}
