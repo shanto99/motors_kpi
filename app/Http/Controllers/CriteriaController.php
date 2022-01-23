@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Criteria;
 use App\Models\DesignationWeight;
 use App\Models\SubCriteria;
+use App\Models\SubSubCriteria;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -80,6 +81,37 @@ class CriteriaController extends Controller
 
         return response()->json([
             'result' => $groupedResult,
+            'status' => 200
+        ], 200);
+    }
+
+    public function updateRemarks(Request $request)
+    {
+        $request->validate([
+            'criteriaId' => 'required',
+            'remarks' => 'required'
+        ]);
+
+        if ($request->subSubCriteriaId) {
+            SubSubCriteria::find($request->subSubCriteriaId)->update([
+                'Remarks' => $request->remarks
+            ]);
+        }
+
+        if ($request->subCriteriaId) {
+            SubCriteria::find($request->subCriteriaId)->update([
+                'Remarks' => $request->remarks
+            ]);
+        }
+
+        if ($request->criteriaId) {
+            Criteria::find($request->criteriaId)->update([
+                'Remarks' => $request->remarks
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Remarks updated successfully',
             'status' => 200
         ], 200);
     }

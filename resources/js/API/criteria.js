@@ -39,4 +39,17 @@ const getSubmittedCriteriaDetails = () => {
 
 };
 
-export {getCriterias, createCriteria, getSubmittedCriteriaDetails};
+const updateCriteriaRemarks = function (remarks, criteriaId, subCriteriaId, subSubCriteriaId) {
+    return new Promise(function(resolve, reject) {
+        axios.post('/motors_kpi/update_remarks', {
+            criteriaId: criteriaId,
+            subCriteriaId: subCriteriaId === "" ? null : subCriteriaId,
+            subSubCriteriaId: subSubCriteriaId === "" ? null : subSubCriteriaId,
+            remarks: remarks === "" ? null : remarks
+        }).then(function(res) {
+            resolve(res.data);
+        })
+    });
+}
+
+export {getCriterias, createCriteria, getSubmittedCriteriaDetails, updateCriteriaRemarks};

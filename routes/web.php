@@ -60,6 +60,8 @@ Route::group(['prefix' => 'motors_kpi'], function () {
         Route::get('/get_subordinates', [UserController::class, 'getSubordinates']);
 
         Route::get('/report/{userId}/{from}/{to}', [KpiController::class, 'report']);
+
+        Route::post('/update_remarks', [CriteriaController::class, 'updateRemarks']);
     });
 });
 

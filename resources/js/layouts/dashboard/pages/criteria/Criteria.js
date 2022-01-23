@@ -2,7 +2,7 @@ import React from "react";
 import {Autocomplete, Box, Button, Grid, ListItemIcon,
     List, ListItem, ListItemText, ListItemButton} from "@mui/material";
 
-import {getCriterias, createCriteria} from "../../../../API/criteria";
+import {getCriterias, createCriteria, updateCriteriaRemarks} from "../../../../API/criteria";
 import {FormControl, Select, InputLabel, TextField, MenuItem} from "@material-ui/core";
 import {Add as AddIcon, Edit as EditIcon} from "@mui/icons-material";
 import swal from "sweetalert";
@@ -79,7 +79,21 @@ class Criteria extends React.Component {
             editingCriteria = subSubCriterias.find(criteria => criteria.SubSubCriteriaID == subSubCriteriaId);
         }
 
-        console.log("Editing criteria: ", editingCriteria);
+        swal({
+            text: editingCriteria.Remarks,
+            content: "input",
+            button: {
+                text: "Update",
+                close: false
+            },
+        }).then(remarks => {
+            updateCriteriaRemarks(remarks, criteriaId, subCriteriaId, subSubCriteriaId).then(res => {
+                swal("Updated!", "Remarks updated successfully", "success");
+                this.getAllCriterias();
+            }).catch(err => {
+                swal("Error!", "Could not update remarks", "error");
+            })
+        });
     }
 
     render() {
