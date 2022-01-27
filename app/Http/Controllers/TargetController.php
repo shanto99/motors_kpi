@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\MonthPlan;
 use App\Models\PlanTarget;
 use App\Models\User;
+use App\Services\WeightDistribution;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
@@ -50,6 +51,12 @@ class TargetController extends Controller
 
 
         $weights = $user->designation->weights->toArray();
+
+        $weightDistributionService = new WeightDistribution($weights, $targets);
+
+        return response()->json([
+            'targets' => $weightDistributionService->weightDistributedTargets()
+        ]);
 
         foreach ($targets as $target) {
             $criteriaId = $target['CriteriaID'];

@@ -22,7 +22,7 @@ class SidePanel extends React.Component {
             } catch(error) {
                 console.log("Could not parse user json");
             }
-           isAdmin = userObj && userObj.IsAdmin.toString() === "1" ? true : false; 
+           isAdmin = userObj && userObj.IsAdmin && userObj.IsAdmin.toString() === "1" ? true : false; 
            isApprover = userObj && userObj.IsApprover && userObj.IsApprover.toString() === "1" ? true : false; 
         }
 
