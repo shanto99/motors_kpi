@@ -7,10 +7,13 @@ class KPIForm extends React.Component {
     constructor(props) {
         super(props);
 
+        console.log("Remarks: ", props.remarks);
+
         this.state = {
             criterias: props.criterias,
             approvals: props.approvals,
-            employee: props.employee
+            employee: props.employee,
+            remarks: props.remarks
         }
     }
 
@@ -62,7 +65,10 @@ class KPIForm extends React.Component {
     }
 
     calculateScore = (criteria) => {
-        return ((criteria.Actual/criteria.Target)*criteria.Weight).toFixed(2);
+        const target = Number(criteria.Target);
+        const actual = Number(criteria.Actual);
+        if(target == 0) return 0.00;
+        return ((actual/target)*criteria.Weight).toFixed(2);
     }
 
     calculateFScore = (weight, score) => {
@@ -89,13 +95,14 @@ class KPIForm extends React.Component {
             let subCriterias = criteria.sub_criterias;
             if(subCriterias && subCriterias.length > 0) {
                 subCriterias.forEach((subCriteria, subIndex) => {
+                    const unit = subCriteria.Unit;
                     if(subIndex === 0) {
                         let score = this.calculateScore(subCriteria);
                         let fScore = this.calculateFScore(subCriteria.Weight, score);
                         totalScore += Number(score);
                         totalFScore += Number(fScore);
                         rows.push(
-                            <TableRow style={{ backgroundColor: getBGcolor(subIndex)}}>
+                            <TableRow key={`kpi-row-${index}`} style={{ backgroundColor: getBGcolor(subIndex)}}>
                                 <TableCell
                                     className="tableCell"
                                     rowSpan={subCriterias.length}
@@ -112,19 +119,19 @@ class KPIForm extends React.Component {
                                     {subCriteria.Name}
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    {subCriteria.Target}
+                                    {`${subCriteria.Target} ${unit}`}
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    {subCriteria.Actual}
+                                    {`${subCriteria.Actual} ${unit}`}
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    {subCriteria.Weight}
+                                    {`${subCriteria.Weight} ${unit}`}
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    {score}
+                                    {`${score} ${unit}`}
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    {fScore}
+                                    {`${fScore} ${unit}`}
                                 </TableCell>
                             </TableRow>
                         );
@@ -141,19 +148,19 @@ class KPIForm extends React.Component {
                                     {subCriteria.Name}
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    {subCriteria.Target}
+                                    {`${subCriteria.Target} ${unit}`}
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    {subCriteria.Actual}
+                                    {`${subCriteria.Actual} ${unit}`}
                                 </TableCell>
                                 <TableCell className="tableCell">
                                     {subCriteria.Weight}
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    {this.calculateScore(subCriteria)}
+                                    {`${score} ${unit}`}
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    {fScore}
+                                    {`${fScore} ${unit}`}
                                 </TableCell>
                             </TableRow>
                         );
@@ -166,6 +173,7 @@ class KPIForm extends React.Component {
                     }
                 });
             } else {
+                let unit = criteria.Unit;
                 let score = this.calculateScore(criteria);
                 let fScore = this.calculateFScore(criteria.Weight, score);
                 totalFScore += Number(fScore);
@@ -181,19 +189,19 @@ class KPIForm extends React.Component {
 
                         </TableCell>
                         <TableCell className="tableCell">
-                            {criteria.Target}
+                            {`${criteria.Target} ${unit}`}
                         </TableCell>
                         <TableCell className="tableCell">
-                            {criteria.Actual}
+                            {`${criteria.Actual} ${unit}`}
                         </TableCell>
                         <TableCell className="tableCell">
                             {criteria.Weight}
                         </TableCell>
                         <TableCell className="tableCell">
-                            {score}
+                            {`${score} ${unit}`}
                         </TableCell>
                         <TableCell className="tableCell">
-                            {fScore}
+                            {`${fScore} ${unit}`}
                         </TableCell>
                     </TableRow>
                 );
@@ -239,7 +247,8 @@ class KPIForm extends React.Component {
         return{
             criterias: props.criterias,
             approvals: props.approvals,
-            employee: props.employee
+            employee: props.employee,
+            remarks: props.remarks || []
         };
     }
 
@@ -325,16 +334,24 @@ class KPIForm extends React.Component {
                         Name: {this.state.employee.UserName}
                         <h3>Employee</h3>
                       </div>
-                      : null}
+                    : null}
                     
                     {approvals.map(approval => {
                         const user = approval.user;
                         return (
-                            <div className="signatureContainer">
+                            <div key={`kpi-sign-${user.UserID}`} className="signatureContainer">
                                 <img src={`/motors_kpi/${user.Signature}`} />
                                 Name: {user.UserName}
                                 <h3>{user.designation.Designation}</h3>
                             </div>
+                        )
+                    })}
+                </div>
+                <div>
+                    <h4>Remarks:</h4>
+                    {this.state.remarks.map((remark, index) => {
+                        return (
+                            <div key={`kpi-remarks-${index}`}>{remark.Remarks}</div>
                         )
                     })}
                 </div>

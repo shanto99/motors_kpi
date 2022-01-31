@@ -18,6 +18,7 @@ class KPI extends React.Component {
             period: new Date(),
             criterias: [],
             approvals: [],
+            remarks: [],
             employee: null
         }
     }
@@ -33,7 +34,8 @@ class KPI extends React.Component {
             this.setState({
                 criterias: res.formattedCriteria,
                 approvals: res.approvals,
-                employee: res.employee
+                employee: res.employee,
+                remarks: res.remarks
             });
         }).catch(err => {
             this.setState({
@@ -71,16 +73,17 @@ class KPI extends React.Component {
                     </div>
                  </div>
                  {criterias.length < 1
-                 ?<seciton>
+                 ?<React.Fragment>
                      <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <img src="/motors_kpi/images/no_kpi.svg"/>
                     </div>
                     <h2>No KPI found</h2>
-                  </seciton> 
+                  </React.Fragment> 
                  : <KPIForm 
                     criterias={criterias} 
                     approvals={this.state.approvals}
                     employee={this.state.employee}
+                    remarks={this.state.remarks}
                  />}
                  
              </div>

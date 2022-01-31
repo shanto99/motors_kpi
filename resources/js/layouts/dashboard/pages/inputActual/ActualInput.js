@@ -103,12 +103,24 @@ class ActualInput extends React.Component {
             }
         }
 
-        inputActuals(targets, planId).then(res => {
+        swal({
+            text: 'Give some remarks.',
+            content: "input",
+            button: {
+                text: "Remarks!",
+                closeModal: false,
+            },
+        })
+        .then(remarks => {
+            if (!remarks) throw null;
+            
+            inputActuals(targets, planId, remarks).then(res => {
             if(res.status === 200) {
                 swal("Submitted", "Actual submitted successfully", "success");
             }
+        })
         }).catch(err => {
-            swal("Opps!", "Could not submit actuals", "error");
+            swal("Error!", "Remarks is required", "error");
         });
     }
 

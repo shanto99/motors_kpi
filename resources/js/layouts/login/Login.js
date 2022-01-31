@@ -8,6 +8,7 @@ import {getUser} from "../../API/authentication";
 
 import styles from "./styles";
 import { Redirect } from "react-router-dom";
+import swal from "sweetalert";
 
 class Login extends React.Component {
     constructor(props) {
@@ -27,7 +28,7 @@ class Login extends React.Component {
                });
            }
         }).catch(err => {
-
+            
         });
     }
 
@@ -47,7 +48,7 @@ class Login extends React.Component {
                 isAuthenticated: true
             })
         }).catch(err => {
-            console.log("Login failed: ", err);
+            swal("Opps!", "Wrong credentials", "error");
         })
     }
 

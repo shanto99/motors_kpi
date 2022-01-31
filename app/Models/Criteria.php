@@ -11,7 +11,7 @@ class Criteria extends Model
     protected $table = "Criterias";
     protected $primaryKey = "CriteriaID";
 
-    protected $fillable = ['Name', 'Weight', 'Remarks'];
+    protected $fillable = ['Name', 'Weight', 'Remarks', 'Unit'];
 
     public function sub_criterias()
     {

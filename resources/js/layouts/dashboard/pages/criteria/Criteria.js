@@ -10,12 +10,15 @@ import swal from "sweetalert";
 class Criteria extends React.Component {
     constructor(props) {
         super(props);
+        this.editingCriteria = null;
+
 
         this.state = {
             criteria: "",
             subCriteria: "",
             name: '',
             remarks: '',
+            unit: '',
             criterias: [],
             subCriterias: []
         }
@@ -35,8 +38,10 @@ class Criteria extends React.Component {
 
     handleCriteriaSubmit = (e) => {
         e.preventDefault();
-        const {name, criteria, subCriteria, remarks} = this.state;
-        createCriteria(name, remarks, criteria, subCriteria).then(res => {
+        const subSubCriteria = this.editingCriteria && this.editingCriteria.SubSubCriteriaID;
+        let {name, criteria, subCriteria, remarks, unit} = this.state;
+        const isEditing = this.editingCriteria ? true : false;
+        createCriteria(name, remarks, criteria, subCriteria, subSubCriteria, unit, isEditing).then(res => {
             swal("Created!!", "New criteria created", "success");
             this.getAllCriterias();
         }).catch(err => {
@@ -64,7 +69,6 @@ class Criteria extends React.Component {
     }
 
     editCriteria = (criteriaId="", subCriteriaId="", subSubCriteriaId="") => {
-        console.log("Criteria id: ", criteriaId);
         const criteria = this.state.criterias.find(criteria => criteria.CriteriaID == criteriaId);
         let editingCriteria = criteria;
         let subCriterias = criteria.sub_criterias;
@@ -79,20 +83,17 @@ class Criteria extends React.Component {
             editingCriteria = subSubCriterias.find(criteria => criteria.SubSubCriteriaID == subSubCriteriaId);
         }
 
-        swal({
-            text: editingCriteria.Remarks,
-            content: "input",
-            button: {
-                text: "Update",
-                close: false
-            },
-        }).then(remarks => {
-            updateCriteriaRemarks(remarks, criteriaId, subCriteriaId, subSubCriteriaId).then(res => {
-                swal("Updated!", "Remarks updated successfully", "success");
-                this.getAllCriterias();
-            }).catch(err => {
-                swal("Error!", "Could not update remarks", "error");
-            })
+        this.editingCriteria = editingCriteria;
+
+        this.setState(preState => {
+            const newState = {...preState};
+            newState.name = editingCriteria.Name;
+            newState.criteria = criteriaId;
+            newState.subCriterias = subCriterias;
+            newState.subCriteria = subCriteriaId;
+            newState.unit = editingCriteria.Unit;
+            newState.remarks = editingCriteria.Remarks;
+            return newState;
         });
     }
 
@@ -171,6 +172,7 @@ class Criteria extends React.Component {
                                 labelId="criteria-select"
                                 value={this.state.criteria}
                                 label="Criteria"
+                                disabled={this.editingCriteria ? true : false}
                                 onChange={this.handleCriteriaSelect}
                             >
                                 <MenuItem value="">Select criteria</MenuItem>
@@ -188,6 +190,7 @@ class Criteria extends React.Component {
                                 labelId="sub-criteria-select"
                                 value={this.state.subCriteria}
                                 label="Sub criteria"
+                                disabled={this.editingCriteria ? true : false}
                                 onChange={this.handleSubCriteriaSelect}
                             >
                                 <MenuItem value="">Select sub criteria</MenuItem>
@@ -206,6 +209,16 @@ class Criteria extends React.Component {
                             fullWidth
                             onChange={(e) => this.setState({
                                 remarks: e.target.value
+                            })}
+                        />
+                        <br/>
+                        <TextField
+                            margin="normal"
+                            label="Unit"
+                            value={this.state.unit}
+                            fullWidth
+                            onChange={(e) => this.setState({
+                                unit: e.target.value
                             })}
                         />
                         <br/><br/>

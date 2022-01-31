@@ -167,13 +167,20 @@ class UserController extends Controller
     function getSubordinateForUser($user, $result = [])
     {
         $subordinates = $this->subordinateUsers($user->UserID);
+        if (count($result) < 1) {
+            foreach ($subordinates as $subordinate) {
+                $subordinate->IsDirectSubordinate = true;
+                array_push($result, $subordinate);
+            }
+        }
+
         if (count($subordinates) > 0) {
             for ($i = 0; $i < count($subordinates); $i++) {
                 $result = $this->getSubordinateForUser($subordinates[$i], $result);
             }
         }
 
-        array_push($result, $user);
+        //array_push($result, $user);
 
         return $result;
     }

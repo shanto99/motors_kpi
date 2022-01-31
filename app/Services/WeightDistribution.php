@@ -47,7 +47,6 @@ class WeightDistribution
     {
         $weightDistributedTargets = [];
         $doneParents = [];
-        $tt = [];
 
         foreach ($this->targets as $target) {
             $criteriaId = $target['CriteriaID'];
@@ -63,15 +62,15 @@ class WeightDistribution
             if (!in_array($parentKey, $doneParents)) {
                 $weightTobeDistributed = 0;
                 $targetSiblings = $this->getSiblings($criteriaId, $subCriteriaId, $subSubCriteriaId);
-                $criteria = $this->find_criteria($criteriaId, $subCriteriaId, $subSubCriteriaId);
                 $nonZeroTargets = [];
 
                 foreach ($targetSiblings as $sTarget) {
+                    $criteria = $this->find_criteria($sTarget['CriteriaID'], $sTarget['SubCriteriaID'], $sTarget['SubSubCriteriaID']);
+                    $sTarget['Unit'] = $criteria->Unit;
                     if ((int)$sTarget['Target'] == 0) {
                         $weightTobeDistributed += (int)$criteria['Weight'];
                         $sTarget['Weight'] = 0;
                         array_push($weightDistributedTargets, $sTarget);
-                        array_push($tt, $sTarget);
                     } else {
                         array_push($nonZeroTargets, $sTarget);
                     }
@@ -81,7 +80,6 @@ class WeightDistribution
                     $criteria = $this->find_criteria($nzt['CriteriaID'], $nzt['SubCriteriaID'], $nzt['SubSubCriteriaID']);
                     $nzt['Weight'] = (float)$criteria['Weight'] + round($weightTobeDistributed / count($nonZeroTargets), 2);
                     array_push($weightDistributedTargets, $nzt);
-                    array_push($tt, $nzt);
                 }
 
                 array_push($doneParents, $parentKey);

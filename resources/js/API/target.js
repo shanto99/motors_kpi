@@ -49,11 +49,12 @@ const getPlanDetail = function(planId) {
     });
 }
 
-const inputActuals = (actuals, planId) => {
+const inputActuals = (actuals, planId, remarks) => {
     return new Promise(function(resolve, reject) {
         axios.post('/motors_kpi/post_actuals', {
             actuals: actuals,
-            planId: planId
+            planId: planId,
+            remarks: remarks
         }).then(function(res) {
             resolve(res.data);
         }).catch(function(err) {

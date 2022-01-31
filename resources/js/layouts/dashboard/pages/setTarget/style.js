@@ -9,16 +9,22 @@ const styles = theme => ({
             display: 'flex',
             margin: '10px 0',
             '& .fieldLabel': {
-                flex: '4',
+                flex: '2',
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
+                [theme.breakpoints.down('md')]: {
+                    fontSize: '12px'
+                }
             },
             '& .fieldInput': {
                 flex: '1'
             },
             '& .remark': {
-                flex: '2',
-                marginLeft: '10px'
+                flex: '1',
+                marginLeft: '10px',
+                [theme.breakpoints.down('md')]: {
+                    fontSize: '12px'
+                }
             }
         }
     },

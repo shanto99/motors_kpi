@@ -1,5 +1,5 @@
 import React from "react";
-import {Grid} from "@mui/material";
+import {Grid, createTheme, ThemeProvider} from "@mui/material";
 import {withStyles} from "@mui/styles";
 import {Redirect, Route, Switch} from "react-router-dom";
 
@@ -24,6 +24,9 @@ import Designation from "./pages/designation/Designation";
 import Header from "../../components/header/Header";
 
 import Report from "./pages/report/Report";
+
+
+const theme = createTheme({});
 
 class Dashboard extends React.Component {
     constructor(props) {
@@ -67,7 +70,8 @@ class Dashboard extends React.Component {
         const {isAuthenticated} = this.state;
 
         return (
-            <div className={classes.appContainer}>
+            <ThemeProvider theme={theme}>
+                <div className={classes.appContainer}>
                 {isAuthenticated
                 ?   <Grid container className={classes.pageWrapper}>
                         <Grid item lg={2} 
@@ -94,7 +98,8 @@ class Dashboard extends React.Component {
                     </Grid>
                 : <Redirect to="/login" />}
 
-            </div>
+                </div>
+            </ThemeProvider>
         );
     }
 }

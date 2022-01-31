@@ -11,5 +11,5 @@ class SubSubCriteria extends Model
     protected $table = "SubSubCriterias";
     protected $primaryKey = "SubSubCriteriaID";
 
-    protected $guarded = [];
+    protected $fillable = ['SubCriteriaID', 'Name', 'Remarks', 'Unit'];
 }

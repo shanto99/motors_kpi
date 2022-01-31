@@ -10,7 +10,7 @@ const getCriterias = function() {
     });
 };
 
-const createCriteria = function(name, remarks, criteriaId, subCriteriaId) {
+const createCriteria = function(name, remarks, criteriaId, subCriteriaId, subSubCriteriaId, unit, isEditing) {
     criteriaId = criteriaId === "" ? null : criteriaId;
     subCriteriaId = subCriteriaId === "" ? null : subCriteriaId;
 
@@ -19,7 +19,10 @@ const createCriteria = function(name, remarks, criteriaId, subCriteriaId) {
            Name: name,
            Remarks: remarks,
            CriteriaID: criteriaId,
-           SubCriteriaID: subCriteriaId
+           SubCriteriaID: subCriteriaId,
+           SubSubCriteriaID: subSubCriteriaId,
+           Unit: unit,
+           IsEditing: isEditing
         }).then(function(res) {
             resolve(res.data);
         }).catch(function(err) {

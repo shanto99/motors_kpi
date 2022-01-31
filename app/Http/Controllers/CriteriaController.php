@@ -21,9 +21,35 @@ class CriteriaController extends Controller
         ], 200);
     }
 
+    public function update_criteria($request)
+    {
+        if ($request->has('SubSubCriteriaID') && $request->SubSubCriteriaID) {
+            $criteria = SubSubCriteria::find($request->SubSubCriteriaID);
+        } else if ($request->has('SubCriteriaID') && $request->SubCriteriaID) {
+            $criteria = SubCriteria::find($request->SubCriteriaID);
+        } else {
+            $criteria = Criteria::find($request->CriteriaID);
+        }
+
+        $criteria->update([
+            'Remarks' => $request->Remarks,
+            'Unit' => $request->Unit ?: ''
+        ]);
+
+        return response()->json([
+            'message' => 'Criteria updated successfully',
+            'status' => 200
+        ], 200);
+    }
+
     public function create_criteria(Request $request)
     {
         try {
+            if ($request->has('IsEditing') && $request->IsEditing) {
+                return $this->update_criteria($request);
+            }
+
+
             if ($request->has('SubCriteriaID') && $request->SubCriteriaID !== null) {
 
                 $subCriteriaWeight = DesignationWeight::where('SubCriteriaID', $request->SubCriteriaID)->where('SubSubCriteriaID', null)->first();
@@ -34,7 +60,8 @@ class CriteriaController extends Controller
                 $subCriteria = SubCriteria::find($request->SubCriteriaID);
                 $criteria = $subCriteria->sub_sub_criterias()->create([
                     'Name' => $request->Name,
-                    'Remarks' => $request->Remarks
+                    'Remarks' => $request->Remarks,
+                    'Unit' => $request->Unit ?: ''
                 ]);
             } else if ($request->has('CriteriaID') && $request->CriteriaID !== null) {
                 $mainCriteriaWeight = DesignationWeight::where('CriteriaID', $request->SubCriteriaID)->where('SubCriteriaID', null)->first();
@@ -44,12 +71,14 @@ class CriteriaController extends Controller
                 $mainCriteria = Criteria::find($request->CriteriaID);
                 $criteria = $mainCriteria->sub_criterias()->create([
                     'Name' => $request->Name,
-                    'Remarks' => $request->Remarks
+                    'Remarks' => $request->Remarks,
+                    'Unit' => $request->Unit ?: ''
                 ]);
             } else {
                 $criteria = Criteria::create([
                     'Name' => $request->Name,
-                    'Remarks' => $request->Remarks
+                    'Remarks' => $request->Remarks,
+                    'Unit' => $request->Unit ?: ''
                 ]);
             }
         } catch (Exception $e) {

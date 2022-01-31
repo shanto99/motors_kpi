@@ -82,6 +82,14 @@ class Home extends React.Component {
                             style={{width: '250px'}}
                             options={subordinates}
                             getOptionLabel={(option) => option.UserName}
+                            renderOption={(option, props) => {
+                                if(option.IsDirectSubordinate) {
+                                    return (<span style={{ fontWeight: 'bold' }}>{option.UserName}</span>);
+                                } else {
+                                    return (<span>{option.UserName}</span>)
+                                }
+                                
+                            }}
                             onChange={(e, user) => this.handleSubordinateSelect(user)}
                             renderInput={(params) => <TextField variant="outlined" {...params} label="Subordinate" /> }
                         />
@@ -102,6 +110,7 @@ class Home extends React.Component {
                         criterias={kpi.formattedCriteria} 
                         approvals={kpi.approvals}
                         employee={kpi.employee}
+                        remarks={kpi.remarks}
                     />
                   </div>
                 : <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

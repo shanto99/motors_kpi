@@ -21,7 +21,7 @@ class CreatePlanTargetsTable extends Migration
             $table->unsignedBigInteger('SubSubCriteriaID')->nullable();
             $table->integer('Weight');
             $table->integer('Target');
-            $table->integer('Actual')->nullable();
+            $table->integer('Actual')->default(0);
             $table->timestamps();
 
             $table->foreign('MonthPlanID')->references('MonthPlanID')->on('MonthPlans');

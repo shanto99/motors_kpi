@@ -30,6 +30,11 @@ class MonthPlan extends Model
         return $this->hasMany(Approvals::class, 'MonthPlanID', 'MonthPlanID');
     }
 
+    public function actualRemarks()
+    {
+        return $this->hasMany(ActualRemark::class, 'MonthPlanID', 'MonthPlanID');
+    }
+
     public function comments()
     {
         return $this->hasMany(KpiApprovalComment::class, 'MonthPlanID', 'MonthPlanID');

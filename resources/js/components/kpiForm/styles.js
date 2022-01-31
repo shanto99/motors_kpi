@@ -1,6 +1,7 @@
 const styles = theme => ({
     tableContainer: {
         width: '100%',
+        maxHeight: '70vh',
         overflow: 'auto',
 
         '& .tableCell': {

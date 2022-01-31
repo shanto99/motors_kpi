@@ -106,6 +106,7 @@ const criteriaWithValue = function(criterias, targets) {
                             subSubCriteria['Target'] = target['Target'];
                             subSubCriteria['Weight'] = target['Weight'];
                             subSubCriteria['Actual'] = target['Actual'];
+                            subSubCriteria['Unit'] = target['Unit'];
                         } 
                     });
                 } else {
@@ -114,6 +115,7 @@ const criteriaWithValue = function(criterias, targets) {
                         subCriteria['Target'] = target['Target'];
                         subCriteria['Weight'] = target['Weight'];
                         subCriteria['Actual'] = target['Actual'];
+                        subCriteria['Target'] = target['Target'];
                     }
                 }
             });
@@ -123,6 +125,7 @@ const criteriaWithValue = function(criterias, targets) {
                 criteria['Target'] = target['Target'];
                 criteria['Weight'] = target['Weight'];
                 criteria['Actual'] = target['Actual'];
+                criteria['Target'] = target['Target'];
             }
         
         }
@@ -139,7 +142,9 @@ const getKpi = function(period) {
             const formattedCriteria = criteriaWithValue(response.criterias, response.targets);
             const approvals = response.approvals;
             const employee = response.employee;
-            resolve({formattedCriteria, approvals, employee});
+            const remarks = response.remarks || [];
+
+            resolve({formattedCriteria, approvals, employee, remarks});
         }).catch(function(err) {
             if(reject) reject(err);
         })
@@ -153,7 +158,8 @@ const getKpiById = function(kpiId) {
             const formattedCriteria = criteriaWithValue(response.criterias, response.targets);
             const approvals = response.approvals;
             const employee = response.employee;
-            resolve({formattedCriteria, approvals, employee});
+            const remarks = response.remarks || []
+            resolve({formattedCriteria, approvals, employee, remarks});
         }).catch(function(err) {
             if(reject) reject(err);
         })
@@ -168,7 +174,8 @@ const getUserKpiByPeriod = function(userId, period) {
             const formattedCriteria = criteriaWithValue(response.criterias, response.targets);
             const approvals = response.approvals;
             const employee = response.employee;
-            resolve({formattedCriteria, approvals, employee});
+            const remarks = response.remarks || [];
+            resolve({formattedCriteria, approvals, employee, remarks});
         }).catch(function(err) {
             if(reject) reject(err);
         })

@@ -286,7 +286,7 @@ class UserManager extends React.Component {
                         />
                         <Autocomplete
                             renderInput={(params) => <TextField {...params} label="Supervisor" />}
-                            getOptionLabel={(option) => option.UserName}
+                            getOptionLabel={(option) => option.UserName +' - '+option.UserID}
                             value={this.state.supervisor}
                             onChange={this.handleSupervisorChange}
                             options={users}

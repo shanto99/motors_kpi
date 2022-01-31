@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActualRemark;
 use App\Models\MonthPlan;
 use App\Models\PlanTarget;
 use App\Models\User;
@@ -49,16 +50,18 @@ class TargetController extends Controller
             'PeriodDate' => $periodDate
         ]);
 
+        $weights = $user->designation->weights;
 
-        $weights = $user->designation->weights->toArray();
+        foreach ($weights as $weight) {
+            $criteria = $weight->subSubCriteria ?: $weight->subCriteria ?: $weight->criteria;
+            $weight['Unit'] = $criteria->Unit;
+        }
 
         $weightDistributionService = new WeightDistribution($weights, $targets);
 
-        return response()->json([
-            'targets' => $weightDistributionService->weightDistributedTargets()
-        ]);
+        $targetsWithDistributedWeights = $weightDistributionService->weightDistributedTargets();
 
-        foreach ($targets as $target) {
+        foreach ($targetsWithDistributedWeights as $target) {
             $criteriaId = $target['CriteriaID'];
             $subCriteriaId = $target['SubCriteriaID'];
             $subSubCriteriaId = $target['SubSubCriteriaID'];
@@ -69,8 +72,9 @@ class TargetController extends Controller
                 'CriteriaID' => $criteriaId,
                 'SubCriteriaID' => $subCriteriaId,
                 'SubSubCriteriaID' => $subSubCriteriaId,
-                'Weight' => $criteria['Weight'],
-                'Target' => $target['Target']
+                'Weight' => $target['Weight'],
+                'Target' => $target['Target'],
+                'Unit' => $target['Unit']
             ]);
         }
 
@@ -96,6 +100,7 @@ class TargetController extends Controller
     {
         $planId = $request->planId;
         $actuals = $request->actuals;
+        $remarks = $request->remarks;
 
         DB::beginTransaction();
 
@@ -125,6 +130,11 @@ class TargetController extends Controller
                     'Actual' => $actual['Actual']
                 ]);
             }
+
+            ActualRemark::create([
+                'MonthPlanID' => $planId,
+                'Remarks' => $remarks
+            ]);
 
             DB::commit();
         } catch (Exception $e) {

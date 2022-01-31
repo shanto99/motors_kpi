@@ -102,7 +102,8 @@ class SetTarget extends React.Component {
         })
     }
 
-    submitTarget = () => {
+    submitTarget = (e) => {
+        e.preventDefault();
         if(this.state.approved) return;
         const targets = this.state.targets;
         let period = this.state.period;
@@ -145,42 +146,44 @@ class SetTarget extends React.Component {
                         showMonthYearPicker onChange={this.handleMonthSelect} />
                     </div>
                 </div>
-                <div style={{ maxHeight: '70vh', overflow: 'auto', padding: '0 20px' }}>
-                    {criterias.map(criteria => {
-                    return (
-                        <div className="formRow">
-                            <div className="fieldLabel">
-                                {this.getCriteriaName(criteria)}
+                <form onSubmit={this.submitTarget}>
+                    <div style={{ maxHeight: '70vh', overflow: 'auto', padding: '0 20px' }}>
+                        {criterias.map(criteria => {
+                        return (
+                            <div className="formRow">
+                                <div className="fieldLabel">
+                                    {this.getCriteriaName(criteria)}
+                                </div>
+                                <div className="fieldInput">
+                                    <TextField
+                                        variant="outlined"
+                                        label="Target"
+                                        required
+                                        disabled={approved}
+                                        value={(() => this.getTarget(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID))()}
+                                        onChange={(e) => 
+                                            this.handleTargetChange(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, e.target.value)}
+
+                                    />
+                                </div>
+                                <div className="remark">
+                                    <span>{this.getCriteriaRemarks(criteria)}</span>
+                                </div>
                             </div>
-                            <div className="fieldInput">
-                                <TextField
-                                    variant="outlined"
-                                    label="Target"
-                                    disabled={approved}
-                                    value={(() => this.getTarget(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID))()}
-                                    onChange={(e) => 
-                                        this.handleTargetChange(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, e.target.value)}
+                            )
+                        })}
+                    </div>
 
-                                />
-                            </div>
-                            <div className="remark">
-                                <span>{this.getCriteriaRemarks(criteria)}</span>
-                            </div>
-                        </div>
-                    )
-                })}
-                </div>
+                    {approved ? <h5>Targets are already approved!</h5> : null}
 
-                {approved ? <h5>Targets are already approved!</h5> : null}
-
-                <Button
-                    variant="outlined"
-                    disabled={approved}
-                    onClick={this.submitTarget}
-                >
-                    Submit
-                </Button>
-
+                    <Button
+                        variant="outlined"
+                        disabled={approved}
+                        type="submit"
+                    >
+                        Submit
+                    </Button>
+                </form>
             </div>
         )
     }
