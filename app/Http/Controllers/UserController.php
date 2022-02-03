@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UserExport;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use \Excel;
 
 class UserController extends Controller
 {
+
     public function create_user(Request $request)
     {
         $inputData = $request->only('UserID', 'UserName', 'Designation', 'Email', 'Phone', 'Portfolio', 'Location');
@@ -64,6 +67,12 @@ class UserController extends Controller
         ]);
 
         $user = User::where('UserID', $request->UserID)->first();
+        if (!$user) {
+            return response()->json([
+                'error' => 'Not Registered User',
+                'status' => 400
+            ], 400);
+        }
         if ($user && Hash::check($request->Password, $user->Password)) {
             Auth::login($user, true);
             return response()->json([
@@ -72,7 +81,7 @@ class UserController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'error' => 'Invalid credentials',
+                'error' => 'Wrong password',
                 'status' => 400
             ], 400);
         }
@@ -141,7 +150,6 @@ class UserController extends Controller
 
         $user = User::with('designation.weights.criteria', 'designation.weights.subCriteria', 'designation.weights.subSubCriteria')->where('UserID', $user->UserID)->first();
 
-
         return response()->json([
             'criteria' => $user->designation->weights,
             'status' => 200
@@ -180,7 +188,12 @@ class UserController extends Controller
             }
         }
 
-        //array_push($result, $user);
+        $willAdd = true;
+        for ($i = 0; $i < count($result); $i++) {
+            if ($result[$i]->UserID == $user->UserID) $willAdd = false;
+        }
+
+        if ($willAdd) array_push($result, $user);
 
         return $result;
     }
@@ -196,5 +209,27 @@ class UserController extends Controller
             'subordinates' => $allSubordinates,
             'status' => 200
         ], 200);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required'
+        ]);
+
+        $user = Auth::user();
+        $user->update([
+            'Password' => bcrypt($request->password)
+        ]);
+
+        return response()->json([
+            'message' => 'Password updated successfully',
+            'status' => 200
+        ]);
+    }
+
+    public function exportUsers()
+    {
+        return Excel::download(new UserExport, 'users.xlsx');
     }
 }

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { formatRFC3339 } from "date-fns";
+import swal from "sweetalert";
 
 const getAllUsers = function() {
     return new Promise(function (resolve, reject) {
@@ -9,7 +10,7 @@ const getAllUsers = function() {
                 let clonedUser = {...user};
                 if(user.supervisors && user.supervisors.length > 0) {
                     clonedUser.supervisor = user.supervisors[0].supervisor;
-                } 
+                }
                 delete clonedUser.supervisors;
                 return clonedUser;
             });
@@ -55,7 +56,7 @@ const getUsersWithPagination = function(currentPage, pagination, search) {
                 let clonedUser = {...user};
                 if(user.supervisors && user.supervisors.length > 0) {
                     clonedUser.supervisor = user.supervisors[0].supervisor;
-                } 
+                }
                 delete clonedUser.supervisors;
                 return clonedUser;
             });
@@ -98,5 +99,22 @@ const getSubordinats = function() {
     });
 }
 
+const exportUsers = function() {
+    return new Promise(function(resolve, reject) {
+        axios.get('/motors_kpi/export_users', {
+            responseType: 'blob'
+        }).then(function(res) {
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'users.xlsx'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        }).catch(function(err) {
+            swal("Error!", "Something went wrong", "error");
+        });
+    });
+}
 
-export {getAllUsers, createUser, getUsersWithPagination, getUserCriteria, getSubordinats};
+
+export {getAllUsers, createUser, getUsersWithPagination, getUserCriteria, getSubordinats, exportUsers};

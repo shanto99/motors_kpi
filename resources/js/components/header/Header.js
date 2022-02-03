@@ -4,6 +4,8 @@ import Cookies from "js-cookie";
 import "./style.css";
 import { Hidden } from "@mui/material";
 
+import {changePassword} from "../../API/authentication";
+
 class Header extends React.Component {
     constructor(props) {
         super(props);
@@ -18,6 +20,27 @@ class Header extends React.Component {
             user: user
         });
     }
+
+    changePassword = () => {
+        swal({
+            text: 'Change password',
+            content: "input",
+            button: {
+                text: "Update!",
+                closeModal: false,
+            },
+            })
+            .then(newPassword => {
+                if (!newPassword) throw null;
+                changePassword(newPassword).then(res => {
+                    swal("Updated!", "Password updated successfully", "success");
+                });
+            })
+            .catch(err => {
+                swal("Error!", "Something went wrong", "error");
+            });
+    }
+
     render() {
         const user = this.state.user;
         return (
@@ -26,16 +49,16 @@ class Header extends React.Component {
                     <Hidden mdUp>
                       <span onClick={this.props.openSidePanel}>
                         <MenuIcon fontSize="large" />
-                      </span>  
+                      </span>
                     </Hidden>
-                    
+
                 </div>
-                <div style={{ display: 'flex', textAlign: 'center', cursor: 'pointer', justifyContent: 'flex-end' }}>
+                <div style={{ display: 'flex', textAlign: 'center', cursor: 'pointer', justifyContent: 'flex-end' }} onClick={this.changePassword}>
                     <section>
                         <AccountCircle fontSize="large"/>
                         <div>{user ? user.UserName : 'user name'}</div>
                     </section>
-                    
+
                 </div>
             </div>
         )

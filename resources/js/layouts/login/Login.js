@@ -28,7 +28,7 @@ class Login extends React.Component {
                });
            }
         }).catch(err => {
-            
+
         });
     }
 
@@ -48,7 +48,8 @@ class Login extends React.Component {
                 isAuthenticated: true
             })
         }).catch(err => {
-            swal("Opps!", "Wrong credentials", "error");
+            const errMsg = err && err.response && err.response.data && err.response.data && err.response.data.error || "Something went wrong";
+            swal("Opps!", errMsg, "error");
         })
     }
 

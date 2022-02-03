@@ -113,7 +113,7 @@ class ActualInput extends React.Component {
         })
         .then(remarks => {
             if (!remarks) throw null;
-            
+
             inputActuals(targets, planId, remarks).then(res => {
             if(res.status === 200) {
                 swal("Submitted", "Actual submitted successfully", "success");
@@ -140,7 +140,7 @@ class ActualInput extends React.Component {
                     actualApproved: plan.approvals && plan.approvals.length > 0 ? true : false
                 });
             }
-            
+
         });
     }
 
@@ -153,7 +153,7 @@ class ActualInput extends React.Component {
                 <div className={classes.inputActualHeader}>
                     <h3>Input actuals: </h3>
                     <div className="datePickerContainer">
-                        <DatePicker selected={period} 
+                        <DatePicker selected={period}
                         dateFormat="yyyy-MM"
                         showMonthYearPicker onChange={this.handleMonthSelect} />
                     </div>
@@ -172,8 +172,11 @@ class ActualInput extends React.Component {
                                     label="Target"
                                     disabled={true}
                                     value={(() => this.getTarget(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID))()}
-                                    onChange={(e) => 
-                                        this.handleTargetChange(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, e.target.value)}
+                                    onChange={(e) => {
+                                        let value = e.target.value;
+                                        if(isNaN(value)) return;
+                                        this.handleTargetChange(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, e.target.value)
+                                    }}
 
                                 />
                             </div>
@@ -183,8 +186,11 @@ class ActualInput extends React.Component {
                                     label="Actual"
                                     disabled={!(targetApproved && !actualApproved)}
                                     value={(() => this.getTarget(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, "actual"))()}
-                                    onChange={(e) => 
-                                        this.handleTargetChange(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, e.target.value)}
+                                    onChange={(e) => {
+                                        let value = e.target.value;
+                                        if(isNaN(value)) return;
+                                        this.handleTargetChange(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, e.target.value)
+                                    }}
 
                                 />
                             </div>
@@ -195,7 +201,7 @@ class ActualInput extends React.Component {
 
                 {!targetApproved
                 ? <h4>Target is not approved yet</h4>
-                : actualApproved 
+                : actualApproved
                 ? <h4>Actual is approved already!</h4>
                 : null}
 

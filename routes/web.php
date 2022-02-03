@@ -62,7 +62,12 @@ Route::group(['prefix' => 'motors_kpi'], function () {
         Route::get('/report/{userId}/{from}/{to}', [KpiController::class, 'report']);
 
         Route::post('/update_remarks', [CriteriaController::class, 'updateRemarks']);
+        Route::post('/change_password', [UserController::class, 'changePassword']);
+
+        Route::get('/export_users', [UserController::class, 'exportUsers']);
     });
+
+    Route::get('/kpi_pdf/{planId?}', [KpiController::class, 'generateKpiPdf']);
 });
 
 Route::fallback(function () {

@@ -88,7 +88,7 @@ const criteriaWithValue = function(criterias, targets) {
         criteriaId = criteriaId ? criteriaId.toString() : null;
         subCriteriaId = subCriteriaId ? subCriteriaId.toString() : null;
         subSubCriteriaId = subSubCriteriaId ? subSubCriteriaId.toString() : null;
-        
+
         return targets.find(function(target) {
             return target.CriteriaID === criteriaId && target.SubCriteriaID === subCriteriaId && target.SubSubCriteriaID === subSubCriteriaId;
         });
@@ -107,7 +107,8 @@ const criteriaWithValue = function(criterias, targets) {
                             subSubCriteria['Weight'] = target['Weight'];
                             subSubCriteria['Actual'] = target['Actual'];
                             subSubCriteria['Unit'] = target['Unit'];
-                        } 
+                            subSubCriteria['ChangedBySupervisor'] = target['ChangedBySupervisor'];
+                        }
                     });
                 } else {
                     let target = findTarget(criteria.CriteriaID, subCriteria.SubCriteriaID);
@@ -116,6 +117,7 @@ const criteriaWithValue = function(criterias, targets) {
                         subCriteria['Weight'] = target['Weight'];
                         subCriteria['Actual'] = target['Actual'];
                         subCriteria['Target'] = target['Target'];
+                        subCriteria['ChangedBySupervisor'] = target['ChangedBySupervisor'];
                     }
                 }
             });
@@ -126,8 +128,9 @@ const criteriaWithValue = function(criterias, targets) {
                 criteria['Weight'] = target['Weight'];
                 criteria['Actual'] = target['Actual'];
                 criteria['Target'] = target['Target'];
+                criteria['ChangedBySupervisor'] = target['ChangedBySupervisor'];
             }
-        
+
         }
 
     });
@@ -204,7 +207,7 @@ const getReport = function(userId, from, to) {
             if(reject) reject(err);
         })
     })
-    
+
 }
 
 export {getKpi, getKpiById, approveKpi, getUserKpiByPeriod, getReport};

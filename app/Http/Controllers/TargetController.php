@@ -61,6 +61,8 @@ class TargetController extends Controller
 
         $targetsWithDistributedWeights = $weightDistributionService->weightDistributedTargets();
 
+        //dd($targetsWithDistributedWeights);
+
         foreach ($targetsWithDistributedWeights as $target) {
             $criteriaId = $target['CriteriaID'];
             $subCriteriaId = $target['SubCriteriaID'];
@@ -195,7 +197,8 @@ class TargetController extends Controller
                     'SubCriteriaID' => $target['SubCriteriaID'],
                     'SubSubCriteriaID' => $target['SubSubCriteriaID'],
                     'Weight' => $target['Weight'],
-                    'Target' => $target['Target']
+                    'Target' => $target['Target'],
+                    'ChangedBySupervisor' => $target['ChangedBySupervisor']
                 ]);
             }
             DB::commit();

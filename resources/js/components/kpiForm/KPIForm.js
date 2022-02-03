@@ -24,7 +24,7 @@ class KPIForm extends React.Component {
                 let formattedSubCriterias = [];
                 subCriterias.forEach(subCriteria => {
                     let subSubCriterias = subCriteria.sub_sub_criterias;
-                    
+
                     if(subSubCriterias && subSubCriterias.length > 0) {
                         let target = 0;
                         let weight = 0;
@@ -34,7 +34,7 @@ class KPIForm extends React.Component {
                             if(subSubCriteria.Weight) weight += Number(subSubCriteria.Weight);
                             if(subSubCriteria.Target) target += Number(subSubCriteria.Target);
                             if(subSubCriteria.Actual) actual += Number(subSubCriteria.Actual);
-                            
+
                             formattedSubCriterias.push(subSubCriteria);
                         });
 
@@ -102,7 +102,7 @@ class KPIForm extends React.Component {
                         totalScore += Number(score);
                         totalFScore += Number(fScore);
                         rows.push(
-                            <TableRow key={`kpi-row-${index}`} style={{ backgroundColor: getBGcolor(subIndex)}}>
+                            <TableRow key={`kpi-row-${index}`} style={{ backgroundColor: subCriteria['ChangedBySupervisor'] === "1" ? "yellow" : getBGcolor(subIndex)}}>
                                 <TableCell
                                     className="tableCell"
                                     rowSpan={subCriterias.length}
@@ -142,7 +142,7 @@ class KPIForm extends React.Component {
                         rows.push(
                             <TableRow
                                 className={subCriteria.isSub ? 'coloredRow' : '#fff'}
-                                style={{ backgroundColor: getBGcolor(subIndex) }}
+                                style={{ backgroundColor: subCriteria['ChangedBySupervisor'] === "1" ? "yellow" : getBGcolor(subIndex)}}
                             >
                                 <TableCell className="tableCell">
                                     {subCriteria.Name}
@@ -178,7 +178,9 @@ class KPIForm extends React.Component {
                 let fScore = this.calculateFScore(criteria.Weight, score);
                 totalFScore += Number(fScore);
                 rows.push(
-                    <TableRow>
+                    <TableRow
+                        style={{ backgroundColor: criteria['ChangedBySupervisor'] === "1" ? "yellow" : getBGcolor(subIndex)}}
+                    >
                         <TableCell className="tableCell">
                             {index+1}
                         </TableCell>
@@ -217,25 +219,25 @@ class KPIForm extends React.Component {
 
                 </TableCell>
                 <TableCell>
-                    
+
                 </TableCell>
                 <TableCell>
-                    
+
                 </TableCell>
                 <TableCell>
-                    
+
                 </TableCell>
                 <TableCell>
-                    
+
                 </TableCell>
                 <TableCell>
-                    {totalWeight.toFixed(2)} 
+                    {totalWeight.toFixed(2)}
                 </TableCell>
                 <TableCell>
-                    {totalScore.toFixed(2)} 
+                    {totalScore.toFixed(2)}
                 </TableCell>
                 <TableCell>
-                    {totalFScore.toFixed(2)} 
+                    {totalFScore.toFixed(2)}
                 </TableCell>
             </TableRow>
         );
@@ -291,7 +293,7 @@ class KPIForm extends React.Component {
                     </div>
                 </div>
                 : null}
-                
+
                 <TableContainer>
                     <Table>
                         <TableHead>
@@ -335,7 +337,7 @@ class KPIForm extends React.Component {
                         <h3>Employee</h3>
                       </div>
                     : null}
-                    
+
                     {approvals.map(approval => {
                         const user = approval.user;
                         return (

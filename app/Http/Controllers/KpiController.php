@@ -177,4 +177,54 @@ class KpiController extends Controller
             'status' => 200
         ], 200);
     }
+
+    public function generateKpiPdf($monthPlanId = 367)
+    {
+        $monthPlan = MonthPlan::with('user', 'targets.criteria', 'targets.subCriteria', 'targets.subSubCriteria')->find($monthPlanId);
+        $user = $monthPlan->user;
+        $criterias = $monthPlan->targets->groupBy(['criteria.Name', 'subCriteria.Name']);
+
+        $curCName = "";
+        $curSCName = "";
+
+        $formattedTargets = [];
+
+        foreach ($criterias as $cName => $subCriterias) {
+            foreach ($subCriterias as $scName => $subSubCriterias) {
+                foreach ($subSubCriterias as $subSubCriteria) {
+                    $ssc = [];
+                    if ($curCName !== $cName) {
+                        $ssc['CriteriaName'] = $cName;
+                        $curCName = $cName;
+                    }
+                    if ($curSCName !== $scName) {
+                        $ssc['SubCriteriaName'] = $scName;
+                        $curSCName = $scName;
+                    }
+
+                    $ssc['Weight'] = $subSubCriteria['Weight'];
+                    $ssc['Target'] = $subSubCriteria['Target'];
+
+                    array_push($formattedTargets, $ssc);
+                }
+            }
+        }
+
+        dd($formattedTargets);
+
+
+
+        $criterias = $criterias->map(function ($criteria) {
+            if ($criteria->count() < 2) return $criteria->first();
+            return $criteria;
+        })->toArray();
+
+        dd($criterias);
+
+        foreach ($criterias as $criteria) {
+        }
+
+
+        return view('kpi', with(['plan' => $monthPlan, 'user' => $user, 'targets' => $targets]));
+    }
 }

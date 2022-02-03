@@ -39,4 +39,16 @@ const logout = function() {
     })
 }
 
-export {login, getUser, logout};
+const changePassword = function(newPassword) {
+    return new Promise(function (resolve, reject) {
+        axios.post('/motors_kpi/change_password', {
+            password: newPassword
+        }).then(function(res) {
+            resolve(res.data);
+        }).catch(function (err) {
+            if(reject) reject(err);
+        });
+    });
+}
+
+export {login, getUser, logout, changePassword};

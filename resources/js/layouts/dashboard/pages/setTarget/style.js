@@ -17,7 +17,12 @@ const styles = theme => ({
                 }
             },
             '& .fieldInput': {
-                flex: '1'
+                flex: '1',
+                display: 'flex',
+                alignItems: 'center',
+                '& span': {
+                    marginLeft: '3px'
+                }
             },
             '& .remark': {
                 flex: '1',
@@ -48,7 +53,7 @@ const styles = theme => ({
             }
         }
     }
-    
+
 });
 
 export default styles;

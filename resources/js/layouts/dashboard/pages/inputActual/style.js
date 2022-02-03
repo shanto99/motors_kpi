@@ -9,9 +9,12 @@ const styles = theme => ({
             display: 'flex',
             margin: '10px 0',
             '& .fieldLabel': {
-                flex: '5',
+                flex: '3',
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
+                [theme.breakpoints.down('md')]: {
+                    fontSize: '12px'
+                }
             },
             '& .fieldInput': {
                 flex: '2',

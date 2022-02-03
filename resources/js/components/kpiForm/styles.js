@@ -1,8 +1,13 @@
 const styles = theme => ({
     tableContainer: {
-        width: '100%',
+        width: 'fit-content',
         maxHeight: '70vh',
         overflow: 'auto',
+        margin: '0 auto',
+
+        [theme.breakpoints.down('md')]: {
+            width: '100% !important'
+        },
 
         '& .tableCell': {
             border: '2px solid white',

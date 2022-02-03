@@ -1,6 +1,6 @@
 import React from "react";
 
-import {getAllUsers, createUser, getUsersWithPagination} from "../../../../API/userManager";
+import {getAllUsers, createUser, getUsersWithPagination, exportUsers} from "../../../../API/userManager";
 import {Grid, Box, TextField, Button, Select,
     FormControl, InputLabel, Autocomplete, MenuItem} from "@mui/material";
 import swal from "sweetalert";
@@ -60,13 +60,13 @@ class UserManager extends React.Component {
     handleUserFormSubmit = (e) => {
         e.preventDefault();
         let supervisorId = null;
-        const {userId, userName, userDesignation, 
+        const {userId, userName, userDesignation,
             userEmail, userPassword, userPhone, userPortfolio, userLocation, sign} = this.state;
         if(this.state.supervisor) {
             supervisorId = this.state.supervisor.UserID;
         }
 
-        createUser(userId, userName, userDesignation, userEmail, 
+        createUser(userId, userName, userDesignation, userEmail,
             userPhone, userPortfolio, userLocation,
             userPassword, sign, supervisorId).then(res => {
             this.fetchAllUsers();
@@ -136,6 +136,7 @@ class UserManager extends React.Component {
         return (
             <Grid container spacing={4}>
                 <Grid item lg={8}>
+                    <Button variant="outlined" color="secondary" onClick={exportUsers}>Export</Button>
                     <PaginationTable title="All users"
                                      columns={[
                                          {title: 'User ID', field: 'UserID'},
@@ -206,7 +207,7 @@ class UserManager extends React.Component {
                                 ))}
                             </Select>
                         </FormControl>
-                        
+
                         <TextField
                             variant="outlined"
                             margin="normal"

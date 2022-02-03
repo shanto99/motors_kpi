@@ -20,7 +20,8 @@ class SetTarget extends React.Component {
             period: new Date(),
             criterias: [],
             targets: [],
-            approved: false
+            approved: false,
+            prevPlan: false
         }
 
 
@@ -35,7 +36,8 @@ class SetTarget extends React.Component {
             this.setState({
                 criterias: criteria,
                 targets: targets || [],
-                approved: plan && plan.TargetApprovedBy ? true : false
+                approved: plan && plan.TargetApprovedBy ? true : false,
+                prevPlan: plan ? true : false
             });
         });
     }
@@ -63,8 +65,6 @@ class SetTarget extends React.Component {
             remarks = criteria.criteria.Remarks;
         }
 
-        console.log("Remarks: ", remarks);
-
         return remarks;
     }
 
@@ -80,7 +80,7 @@ class SetTarget extends React.Component {
 
     getTarget = (criteriaId, subCriteriaId, subSubCriteriaId) => {
         const foundTarget = this.findCriteriaTarget(criteriaId, subCriteriaId, subSubCriteriaId);
-        return foundTarget && foundTarget.Target || "";
+        return foundTarget;
     }
 
     handleTargetChange = (criteriaId, subCriteriaId, subSubCriteriaId, target) => {
@@ -126,22 +126,28 @@ class SetTarget extends React.Component {
             this.setState({
                 targets: targets || [],
                 approved: plan && plan.TargetApprovedBy ? true : false,
-                period: date
+                period: date,
+                prevPlan: plan ? true : false
             });
         });
-        
+
+    }
+
+    getCriteriaUnit = (criteria) => {
+        criteria = criteria.sub_sub_criteria || criteria.sub_criteria || criteria.criteria;
+        return criteria.Unit;
     }
 
     render() {
         const classes = this.props.classes;
-        const {criterias, approved, period} = this.state;
+        const {criterias, approved, period, prevPlan} = this.state;
 
         return (
             <div className={classes.targetFormContainer}>
                 <div className={classes.setTargetHeader}>
                     <h3>Set your target: </h3>
                     <div className="datePickerContainer">
-                        <DatePicker selected={period} 
+                        <DatePicker selected={period}
                         dateFormat="yyyy-MM"
                         showMonthYearPicker onChange={this.handleMonthSelect} />
                     </div>
@@ -149,6 +155,7 @@ class SetTarget extends React.Component {
                 <form onSubmit={this.submitTarget}>
                     <div style={{ maxHeight: '70vh', overflow: 'auto', padding: '0 20px' }}>
                         {criterias.map(criteria => {
+                            const target = this.getTarget(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID);
                         return (
                             <div className="formRow">
                                 <div className="fieldLabel">
@@ -160,11 +167,16 @@ class SetTarget extends React.Component {
                                         label="Target"
                                         required
                                         disabled={approved}
-                                        value={(() => this.getTarget(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID))()}
-                                        onChange={(e) => 
-                                            this.handleTargetChange(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, e.target.value)}
+                                        value={target ? target.Target : ""}
+                                        onChange={(e) => {
+                                                let value = e.target.value;
+                                                if(isNaN(value)) return;
+                                                this.handleTargetChange(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, e.target.value)
+                                            }
+                                        }
 
                                     />
+                                    <span>{target && this.state.prevPlan ? target.Unit : this.getCriteriaUnit(criteria)}</span>
                                 </div>
                                 <div className="remark">
                                     <span>{this.getCriteriaRemarks(criteria)}</span>

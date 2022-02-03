@@ -59,13 +59,13 @@ class KPI extends React.Component {
         const classes = this.props.classes;
         const criterias = JSON.parse(JSON.stringify(this.state.criterias));
          return (
-             <div style={{ width: 'fit-content', margin: '0 auto' }}>
+             <div style={{ margin: '0 auto' }}>
                  <div className={classes.kpiFormHeader}>
                     <h3>
-                        My KPI for period: 
+                        My KPI for period:
                     </h3>
                     <div className="datePickerContainer">
-                        <DatePicker selected={period} 
+                        <DatePicker selected={period}
                             dateFormat="yyyy-MM"
                             showMonthYearPicker onChange={this.handleMonthSelect}
                             onChange={this.handleMonthSelect}
@@ -74,20 +74,23 @@ class KPI extends React.Component {
                  </div>
                  {criterias.length < 1
                  ?<React.Fragment>
-                     <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <img src="/motors_kpi/images/no_kpi.svg"/>
                     </div>
                     <h2>No KPI found</h2>
-                  </React.Fragment> 
-                 : <KPIForm 
-                    criterias={criterias} 
-                    approvals={this.state.approvals}
-                    employee={this.state.employee}
-                    remarks={this.state.remarks}
-                 />}
-                 
+                  </React.Fragment>
+                 :
+                    <KPIForm
+                        criterias={criterias}
+                        approvals={this.state.approvals}
+                        employee={this.state.employee}
+                        remarks={this.state.remarks}
+                        ref={this.pdfElementRef}
+                    />
+                 }
+
              </div>
-            
+
         )
     }
 }

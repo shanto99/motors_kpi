@@ -46,6 +46,8 @@ class ApproveTarget extends React.Component {
             const targets = responses[1].plan && responses[1].plan.targets || [];
             const user = responses[1].plan && responses[1].plan.user || null;
 
+            this.tagetsBackup = JSON.parse(JSON.stringify(targets));
+
             this.setState({
                 selectedPlan: selectedPlan,
                 selectedPlancriterias: criterias,
@@ -94,25 +96,51 @@ class ApproveTarget extends React.Component {
         })
     }
 
+    checkIfAltered = (target) => {
+        let backup = this.tagetsBackup.find(t => t.CriteriaID === target.CriteriaID && t.SubCriteriaID === target.SubCriteriaID && t.SubSubCriteriaID === target.SubSubCriteriaID);
+        if(backup) {
+            if(Number(backup.Target) !== Number(target.Target) || Number(backup.Weight) !== Number(backup.Weight)) {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
     approveTarget = () => {
         const monthPlanId = this.state.selectedPlan.MonthPlanID;
         const targets = this.state.selectedPlantargets;
+
         let totalWeight = 0;
-        targets.forEach(target => {
+        for(let i=0; i<targets.length; i++) {
+            const target = targets[i];
+            if(this.checkIfAltered(target)) target['ChangedBySupervisor'] = 1;
+            else target['ChangedBySupervisor'] = 0;
+            if(Number(target.Weight) === 0 && Number(target.Target) !== 0) {
+                swal("Error!", "Weight can not be zero while target is non zero", "error");
+                return;
+            } else if(Number(target.Target) === 0 && Number(target.Weight) !== 0) {
+                swal("Error!", "Target can not be zero while weight is non zero", "error");
+                return;
+            }
             totalWeight += Number(target.Weight);
-        });
+        }
+
+        if(totalWeight > 99 && totalWeight < 101) totalWeight = 100;
+
         if(totalWeight !== 100) {
             swal("Error", "Total weight must be 100", "error");
             return;
         }
+
         approveTargets(monthPlanId, targets).then(res => {
             if(res.status === 200) {
                 swal("Approved", "Targets approved successfully", "success");
             } else {
                 swal("Error", "Could not approve targets", "error");
             }
-        })
-        
+        });
+
     }
 
     render() {
@@ -146,14 +174,14 @@ class ApproveTarget extends React.Component {
                     </div>
                 </Grid>
                 <Grid item lg={8}>
-                    {this.state.selectedPlan 
+                    {this.state.selectedPlan
                     ? <div className={classes.targetFormContainer}>
                         <div className="userDetails">
                             <h2 style={{margin: '5px 0'}}>{planUser && planUser.UserName}</h2>
                             <h4 style={{margin: '5px 0'}}>User id: {planUser.UserID}</h4>
                             <span><b>Period: {this.state.selectedPlan.Period}</b></span>
                         </div>
-                        
+
                         {criterias.map(criteria => {
                             const weight = this.getTarget(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, 'Weight');
                             totalWeight += Number(weight);
@@ -167,7 +195,7 @@ class ApproveTarget extends React.Component {
                                             variant="outlined"
                                             label="Weight"
                                             value={weight}
-                                            onChange={(e) => 
+                                            onChange={(e) =>
                                                 this.handleTargetChange(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, e.target.value, 'Weight')}
 
                                         />
@@ -177,7 +205,7 @@ class ApproveTarget extends React.Component {
                                             variant="outlined"
                                             label="Target"
                                             value={(() => this.getTarget(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID))()}
-                                            onChange={(e) => 
+                                            onChange={(e) =>
                                                 this.handleTargetChange(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, e.target.value, 'Target')}
 
                                         />
