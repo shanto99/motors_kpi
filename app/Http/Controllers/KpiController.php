@@ -191,7 +191,10 @@ class KpiController extends Controller
 
         foreach ($criterias as $cName => $subCriterias) {
             foreach ($subCriterias as $scName => $subSubCriterias) {
+                $sc = [];
+                $havessc = false;
                 foreach ($subSubCriterias as $subSubCriteria) {
+                    $havessc = true;
                     $ssc = [];
                     if ($curCName !== $cName) {
                         $ssc['CriteriaName'] = $cName;
