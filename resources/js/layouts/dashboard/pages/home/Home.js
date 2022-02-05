@@ -106,6 +106,7 @@ class Home extends React.Component {
                 {kpi
                 ? <div style={{ margin: '0 auto', marginTop: '30px' }}>
                     <KPIForm 
+                        monthPlanId = {kpi.MonthPlanID}
                         period={period}
                         criterias={kpi.formattedCriteria} 
                         approvals={kpi.approvals}

@@ -1,15 +1,16 @@
 import React from "react";
 import styles from "./styles";
 
-import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, withStyles} from "@material-ui/core";
+import {Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, withStyles} from "@material-ui/core";
+import {generateKpiPdf} from "../../API/kpi";
+import swal from "sweetalert";
 
 class KPIForm extends React.Component {
     constructor(props) {
         super(props);
 
-        console.log("Remarks: ", props.remarks);
-
         this.state = {
+            monthPlanId: props.monthPlanId,
             criterias: props.criterias,
             approvals: props.approvals,
             employee: props.employee,
@@ -250,10 +251,18 @@ class KPIForm extends React.Component {
             criterias: props.criterias,
             approvals: props.approvals,
             employee: props.employee,
-            remarks: props.remarks || []
+            remarks: props.remarks || [],
+            monthPlanId: props.monthPlanId
         };
     }
 
+    generatePdf = () => {
+        generateKpiPdf(this.state.monthPlanId).then(res => {
+            swal("Success", "KPI pdf downloaded!", "success");
+        }).catch(err => {
+            swal("Error!", "Could not generate pdf!", "error");
+        });
+    }
 
     render()
     {
@@ -267,6 +276,17 @@ class KPIForm extends React.Component {
 
         return (
             <div className={classes.tableContainer}>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button
+                        color="secondary"
+                        variant="contained"
+                        onClick={this.generatePdf}
+                    >
+                        Generate PDF
+                    </Button>
+                </div>
+            
+                <br/>
                 {employee
                 ? <div className="employeeInfo">
                     <div className="infoRow">

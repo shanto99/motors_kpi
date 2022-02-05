@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Criteria;
 use App\Models\MonthPlan;
 use App\Models\User;
+use App\Services\KpiFormService;
+use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +33,7 @@ class KpiController extends Controller
         $approvals = $plan->approvals;
 
         return response()->json([
+            'monthPlanId' => $plan->MonthPlanID,
             'employee' => $employee,
             'approvals' => $approvals,
             'criterias' => $criterias,
@@ -51,6 +54,7 @@ class KpiController extends Controller
         $remarks = $plan->actualRemarks;
 
         return response()->json([
+            'monthPlanID' => $plan->monthPlanId,
             'employee' => $employee,
             'approvals' => $approvals,
             'criterias' => $criterias,
@@ -178,56 +182,16 @@ class KpiController extends Controller
         ], 200);
     }
 
-    public function generateKpiPdf($monthPlanId = 367)
+    public function generateKpiPdf($monthPlanId)
     {
-        $monthPlan = MonthPlan::with('user', 'targets.criteria', 'targets.subCriteria', 'targets.subSubCriteria')->find($monthPlanId);
-        $user = $monthPlan->user;
-        $criterias = $monthPlan->targets->groupBy(['criteria.Name', 'subCriteria.Name']);
+        $result = KpiFormService::formatDataForKpiForm($monthPlanId);
+        //return view('kpi', $result);
+        $pdf = PDF::loadView('kpi', $result)->setPaper('a4', 'landscape');
+        $path = public_path('pdf');
+        $fileName =  time() . '.' . 'pdf';
+        $pdf->save($path . '/' . $fileName);
 
-        $curCName = "";
-        $curSCName = "";
-
-        $formattedTargets = [];
-
-        foreach ($criterias as $cName => $subCriterias) {
-            foreach ($subCriterias as $scName => $subSubCriterias) {
-                $sc = [];
-                $havessc = false;
-                foreach ($subSubCriterias as $subSubCriteria) {
-                    $havessc = true;
-                    $ssc = [];
-                    if ($curCName !== $cName) {
-                        $ssc['CriteriaName'] = $cName;
-                        $curCName = $cName;
-                    }
-                    if ($curSCName !== $scName) {
-                        $ssc['SubCriteriaName'] = $scName;
-                        $curSCName = $scName;
-                    }
-
-                    $ssc['Weight'] = $subSubCriteria['Weight'];
-                    $ssc['Target'] = $subSubCriteria['Target'];
-
-                    array_push($formattedTargets, $ssc);
-                }
-            }
-        }
-
-        dd($formattedTargets);
-
-
-
-        $criterias = $criterias->map(function ($criteria) {
-            if ($criteria->count() < 2) return $criteria->first();
-            return $criteria;
-        })->toArray();
-
-        dd($criterias);
-
-        foreach ($criterias as $criteria) {
-        }
-
-
-        return view('kpi', with(['plan' => $monthPlan, 'user' => $user, 'targets' => $targets]));
+        $pdf = public_path('pdf/' . $fileName);
+        return response()->download($pdf)->deleteFileAfterSend(true);
     }
 }

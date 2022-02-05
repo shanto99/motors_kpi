@@ -16,6 +16,7 @@ class KPI extends React.Component {
 
         this.state = {
             period: new Date(),
+            monthPlanId: null,
             criterias: [],
             approvals: [],
             remarks: [],
@@ -32,6 +33,7 @@ class KPI extends React.Component {
         let period = `${this.state.period.getFullYear()}-${this.state.period.getMonth()+1}`;
         getKpi(period).then(res => {
             this.setState({
+                monthPlanId: res.monthPlanId,
                 criterias: res.formattedCriteria,
                 approvals: res.approvals,
                 employee: res.employee,
@@ -81,6 +83,7 @@ class KPI extends React.Component {
                   </React.Fragment>
                  :
                     <KPIForm
+                        monthPlanId={this.state.monthPlanId}
                         criterias={criterias}
                         approvals={this.state.approvals}
                         employee={this.state.employee}

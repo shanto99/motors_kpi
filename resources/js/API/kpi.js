@@ -1,4 +1,5 @@
 import axios from "axios";
+import { reject } from "lodash";
 
 const filterOutSubSubCriteria = function(subCriteria) {
     let subSubCriterias = subCriteria.sub_sub_criterias;
@@ -146,8 +147,9 @@ const getKpi = function(period) {
             const approvals = response.approvals;
             const employee = response.employee;
             const remarks = response.remarks || [];
+            const monthPlanId = response.monthPlanId;
 
-            resolve({formattedCriteria, approvals, employee, remarks});
+            resolve({formattedCriteria, approvals, employee, remarks, monthPlanId});
         }).catch(function(err) {
             if(reject) reject(err);
         })
@@ -161,8 +163,9 @@ const getKpiById = function(kpiId) {
             const formattedCriteria = criteriaWithValue(response.criterias, response.targets);
             const approvals = response.approvals;
             const employee = response.employee;
-            const remarks = response.remarks || []
-            resolve({formattedCriteria, approvals, employee, remarks});
+            const remarks = response.remarks || [];
+            const monthPlanId = response.monthPlanId;
+            resolve({formattedCriteria, approvals, employee, remarks, monthPlanId});
         }).catch(function(err) {
             if(reject) reject(err);
         })
@@ -199,7 +202,6 @@ const approveKpi = function(kpiId, comment) {
 }
 
 const getReport = function(userId, from, to) {
-    console.log({from, to});
     return new Promise(function(resolve, reject) {
         axios.get(`/motors_kpi/report/${userId}/${from}/${to}`).then(function(res) {
             resolve(res.data);
@@ -210,4 +212,19 @@ const getReport = function(userId, from, to) {
 
 }
 
-export {getKpi, getKpiById, approveKpi, getUserKpiByPeriod, getReport};
+const generateKpiPdf = function(kpiId) {
+    axios.get(`/motors_kpi/kpi_pdf/${kpiId}`, {
+        responseType: 'blob'
+    }).then(function(res) {
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'kpi.pdf'); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+    }).catch(function(err) {
+        if(reject) reject(err);
+    });
+}
+
+export {getKpi, getKpiById, approveKpi, getUserKpiByPeriod, getReport, generateKpiPdf};
