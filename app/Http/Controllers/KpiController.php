@@ -54,7 +54,7 @@ class KpiController extends Controller
         $remarks = $plan->actualRemarks;
 
         return response()->json([
-            'monthPlanID' => $plan->monthPlanId,
+            'monthPlanId' => $plan->MonthPlanID,
             'employee' => $employee,
             'approvals' => $approvals,
             'criterias' => $criterias,
@@ -86,6 +86,7 @@ class KpiController extends Controller
         $remarks = $plan->actualRemarks;
 
         return response()->json([
+            'monthPlanId' => $plan->MonthPlanID,
             'employee' => $employee,
             'approvals' => $approvals,
             'criterias' => $criterias,
@@ -188,7 +189,7 @@ class KpiController extends Controller
         //return view('kpi', $result);
         $pdf = PDF::loadView('kpi', $result)->setPaper('a4', 'landscape');
         $path = public_path('pdf');
-        $fileName =  time() . '.' . 'pdf';
+        $fileName =  'kpi' . '.' . 'pdf';
         $pdf->save($path . '/' . $fileName);
 
         $pdf = public_path('pdf/' . $fileName);

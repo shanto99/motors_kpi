@@ -172,9 +172,10 @@ class ActualInput extends React.Component {
                                     label="Target"
                                     disabled={true}
                                     value={(() => this.getTarget(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID))()}
+                                    size="small"
                                     onChange={(e) => {
                                         let value = e.target.value;
-                                        if(isNaN(value)) return;
+                                        if(isNaN(value) && value !== "") return;
                                         this.handleTargetChange(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, e.target.value)
                                     }}
 
@@ -186,9 +187,10 @@ class ActualInput extends React.Component {
                                     label="Actual"
                                     disabled={!(targetApproved && !actualApproved)}
                                     value={(() => this.getTarget(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, "actual"))()}
+                                    size="small"
                                     onChange={(e) => {
                                         let value = e.target.value;
-                                        if(isNaN(value)) return;
+                                        if(isNaN(value) && value !== "") return;
                                         this.handleTargetChange(criteria.CriteriaID, criteria.SubCriteriaID, criteria.SubSubCriteriaID, e.target.value)
                                     }}
 

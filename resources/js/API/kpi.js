@@ -181,7 +181,8 @@ const getUserKpiByPeriod = function(userId, period) {
             const approvals = response.approvals;
             const employee = response.employee;
             const remarks = response.remarks || [];
-            resolve({formattedCriteria, approvals, employee, remarks});
+            const monthPlanId = response.monthPlanId;
+            resolve({formattedCriteria, approvals, employee, remarks, monthPlanId});
         }).catch(function(err) {
             if(reject) reject(err);
         })

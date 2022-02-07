@@ -150,7 +150,7 @@ class Criteria extends React.Component {
                             })}
                         </List>
                     </List>
-                    </div>  
+                    </div>
                 </Grid>
                 <Grid item lg={6}>
                     <Box component="form" style={{ maxWidth: '400px' }} onSubmit={this.handleCriteriaSubmit}>
@@ -228,7 +228,7 @@ class Criteria extends React.Component {
                             variant="contained"
                             color="primary"
                         >
-                            Save user
+                            Save
                         </Button>
                     </Box>
                 </Grid>

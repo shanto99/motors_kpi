@@ -65,10 +65,17 @@
             padding: 15px;
         }
 
+        .altered-row {
+            background: yellow;
+        }
+
     </style>
 </head>
 
 <body>
+    @php
+        $parentRowClass = '';
+    @endphp
     <div class="kpi-container">
         <div class="kpi-header">
             <div class="kpi-header-row">
@@ -94,9 +101,6 @@
                     <b>Location: {{ $user->Location }}</b>
                 </span>
             </div>
-            <div class="kpi-header-row">
-
-            </div>
         </div>
         <div class="kpi-table">
             <table>
@@ -106,18 +110,39 @@
                     <th>Target</th>
                     <th>Actual</th>
                     <th>Weight</th>
+                    <th>Score</th>
+                    <th>F.Score</th>
                 </tr>
                 @foreach ($targets as $target)
-                    <tr class="kpi-row @if ($loop->index % 2 == 0) even-row @else odd-row @endif @if (isset($target['SumRow'])) font-bold @endif">
+                    <tr class="kpi-row @if ($loop->index % 2 == 0) even-row @else odd-row @endif @if (isset($target['SumRow'])) font-bold @endif @if (isset($target['ChangedBySupervisor']) && $target['ChangedBySupervisor']) altered-row @endif">
                         @if (isset($target['CriteriaName']))
-                            <td @if (isset($target['RowSpan'])) rowspan="{{ $target['RowSpan'] }}" @endif>{{ $target['CriteriaName'] }}</td>
+                            @php
+                                $parentRowClass = $loop->index % 2 == 0 ? 'even-row' : 'odd-row';
+                            @endphp
+                            {{-- <td @if (isset($target['RowSpan'])) rowspan="{{ $target['RowSpan'] }}" @endif>{{ $target['CriteriaName'] }}</td> --}}
+                            <td class="@if ($loop->index % 2 == 0) even-row @else odd-row @endif">{{ $target['CriteriaName'] }}</td>
+                        @else
+                            <td class="kpi-row {{ $parentRowClass }}">
+
+                            </td>
                         @endif
                         <td class="kpi-name">{{ $target['Name'] }}</td>
                         <td class="value-cell">{{ $target['Target'] }}</td>
                         <td class="value-cell">{{ $target['Actual'] }}</td>
                         <td class="value-cell">{{ $target['Weight'] }}</td>
+                        <td class="value-cell">{{ $target['Score'] }}</td>
+                        <td class="value-cell">{{ $target['FScore'] }}</td>
                     </tr>
                 @endforeach
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td class="value-cell">{{ $total['Target'] }}</td>
+                    <td class="value-cell">{{ $total['Actual'] }}</td>
+                    <td class="value-cell">{{ $total['Weight'] }}</td>
+                    <td class="value-cell">{{ $total['Score'] }}</td>
+                    <td class="value-cell">{{ $total['FScore'] }}</td>
+                </tr>
             </table>
         </div>
         <h3>Remarks: </h3>

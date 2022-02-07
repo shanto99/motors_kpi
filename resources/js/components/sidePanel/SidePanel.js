@@ -22,8 +22,8 @@ class SidePanel extends React.Component {
             } catch(error) {
                 console.log("Could not parse user json");
             }
-           isAdmin = userObj && userObj.IsAdmin && userObj.IsAdmin.toString() === "1" ? true : false; 
-           isApprover = userObj && userObj.IsApprover && userObj.IsApprover.toString() === "1" ? true : false; 
+           isAdmin = userObj && userObj.IsAdmin && userObj.IsAdmin.toString() === "1" ? true : false;
+           isApprover = userObj && userObj.IsApprover && userObj.IsApprover.toString() === "1" ? true : false;
         }
 
         this.state = {
@@ -31,7 +31,7 @@ class SidePanel extends React.Component {
             isAuthenticated: true,
             isApprover: isApprover
         };
-        
+
     }
 
     makeLogout = () => {
@@ -81,7 +81,7 @@ class SidePanel extends React.Component {
                                 </ListItem>
                             </Link>
                         : null}
-                        
+
                         <Link to="/approve-kpi" className={classes.menuItem}>
                             <ListItem>
                                 <ListItemText>
@@ -116,7 +116,7 @@ class SidePanel extends React.Component {
                             </ListItem>
                         </Link>
                         : null}
-                        
+
                         {isAdmin
                         ? <Link to="/assign-criteria" className={classes.menuItem}>
                             <ListItem>
@@ -136,7 +136,7 @@ class SidePanel extends React.Component {
                             </ListItem>
                         </Link>
                         : null}
-                        
+
                         <Link to="/approve-target" className={classes.menuItem}>
                             <ListItem>
                                 <ListItemText>
@@ -154,21 +154,21 @@ class SidePanel extends React.Component {
                             </Link>
                         : null}
 
-                        <Link to="/report" className={classes.menuItem}>
+                        {/* <Link to="/report" className={classes.menuItem}>
                             <ListItem>
                                 <ListItemText>
                                     Report
                                 </ListItemText>
                             </ListItem>
-                        </Link>
-                        
+                        </Link> */}
+
                     </List>
                 </section>
                 <div>
                     <button className={classes.logoutBtn} onClick={this.makeLogout}>
                        <span><img src="/motors_kpi/images/exit_icon.svg"/></span> Logout
                     </button>
-                    
+
                 </div>
             </div>
         );

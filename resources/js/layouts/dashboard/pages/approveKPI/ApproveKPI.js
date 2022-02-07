@@ -89,15 +89,27 @@ class ApproveKPI extends React.Component {
     }
 
     render() {
-        const {plans, selectedPlanId, planDetails} = this.state;
+        let {plans, selectedPlanId, selectedPlan, planDetails, approvals, employee} = this.state;
         const classes = this.props.classes;
+
+        let kpi = {
+            selectedPlanId,
+            planDetails,
+            employee,
+            approvals,
+            plans,
+            selectedPlan
+        };
+
+        kpi = JSON.parse(JSON.stringify(kpi));
+
 
         return (
             <Grid container>
                 <Grid item lg={4} md={4}>
                     <h3>Approve KPI</h3>
                     <div style={{maxWidth: '74vh', overflow: 'auto'}}>
-                        {plans.map(plan => {
+                        {kpi.plans.map(plan => {
                             let period = plan.Period;
                             let periodArr = period.split("-");
                             let year = periodArr[0];
@@ -115,16 +127,18 @@ class ApproveKPI extends React.Component {
                         })}
                     </div>
                 </Grid>
-                <Grid item lg={8} md={8}>
-                    {planDetails
-                    ? <div>
+                <Grid item lg={8} md={8} style={{overflow: 'auto'}}>
+                    {kpi.planDetails
+                    ? <>
                         <div style={{ maxHeight: '74vh', overflow: 'auto' }}>
-                          <KPIForm criterias={this.state.planDetails} 
-                            employee = {this.state.employee}
-                            period={this.state.selectedPlan.Period}
-                            approvals={this.state.approvals} />  
+                          <KPIForm criterias={kpi.planDetails}
+                            employee = {kpi.employee}
+                            period={kpi.selectedPlan.Period}
+                            approvals={kpi.approvals}
+                            monthPlanId={kpi.selectedPlanId}
+                            />
                         </div>
-                        
+
                         <div className={classes.kpiFormFooter}>
                             <Button
                                 variant="outlined"
@@ -133,9 +147,9 @@ class ApproveKPI extends React.Component {
                                 Approve
                             </Button>
                         </div>
-                      </div>
+                      </>
                     : null}
-                    
+
                 </Grid>
             </Grid>
         )

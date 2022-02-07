@@ -88,27 +88,27 @@ class Home extends React.Component {
                                 } else {
                                     return (<span>{option.UserName}</span>)
                                 }
-                                
+
                             }}
                             onChange={(e, user) => this.handleSubordinateSelect(user)}
                             renderInput={(params) => <TextField variant="outlined" {...params} label="Subordinate" /> }
                         />
                     </div>
-                    
+
 
                     <div className={classes.datePickerContainer}>
                         <label style={{ fontWeight: 'bold', width: '150px' }}>Select Period</label>
-                        <DatePicker selected={this.state.selectedDateInstance} 
+                        <DatePicker selected={this.state.selectedDateInstance}
                         dateFormat="yyyy-MM"
                         showMonthYearPicker onChange={this.handleMonthSelect} />
                     </div>
                 </div>
                 {kpi
                 ? <div style={{ margin: '0 auto', marginTop: '30px' }}>
-                    <KPIForm 
-                        monthPlanId = {kpi.MonthPlanID}
+                    <KPIForm
+                        monthPlanId = {kpi.monthPlanId}
                         period={period}
-                        criterias={kpi.formattedCriteria} 
+                        criterias={kpi.formattedCriteria}
                         approvals={kpi.approvals}
                         employee={kpi.employee}
                         remarks={kpi.remarks}
@@ -118,7 +118,7 @@ class Home extends React.Component {
                     <img src="/motors_kpi/images/no_kpi.svg"/>
                  </div>}
             </React.Fragment>
-            
+
         );
     }
 }

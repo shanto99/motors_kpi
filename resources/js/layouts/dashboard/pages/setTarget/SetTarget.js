@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField, Button, withStyles } from "@material-ui/core";
+import { TextField, Button, withStyles, InputAdornment } from "@material-ui/core";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -164,10 +164,13 @@ class SetTarget extends React.Component {
                                 <div className="fieldInput">
                                     <TextField
                                         variant="outlined"
-                                        label="Target"
                                         required
                                         disabled={approved}
                                         value={target ? target.Target : ""}
+                                        size="small"
+                                        InputProps={{
+                                            endAdornment: <InputAdornment>{this.state.prevPlan ? target.Unit : this.getCriteriaUnit(criteria)}</InputAdornment>
+                                        }}
                                         onChange={(e) => {
                                                 let value = e.target.value;
                                                 if(isNaN(value)) return;
@@ -176,7 +179,7 @@ class SetTarget extends React.Component {
                                         }
 
                                     />
-                                    <span>{target && this.state.prevPlan ? target.Unit : this.getCriteriaUnit(criteria)}</span>
+                                    {/* <span>{target && this.state.prevPlan ? target.Unit : this.getCriteriaUnit(criteria)}</span> */}
                                 </div>
                                 <div className="remark">
                                     <span>{this.getCriteriaRemarks(criteria)}</span>

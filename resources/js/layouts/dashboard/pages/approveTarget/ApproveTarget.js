@@ -46,7 +46,7 @@ class ApproveTarget extends React.Component {
             const targets = responses[1].plan && responses[1].plan.targets || [];
             const user = responses[1].plan && responses[1].plan.user || null;
 
-            this.tagetsBackup = JSON.parse(JSON.stringify(targets));
+            this.targetsBackup = JSON.parse(JSON.stringify(targets));
 
             this.setState({
                 selectedPlan: selectedPlan,
@@ -97,10 +97,11 @@ class ApproveTarget extends React.Component {
     }
 
     checkIfAltered = (target) => {
-        let backup = this.tagetsBackup.find(t => t.CriteriaID === target.CriteriaID && t.SubCriteriaID === target.SubCriteriaID && t.SubSubCriteriaID === target.SubSubCriteriaID);
+        let backup = this.targetsBackup.find(t => t.CriteriaID === target.CriteriaID && t.SubCriteriaID === target.SubCriteriaID && t.SubSubCriteriaID === target.SubSubCriteriaID);
         if(backup) {
-            if(Number(backup.Target) !== Number(target.Target) || Number(backup.Weight) !== Number(backup.Weight)) {
+            if(Number(backup.Target) !== Number(target.Target) || Number(backup.Weight) !== Number(target.Weight)) {
                 return true;
+
             }
 
             return false;

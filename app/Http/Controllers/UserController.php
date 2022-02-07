@@ -66,7 +66,7 @@ class UserController extends Controller
             'Password' => 'required'
         ]);
 
-        $user = User::where('UserID', $request->UserID)->first();
+        $user = User::with('supervisors.supervisor')->where('UserID', $request->UserID)->first();
         if (!$user) {
             return response()->json([
                 'error' => 'Not Registered User',
@@ -89,8 +89,9 @@ class UserController extends Controller
 
     public function get_user()
     {
+        $user = User::with('supervisors.supervisor')->where('UserID', Auth::user()->UserID)->first();
         return response()->json([
-            'user' => Auth::user(),
+            'user' => $user,
             'status' => 200
         ], 200);
     }

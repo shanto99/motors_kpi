@@ -2,7 +2,7 @@ import { AccountCircle, Menu as MenuIcon } from "@mui/icons-material";
 import React from "react";
 import Cookies from "js-cookie";
 import "./style.css";
-import { Hidden } from "@mui/material";
+import { Hidden, Menu, MenuItem, Button } from "@mui/material";
 
 import {changePassword} from "../../API/authentication";
 
@@ -10,7 +10,9 @@ class Header extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: null
+            user: null,
+            open: false,
+            anchorEl: null
         }
     }
     componentDidMount(){
@@ -22,7 +24,10 @@ class Header extends React.Component {
     }
 
     changePassword = () => {
-        swal({
+        this.setState({
+            open: false
+        }, () => {
+            swal({
             text: 'Change password',
             content: "input",
             button: {
@@ -39,10 +44,25 @@ class Header extends React.Component {
             .catch(err => {
                 swal("Error!", "Something went wrong", "error");
             });
+        });
+    }
+
+    handleClick = (e) => {
+        this.setState({
+            anchorEl: e.currentTarget,
+            open: true
+        });
+    }
+
+    handleClose = () => {
+        this.setState({
+            open: false
+        });
     }
 
     render() {
-        const user = this.state.user;
+        const {user, open} = this.state;
+
         return (
             <div className="headerWrapper">
                 <div>
@@ -53,10 +73,36 @@ class Header extends React.Component {
                     </Hidden>
 
                 </div>
-                <div style={{ display: 'flex', textAlign: 'center', cursor: 'pointer', justifyContent: 'flex-end' }} onClick={this.changePassword}>
+                <div style={{ display: 'flex', textAlign: 'center', cursor: 'pointer', justifyContent: 'flex-end' }}>
                     <section>
                         <AccountCircle fontSize="large"/>
-                        <div>{user ? user.UserName : 'user name'}</div>
+                        <div>
+                            <Button
+                                id="basic-button"
+                                aria-controls={open ? 'user-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                                onClick={this.handleClick}
+                            >
+                                {user ? user.UserName : 'user name'}
+                            </Button>
+                            <Menu
+                                id="user-menu"
+                                anchorEl={this.state.anchorEl}
+                                open={open}
+                                onClose={this.handleClose}
+                                MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                                }}
+                            >
+                                <MenuItem>
+                                    <span>Supervisor: {user && user.supervisors && user.supervisors.length > 0 ? user.supervisors[0].supervisor.UserName : 'None'}</span>
+                                </MenuItem>
+                                <MenuItem
+                                    onClick={this.changePassword}
+                                >Change password</MenuItem>
+                            </Menu>
+                        </div>
                     </section>
 
                 </div>

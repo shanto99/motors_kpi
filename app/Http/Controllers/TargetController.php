@@ -61,8 +61,6 @@ class TargetController extends Controller
 
         $targetsWithDistributedWeights = $weightDistributionService->weightDistributedTargets();
 
-        //dd($targetsWithDistributedWeights);
-
         foreach ($targetsWithDistributedWeights as $target) {
             $criteriaId = $target['CriteriaID'];
             $subCriteriaId = $target['SubCriteriaID'];
@@ -185,20 +183,34 @@ class TargetController extends Controller
         $targets = $request->targets;
 
         $monthPlan = MonthPlan::find($planId);
+
+        function findTarget($exTarget, $targets)
+        {
+            for ($i = 0; $i < count($targets); $i++) {
+                $target = $targets[$i];
+                if (
+                    $target['CriteriaID'] == $exTarget->CriteriaID
+                    && $target['SubCriteriaID'] == $exTarget->SubCriteriaID
+                    && $target['SubSubCriteriaID'] == $exTarget->SubSubCriteriaID
+                ) {
+                    return $target;
+                }
+            }
+        }
+
         DB::beginTransaction();
         try {
             $monthPlan->update([
                 'TargetApprovedBy' => Auth::user()->UserID
             ]);
-            $monthPlan->targets()->delete();
-            foreach ($targets as $target) {
-                $monthPlan->targets()->create([
-                    'CriteriaID' => $target['CriteriaID'],
-                    'SubCriteriaID' => $target['SubCriteriaID'],
-                    'SubSubCriteriaID' => $target['SubSubCriteriaID'],
+            $existingTargets = $monthPlan->targets;
+            foreach ($existingTargets as $exTarget) {
+                $target = findTarget($exTarget, $targets);
+                $exTarget->update([
                     'Weight' => $target['Weight'],
                     'Target' => $target['Target'],
                     'ChangedBySupervisor' => $target['ChangedBySupervisor']
+
                 ]);
             }
             DB::commit();

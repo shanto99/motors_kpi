@@ -126,13 +126,13 @@ class KPIForm extends React.Component {
                                     {`${subCriteria.Actual} ${unit}`}
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    {`${subCriteria.Weight} ${unit}`}
+                                    {subCriteria.Weight}
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    {`${score} ${unit}`}
+                                    {score}
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    {`${fScore} ${unit}`}
+                                    {fScore}
                                 </TableCell>
                             </TableRow>
                         );
@@ -158,10 +158,10 @@ class KPIForm extends React.Component {
                                     {subCriteria.Weight}
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    {`${score} ${unit}`}
+                                    {score}
                                 </TableCell>
                                 <TableCell className="tableCell">
-                                    {`${fScore} ${unit}`}
+                                    {fScore}
                                 </TableCell>
                             </TableRow>
                         );
@@ -201,10 +201,10 @@ class KPIForm extends React.Component {
                             {criteria.Weight}
                         </TableCell>
                         <TableCell className="tableCell">
-                            {`${score} ${unit}`}
+                            {score}
                         </TableCell>
                         <TableCell className="tableCell">
-                            {`${fScore} ${unit}`}
+                            {fScore}
                         </TableCell>
                     </TableRow>
                 );
@@ -285,7 +285,7 @@ class KPIForm extends React.Component {
                         Generate PDF
                     </Button>
                 </div>
-            
+
                 <br/>
                 {employee
                 ? <div className="employeeInfo">
