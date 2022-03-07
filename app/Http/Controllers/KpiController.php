@@ -22,14 +22,15 @@ class KpiController extends Controller
             'targets.subSubCriteria',
             'approvals.user.designation',
             'user',
-            'actualRemarks'
+            'actualRemarks',
+            'comments'
         )->where('UserID', Auth::user()->UserID)->where('Period', $period)->first();
         $targets = $plan->targets->toArray();
         $criterias = Criteria::with('sub_criterias.sub_sub_criterias')->get();
         $criterias = json_decode(json_encode($criterias), true);
         $employee = $plan->user;
         $remarks = $plan->actualRemarks;
-
+        $comments = $plan->comments;
         $approvals = $plan->approvals;
 
         return response()->json([
@@ -39,19 +40,21 @@ class KpiController extends Controller
             'criterias' => $criterias,
             'targets' => $targets,
             'remarks' => $remarks,
+            'comments' => $comments,
             'status' => 200
         ], 200);
     }
 
     public function getKpiById($kpiId)
     {
-        $plan = MonthPlan::with('approvals.user.designation, actualRemarks')->where('MonthPlanID', $kpiId)->first();
+        $plan = MonthPlan::with('approvals.user.designation, actualRemarks', 'comments')->where('MonthPlanID', $kpiId)->first();
         $targets = $plan->targets->toArray();
         $criterias = Criteria::with('sub_criterias.sub_sub_criterias')->get();
         $criterias = json_decode(json_encode($criterias), true);
         $approvals = $plan->approvals;
         $employee = $plan->user;
         $remarks = $plan->actualRemarks;
+        $comments = $plan->comments;
 
         return response()->json([
             'monthPlanId' => $plan->MonthPlanID,
@@ -60,6 +63,7 @@ class KpiController extends Controller
             'criterias' => $criterias,
             'targets' => $targets,
             'remarks' => $remarks,
+            'comments' => $comments,
             'status' => 200
         ], 200);
     }
@@ -72,7 +76,8 @@ class KpiController extends Controller
             'targets.subSubCriteria',
             'approvals.user.designation',
             'user',
-            'actualRemarks'
+            'actualRemarks',
+            'comments'
         )->where('UserID', $userId)->where('Period', $period)->first();
         if (!$plan) return response()->json([
             'kpi' => null,
@@ -84,6 +89,7 @@ class KpiController extends Controller
         $approvals = $plan->approvals;
         $employee = $plan->user;
         $remarks = $plan->actualRemarks;
+        $comments = $plan->comments;
 
         return response()->json([
             'monthPlanId' => $plan->MonthPlanID,
@@ -92,6 +98,7 @@ class KpiController extends Controller
             'criterias' => $criterias,
             'targets' => $targets,
             'remarks' => $remarks,
+            'comments' => $comments,
             'status' => 200
         ], 200);
     }

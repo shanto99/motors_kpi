@@ -31,11 +31,11 @@ class SetTarget extends React.Component {
         Promise.all([getUserCriteria(), getTargets()]).then(responses => {
             const criteria = responses[0] && responses[0].criteria;
             const plan = responses[1].plan;
-            const targets = plan && plan.targets || [];
+            const targets = plan && plan.targets && plan.targets.length > 0 ? plan.targets : JSON.parse(JSON.stringify(criteria));
 
             this.setState({
                 criterias: criteria,
-                targets: targets || [],
+                targets: targets,
                 approved: plan && plan.TargetApprovedBy ? true : false,
                 prevPlan: plan ? true : false
             });
@@ -121,10 +121,10 @@ class SetTarget extends React.Component {
         let period = `${date.getFullYear()}-${date.getMonth()+1}`;
         getTargets(period).then(res => {
             const plan = res.plan;
-            const targets = plan && plan.targets || [];
+            const targets = plan && plan.targets && plan.targets.length > 0 ? plan.targets :  JSON.parse(JSON.stringify(this.state.criterias));
 
             this.setState({
-                targets: targets || [],
+                targets: targets,
                 approved: plan && plan.TargetApprovedBy ? true : false,
                 period: date,
                 prevPlan: plan ? true : false
@@ -138,10 +138,33 @@ class SetTarget extends React.Component {
         return criteria.Unit;
     }
 
+    getFormattedTargets = (targets) => {
+        const formattedTargets = [];
+        targets.forEach(function(target) {
+                const criteria = target.sub_sub_criteria ? target.sub_sub_criteria : (target.sub_criteria ? target.sub_criteria : target.criteria);
+                formattedTargets.push({
+                    CriteriaID: target.criteria.CriteriaID,
+                    SubCriteriaID: criteria.SubCriteriaID,
+                    SubSubCriteriaID: criteria.SubSubCriteriaID,
+                    Unit: criteria.Unit,
+                    Target: target.Target || "",
+                    Name: criteria.Name,
+                    Remarks: criteria.Remarks
+                });
+            });
+
+        return formattedTargets;
+    }
+
     render() {
         const classes = this.props.classes;
-        const {criterias, approved, period, prevPlan} = this.state;
+        let {approved, period, prevPlan, targets} = this.state;
 
+        console.log("Targets: ", targets);
+
+        const criterias = this.getFormattedTargets(targets);
+
+        console.log(criterias);
         return (
             <div className={classes.targetFormContainer}>
                 <div className={classes.setTargetHeader}>
@@ -159,17 +182,26 @@ class SetTarget extends React.Component {
                         return (
                             <div className="formRow">
                                 <div className="fieldLabel">
-                                    {this.getCriteriaName(criteria)}
+                                    {
+                                        //this.getCriteriaName(criteria)
+                                        criteria.Name
+                                    }
                                 </div>
                                 <div className="fieldInput">
                                     <TextField
                                         variant="outlined"
                                         required
                                         disabled={approved}
-                                        value={target ? target.Target : ""}
+                                        value={
+                                            //target ? target.Target : ""
+                                            criteria.Target
+                                        }
                                         size="small"
                                         InputProps={{
-                                            endAdornment: <InputAdornment>{this.state.prevPlan ? target.Unit : this.getCriteriaUnit(criteria)}</InputAdornment>
+                                            endAdornment: <InputAdornment>{
+                                                //this.state.prevPlan ? target.Unit : this.getCriteriaUnit(criteria)
+                                                criteria.Unit
+                                                }</InputAdornment>
                                         }}
                                         onChange={(e) => {
                                                 let value = e.target.value;
@@ -182,7 +214,10 @@ class SetTarget extends React.Component {
                                     {/* <span>{target && this.state.prevPlan ? target.Unit : this.getCriteriaUnit(criteria)}</span> */}
                                 </div>
                                 <div className="remark">
-                                    <span>{this.getCriteriaRemarks(criteria)}</span>
+                                    <span>{
+                                        //this.getCriteriaRemarks(criteria)
+                                        criteria.Remarks
+                                    }</span>
                                 </div>
                             </div>
                             )

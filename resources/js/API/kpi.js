@@ -147,9 +147,10 @@ const getKpi = function(period) {
             const approvals = response.approvals;
             const employee = response.employee;
             const remarks = response.remarks || [];
+            const comments = response.comments || [];
             const monthPlanId = response.monthPlanId;
 
-            resolve({formattedCriteria, approvals, employee, remarks, monthPlanId});
+            resolve({formattedCriteria, approvals, employee, remarks, comments, monthPlanId});
         }).catch(function(err) {
             if(reject) reject(err);
         })
@@ -164,8 +165,9 @@ const getKpiById = function(kpiId) {
             const approvals = response.approvals;
             const employee = response.employee;
             const remarks = response.remarks || [];
+            const comments = response.comments || [];
             const monthPlanId = response.monthPlanId;
-            resolve({formattedCriteria, approvals, employee, remarks, monthPlanId});
+            resolve({formattedCriteria, approvals, employee, remarks, comments, monthPlanId});
         }).catch(function(err) {
             if(reject) reject(err);
         })
@@ -181,8 +183,9 @@ const getUserKpiByPeriod = function(userId, period) {
             const approvals = response.approvals;
             const employee = response.employee;
             const remarks = response.remarks || [];
+            const comments = response.comments || [];
             const monthPlanId = response.monthPlanId;
-            resolve({formattedCriteria, approvals, employee, remarks, monthPlanId});
+            resolve({formattedCriteria, approvals, employee, remarks, comments, monthPlanId});
         }).catch(function(err) {
             if(reject) reject(err);
         })

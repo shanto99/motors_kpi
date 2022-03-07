@@ -76,7 +76,9 @@ class ActualInput extends React.Component {
     getTarget = (criteriaId, subCriteriaId, subSubCriteriaId, valueType="target") => {
         const foundTarget = this.findCriteriaTarget(criteriaId, subCriteriaId, subSubCriteriaId);
         if(valueType === "target") return foundTarget && foundTarget.Target || "";
-        else return foundTarget && foundTarget.Actual || "";
+        const actual = foundTarget && foundTarget.Actual;
+        if(actual && actual > 0) return actual;
+        return "";
     }
 
     handleTargetChange = (criteriaId, subCriteriaId, subSubCriteriaId, value) => {

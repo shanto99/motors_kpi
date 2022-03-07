@@ -20,6 +20,7 @@ class KPI extends React.Component {
             criterias: [],
             approvals: [],
             remarks: [],
+            comments: [],
             employee: null
         }
     }
@@ -37,7 +38,8 @@ class KPI extends React.Component {
                 criterias: res.formattedCriteria,
                 approvals: res.approvals,
                 employee: res.employee,
-                remarks: res.remarks
+                remarks: res.remarks,
+                comments: res.comments || []
             });
         }).catch(err => {
             this.setState({
@@ -88,6 +90,7 @@ class KPI extends React.Component {
                         approvals={this.state.approvals}
                         employee={this.state.employee}
                         remarks={this.state.remarks}
+                        comments={this.state.comments || []}
                         ref={this.pdfElementRef}
                     />
                  }

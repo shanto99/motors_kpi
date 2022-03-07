@@ -22,7 +22,7 @@ class UserExport implements FromArray, WithHeadings
                 'UserID' => $user->UserID,
                 'UserName' => $user->UserName,
                 'Designation' => $user->designation->Designation,
-                'Supervisor' => $user->supervisors ? (isset($user->supervisors[0]) ? $user->supervisors[0]->UserID : 'N/A') : 'N/A',
+                'Supervisor' => $user->supervisors ? (isset($user->supervisors[0]) ? $user->supervisors[0]->SupervisorID : 'N/A') : 'N/A',
                 'Email' => $user->Email,
                 'Phone' => $user->Phone,
                 'Portfolio' => $user->Portfolio,

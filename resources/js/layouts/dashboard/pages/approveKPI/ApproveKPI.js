@@ -19,6 +19,8 @@ class ApproveKPI extends React.Component {
             selectedPlan: null,
             planDetails: null,
             approvals: [],
+            comments: [],
+            remarks: [],
             employee: null
         }
     }
@@ -46,6 +48,8 @@ class ApproveKPI extends React.Component {
                 selectedPlan: selectedPlan,
                 planDetails: res.formattedCriteria,
                 approvals: res.approvals || [],
+                comments: res.comments || [],
+                remarks: res.remarks || [],
                 employee: res.employee
             });
         }).catch(err => {
@@ -89,7 +93,7 @@ class ApproveKPI extends React.Component {
     }
 
     render() {
-        let {plans, selectedPlanId, selectedPlan, planDetails, approvals, employee} = this.state;
+        let {plans, selectedPlanId, selectedPlan, planDetails, approvals, remarks, comments, employee} = this.state;
         const classes = this.props.classes;
 
         let kpi = {
@@ -98,7 +102,9 @@ class ApproveKPI extends React.Component {
             employee,
             approvals,
             plans,
-            selectedPlan
+            selectedPlan,
+            remarks,
+            comments
         };
 
         kpi = JSON.parse(JSON.stringify(kpi));
@@ -136,6 +142,8 @@ class ApproveKPI extends React.Component {
                             period={kpi.selectedPlan.Period}
                             approvals={kpi.approvals}
                             monthPlanId={kpi.selectedPlanId}
+                            remarks={kpi.remarks}
+                            comments={kpi.comments}
                             />
                         </div>
 

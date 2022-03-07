@@ -112,6 +112,7 @@ class Home extends React.Component {
                         approvals={kpi.approvals}
                         employee={kpi.employee}
                         remarks={kpi.remarks}
+                        comments = {kpi.comments}
                     />
                   </div>
                 : <div style={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

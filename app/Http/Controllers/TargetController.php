@@ -40,43 +40,57 @@ class TargetController extends Controller
 
         $periodDate = Carbon::createFromFormat('Y-m-d', $period . '-01');
 
-        $existingPlan = MonthPlan::where('UserID', $user->UserID)->where('Period', $period)->first();
-        if ($existingPlan) {
-            $existingPlan->delete();
-        }
+        DB::beginTransaction();
 
-        $plan = $user->plans()->create([
-            'Period' => $period,
-            'PeriodDate' => $periodDate
-        ]);
+        try {
+            $existingPlan = MonthPlan::where('UserID', $user->UserID)->where('Period', $period)->first();
+            if ($existingPlan) {
+                $existingPlan->delete();
+            }
 
-        $weights = $user->designation->weights;
-
-        foreach ($weights as $weight) {
-            $criteria = $weight->subSubCriteria ?: $weight->subCriteria ?: $weight->criteria;
-            $weight['Unit'] = $criteria->Unit;
-        }
-
-        $weightDistributionService = new WeightDistribution($weights, $targets);
-
-        $targetsWithDistributedWeights = $weightDistributionService->weightDistributedTargets();
-
-        foreach ($targetsWithDistributedWeights as $target) {
-            $criteriaId = $target['CriteriaID'];
-            $subCriteriaId = $target['SubCriteriaID'];
-            $subSubCriteriaId = $target['SubSubCriteriaID'];
-
-            $criteria = $this->find_criteria($criteriaId, $subCriteriaId, $subSubCriteriaId, $weights);
-
-            $plan->targets()->create([
-                'CriteriaID' => $criteriaId,
-                'SubCriteriaID' => $subCriteriaId,
-                'SubSubCriteriaID' => $subSubCriteriaId,
-                'Weight' => $target['Weight'],
-                'Target' => $target['Target'],
-                'Unit' => $target['Unit']
+            $plan = $user->plans()->create([
+                'Period' => $period,
+                'PeriodDate' => $periodDate
             ]);
+
+            $weights = $user->designation->weights;
+
+            foreach ($weights as $weight) {
+                $criteria = $weight->subSubCriteria ?: $weight->subCriteria ?: $weight->criteria;
+                $weight['Unit'] = $criteria->Unit;
+            }
+
+            $weightDistributionService = new WeightDistribution($weights, $targets);
+
+            $targetsWithDistributedWeights = $weightDistributionService->weightDistributedTargets();
+
+            foreach ($targetsWithDistributedWeights as $target) {
+                $criteriaId = $target['CriteriaID'];
+                $subCriteriaId = $target['SubCriteriaID'];
+                $subSubCriteriaId = $target['SubSubCriteriaID'];
+
+                $criteria = $this->find_criteria($criteriaId, $subCriteriaId, $subSubCriteriaId, $weights);
+
+                $plan->targets()->create([
+                    'CriteriaID' => $criteriaId,
+                    'SubCriteriaID' => $subCriteriaId,
+                    'SubSubCriteriaID' => $subSubCriteriaId,
+                    'Weight' => $target['Weight'],
+                    'Target' => $target['Target'],
+                    'Unit' => $target['Unit']
+                ]);
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'error' => 'Something went wrong',
+                'status' => 500
+            ], 500);
         }
+
+
 
         return response()->json([
             'message' => 'Targets set successfully',
@@ -88,7 +102,7 @@ class TargetController extends Controller
     public function getTargets($period)
     {
         $userId = Auth::user()->UserID;
-        $userPlan = MonthPlan::with('targets', 'approvals')->where('UserID', $userId)->where('Period', $period)->first();
+        $userPlan = MonthPlan::with('targets.criteria', 'targets.subCriteria', 'targets.subSubCriteria', 'approvals')->where('UserID', $userId)->where('Period', $period)->first();
 
         return response()->json([
             'plan' => $userPlan,
