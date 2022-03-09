@@ -36,6 +36,11 @@ class TargetController extends Controller
         $targets = $request->targets;
         $user = Auth::user();
 
+        if (count($targets) < 1) return response()->json([
+            'error' => 'Invalid request',
+            'status' => 500
+        ], 500);
+
         $period = $request->period;
 
         $periodDate = Carbon::createFromFormat('Y-m-d', $period . '-01');
@@ -212,20 +217,27 @@ class TargetController extends Controller
             }
         }
 
+
+
         DB::beginTransaction();
         try {
+            $totalWeight = 0;
             $monthPlan->update([
                 'TargetApprovedBy' => Auth::user()->UserID
             ]);
             $existingTargets = $monthPlan->targets;
             foreach ($existingTargets as $exTarget) {
                 $target = findTarget($exTarget, $targets);
+                $totalWeight += (float)$target['Weight'];
                 $exTarget->update([
                     'Weight' => $target['Weight'],
                     'Target' => $target['Target'],
                     'ChangedBySupervisor' => $target['ChangedBySupervisor']
 
                 ]);
+            }
+            if ($totalWeight !== (float)100) {
+                throw new Exception("Total weight must be 100! (Please distribute w)");
             }
             DB::commit();
         } catch (Exception $e) {
