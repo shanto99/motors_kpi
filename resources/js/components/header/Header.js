@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import "./style.css";
 import { Hidden, Menu, MenuItem, Button } from "@mui/material";
 
-import {changePassword} from "../../API/authentication";
+import {changePassword, getUser} from "../../API/authentication";
 
 class Header extends React.Component {
     constructor(props) {
@@ -18,9 +18,20 @@ class Header extends React.Component {
     componentDidMount(){
         let user = Cookies.get('user');
         user = user ? JSON.parse(user) : null;
-        this.setState({
-            user: user
-        });
+        if(!user) {
+            getUser().then(res => {
+                user = res.user;
+                Cookies.set('user', JSON.stringify(user));
+                this.setState({
+                    user: user
+                });
+            });
+        } else {
+            this.setState({
+                user: user
+            });
+        }
+
     }
 
     changePassword = () => {
